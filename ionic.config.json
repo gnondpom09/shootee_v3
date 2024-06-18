@@ -1,0 +1,7 @@
+{
+  "name": "shootee",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
