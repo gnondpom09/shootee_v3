@@ -1,13 +1,12 @@
-import { Image } from './spot.model';
+import { Timestamp } from 'firebase/firestore';
 
 export interface Profile {
-  uid: string;
-  avatar: Image;
+  id: string;
+  avatar: string;
   pseudo: string;
   email: string;
-  inscriptionDate: string;
+  inscriptionDate: Timestamp;
   level?: string;
   firstname?: string;
   lastname?: string;
-  location?: string;
 }

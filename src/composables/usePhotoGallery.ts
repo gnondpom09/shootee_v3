@@ -49,6 +49,8 @@ export async function getBase64(photo: Photo): Promise<string> {
 }
 
 export const usePhotoGallery = () => {
+  const storage = useFirebaseStorage();
+
   async function getPhotoFormLibrary(userId?: string): Promise<void> {
     try {
       const photo = (await Camera.getLimitedLibraryPhotos()).photos[0];
@@ -60,6 +62,7 @@ export const usePhotoGallery = () => {
       photos.value = [...photos.value];
     }
   }
+
   async function takePhoto(userId?: string): Promise<void> {
     try {
       const photo = await Camera.getPhoto({
@@ -69,7 +72,6 @@ export const usePhotoGallery = () => {
         quality: 100,
       });
 
-      // upload avatar in storage and firestore
       if (userId) {
         savePhoto(userId, photo);
       }
@@ -85,20 +87,6 @@ export const usePhotoGallery = () => {
     try {
       let blob: Blob;
 
-      if (isPlatform('hybrid')) {
-        console.log('PLATFORM HYBRID');
-        const file = await Filesystem.readFile({
-          path: photo.path!,
-        });
-        blob = b64toBlob(file.data as string);
-      } else {
-        console.log('PLATFROM DESKTOP');
-        const response = await fetch(photo.webPath!);
-        blob = await response.blob();
-      }
-
-      const storage = useFirebaseStorage();
-
       const fileName = Date.now() + '.jpeg';
 
       const savedFileImage = {
@@ -107,12 +95,22 @@ export const usePhotoGallery = () => {
       };
 
       const imageFileRef = storageRef(storage, `test/${fileName}`);
-      const { url, upload } = useStorageFile(imageFileRef);
+
+      if (isPlatform('hybrid')) {
+        const file = await Filesystem.readFile({
+          path: photo.path!,
+        });
+        blob = b64toBlob(file.data as string, 'image/jpeg');
+      } else {
+        const response = await fetch(photo.webPath!);
+        blob = await response.blob();
+      }
+
+      const { url, upload } = await useStorageFile(imageFileRef);
 
       upload(blob)?.then(() => {
         setTimeout(() => {
           if (url.value) {
-            console.log(url.value);
             updateAvatar(userId, url.value);
             savedFileImage.webviewPath = url.value;
           }

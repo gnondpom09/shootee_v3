@@ -1,8 +1,11 @@
+import { GeoPoint } from 'firebase/firestore';
+import { Spot } from './spot.model';
+
 export interface Marker {
-  uid: string;
-  lattitude: string;
-  longitude: string;
+  id: string;
   name: string;
   thumbnail: string;
-  spotsCount: number;
+  location: GeoPoint;
+  spotsCount?: number;
+  spots?: Spot[];
 }

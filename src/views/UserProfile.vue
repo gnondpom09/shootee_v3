@@ -15,7 +15,7 @@ const currentUser = useCurrentUser();
 
 const users = getAllUsers();
 
-const user = getUserById(currentUser.value?.uid ?? '');
+const user = getUserById(currentUser.value?.uid as string);
 
 const actionSheet: ActionSheetOptions = {
   header: 'Modifier mon avatar',
@@ -51,7 +51,6 @@ function goToSettings() {
 }
 
 function changeAvatarFromPhoto() {
-  // display action sheet
   if (user.value) {
     takePhoto(user.value.id);
     user.value.avatar = photos.value[0]?.webviewPath ?? user.value.avatar;
@@ -59,7 +58,6 @@ function changeAvatarFromPhoto() {
 }
 
 function changeAvatarFromLibrary() {
-  // display action sheet
   if (user.value) {
     getPhotoFormLibrary(user.value.id);
     user.value.avatar = photos.value[0]?.webviewPath ?? user.value.avatar;

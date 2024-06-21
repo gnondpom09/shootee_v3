@@ -1,22 +1,13 @@
 <script setup lang="ts">
 import { getUserById, updateUser } from '@/services/user.service';
-import { ref, onMounted } from 'vue';
 import { useCurrentUser } from 'vuefire';
 
 const currentUser = useCurrentUser();
 
-const user = getUserById(currentUser.value.uid);
-
-const firstname = ref('');
-
-onMounted(() => {
-  if (user.firstname) {
-    firstname.value = user.firstname;
-  }
-});
+const user = getUserById(currentUser.value?.uid as string);
 
 function updateFirstname() {
-  updateUser(user.value.id, firstname.value);
+  updateUser(user.value?.id as string, user.value?.firstname as string);
 }
 </script>
 

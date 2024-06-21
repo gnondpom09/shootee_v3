@@ -1,4 +1,4 @@
-import { Profile } from './profile.model';
+import { GeoPoint } from 'firebase/firestore';
 
 export interface Image {
   filepath: string;
@@ -6,9 +6,8 @@ export interface Image {
 }
 
 export interface Spot {
-  uid: string;
-  image: Image;
-  country: string;
-  author: Profile;
-  city?: string;
+  id: string;
+  image: string;
+  location: GeoPoint;
+  authorId: string;
 }

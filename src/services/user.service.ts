@@ -4,9 +4,11 @@ import {
   setDoc,
   updateDoc,
   deleteDoc,
+  Timestamp,
 } from 'firebase/firestore';
 
 import { useCollection, useDocument, useFirestore } from 'vuefire';
+import { Profile } from '../models/profile.model';
 
 const firestore = useFirestore();
 
@@ -18,16 +20,16 @@ export async function createUser(id: string, pseudo: string, email: string) {
     pseudo,
     email,
     avatar: '',
-    inscriptionDate: new Date().toISOString(),
+    inscriptionDate: Timestamp.fromDate(new Date()),
   });
 }
 
 export function getAllUsers() {
-  return useCollection(collection(firestore, 'users'));
+  return useCollection<Profile>(collection(firestore, 'users'));
 }
 
 export function getUserById(id: string) {
-  return useDocument(doc(firestore, `users/${id}`));
+  return useDocument<Profile>(doc(firestore, `users/${id}`));
 }
 
 export async function updateUser(id: string, firstname: string) {
