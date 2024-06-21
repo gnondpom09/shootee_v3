@@ -7,7 +7,7 @@ import { ActionSheetOptions, IonActionSheet } from '@ionic/vue';
 
 import { usePhotoGallery } from '@/composables/usePhotoGallery';
 
-const { takePhoto, photos } = usePhotoGallery();
+const { takePhoto, photos, getPhotoFormLibrary } = usePhotoGallery();
 
 const router = useRouter();
 
@@ -23,13 +23,13 @@ const actionSheet: ActionSheetOptions = {
     {
       text: 'Prendre une photo',
       handler: () => {
-        changeAvatar();
+        changeAvatarFromPhoto();
       },
     },
     {
       text: 'Ouvrir la bibliothèque',
-      data: {
-        action: 'share',
+      handler: () => {
+        changeAvatarFromLibrary();
       },
     },
     {
@@ -50,10 +50,18 @@ function goToSettings() {
   router.push('/settings');
 }
 
-function changeAvatar() {
+function changeAvatarFromPhoto() {
   // display action sheet
   if (user.value) {
     takePhoto(user.value.id);
+    user.value.avatar = photos.value[0]?.webviewPath ?? user.value.avatar;
+  }
+}
+
+function changeAvatarFromLibrary() {
+  // display action sheet
+  if (user.value) {
+    getPhotoFormLibrary(user.value.id);
     user.value.avatar = photos.value[0]?.webviewPath ?? user.value.avatar;
   }
 }
