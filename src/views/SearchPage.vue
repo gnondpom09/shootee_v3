@@ -2,6 +2,7 @@
 import { UseGeolocation } from '@vueuse/components';
 // import { camera, trash, close } from 'ionicons/icons';
 import { usePhotoGallery } from '@/composables/usePhotoGallery';
+import ExploreContainer from '@/components/ExploreContainer.vue';
 
 const { takePhoto, photos } = usePhotoGallery();
 
@@ -28,6 +29,8 @@ const { takePhoto, photos } = usePhotoGallery();
         Latitude: {{ latitude }} Longitude: {{ longitude }}
       </UseGeolocation>
 
+      <ExploreContainer />
+
       <div class="container">
         <ion-grid>
           <ion-row>
@@ -36,8 +39,7 @@ const { takePhoto, photos } = usePhotoGallery();
             </ion-col>
           </ion-row>
         </ion-grid>
-
-        <ion-fab vertical="center" horizontal="center" slot="fixed">
+        <ion-fab vertical="top" horizontal="end" slot="fixed">
           <ion-fab-button @click="takePhoto">
             <ion-icon name="camera"></ion-icon>
           </ion-fab-button>

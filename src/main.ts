@@ -157,3 +157,13 @@ app.use(VueFire, {
 router.isReady().then(() => {
   app.mount('#app');
 });
+
+const API_KEY_WOOSMAP = 'woos-fc8fe374-edf7-3d11-86b2-7e787c73d350';
+
+fetch(
+  'https://api.woosmap.com/localities/autocomplete/?input=Lond&components=country%3Agb&no_deprecated_fields=true&key=' +
+    API_KEY_WOOSMAP
+)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.log('error', error));
