@@ -167,3 +167,11 @@ fetch(
   .then((response) => response.text())
   .then((result) => console.log(result))
   .catch((error) => console.log('error', error));
+
+// declare global {
+//   interface Window {
+//     WebApp: any;
+//   }
+// }
+
+// export const WebApp = window.WebApp;

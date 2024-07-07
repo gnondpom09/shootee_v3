@@ -1,36 +1,48 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 
-// const API_KEY_WOOSMAP = 'woos-fc8fe374-edf7-3d11-86b2-7e787c73d350';
+import { useGeolocation } from '@vueuse/core';
 
-const conf = {
-  woosmapApiKey: 'woos-48c80350-88aa-333e-835a-07f4b658a9a4',
-  // woosmapApiKey: API_KEY_WOOSMAP,
-  storeLocatorConfig: {
-    googlemaps: {
-      api_key: 'AIzaSyBn3kw1bNdgmiXAczwr2DcKLAaW-M3nX14',
-      places: {
-        types: ['geocode'],
-      },
-    },
-  },
-};
+const { coords } = useGeolocation();
+
+const API_KEY_WOOSMAP = 'woos-fc8fe374-edf7-3d11-86b2-7e787c73d350';
 
 onMounted(() => {
   const script = document.createElement('script');
-  script.src = 'https://webapp.woosmap.com/webapp.js';
+  script.src = `https://sdk.woosmap.com/map/map.js?key=${API_KEY_WOOSMAP}&callback=initMap`;
   script.async = true;
   document.body.appendChild(script);
 
   script.addEventListener('load', () => {
-    init();
+    initMap();
   });
 });
 
-function init() {
-  const webapp = new window.WebApp('map', conf.woosmapApiKey);
-  webapp.setConf(conf.storeLocatorConfig);
-  webapp.render();
+function initMap(): void {
+  const center: woosmap.map.LatLngLiteral = {
+    lat: coords.value.latitude ?? '',
+    lng: coords.value.longitude ?? '',
+  };
+
+  const map = new woosmap.map.Map(
+    document.getElementById('map') as HTMLElement,
+    {
+      zoom: 13,
+      center: center,
+    }
+  );
+
+  const marker = new woosmap.map.Marker({
+    position: map.getCenter(),
+    icon: {
+      url: 'https://images.woosmap.com/marker.png',
+      scaledSize: {
+        height: 50,
+        width: 32,
+      },
+    },
+  });
+  marker.setMap(map);
 }
 </script>
 
@@ -38,7 +50,6 @@ function init() {
   <div id="map"></div>
 </template>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #map {
   height: 100%;
