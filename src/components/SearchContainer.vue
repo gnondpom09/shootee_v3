@@ -1,11 +1,6 @@
-<script setup lang="ts">
-import { onMounted, ref } from 'vue';
-
+<script lang="ts" setup>
+import { ref, onMounted } from "vue";
 import { API_KEY_WOOSMAP } from "../constants/map";
-import { useGeolocation } from '@vueuse/core';
-import SearchContainer from '@/components/SearchContainer.vue';
-
-const { coords } = useGeolocation();
 
 type DebouncePromiseFunction<T, Args extends any[]> = (
   ...args: Args
@@ -18,85 +13,18 @@ let localitiesService: woosmap.map.LocalitiesService;
 let request: woosmap.map.localities.LocalitiesAutocompleteRequest;
 let debouncedLocalitiesAutocomplete: (...args: any[]) => Promise<any>;
 
-const inputElement = ref<HTMLInputElement | null>(null);
-const suggestionsList = ref<HTMLUListElement | null>(null);
-const clearSearchBtn = ref<HTMLButtonElement | null>(null);
-
 onMounted(() => {
-  const script = document.createElement('script');
-  script.src = `https://sdk.woosmap.com/map/map.js?key=${API_KEY_WOOSMAP}&callback=initMap`;
-  script.async = true;
-  document.body.appendChild(script);
-
-  inputElement.value = document.getElementById(
-    "autocomplete-input",
-  ) as HTMLInputElement;
-
-  suggestionsList.value = document.getElementById(
-    "suggestions-list",
-  ) as HTMLUListElement;
-  clearSearchBtn.value = document.getElementsByClassName(
-    "clear-searchButton",
-  )[0] as HTMLButtonElement;
-
-  script.addEventListener('load', () => {
-    initMap();
-  });
-
-  if (inputElement.value && suggestionsList.value) {
-  inputElement.value.addEventListener("input", handleAutocomplete);
-
-  inputElement.value.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      if (suggestionsList.value) {
-        const firstLi = suggestionsList.value.querySelector("li");
-      
-        if (firstLi) {
-          firstLi.click();
-        }
-      }
-    }
-  });
-
-  if (clearSearchBtn.value && inputElement.value && suggestionsList.value) {
-  clearSearchBtn.value.addEventListener("click", () => {
-    if (inputElement.value && suggestionsList.value && clearSearchBtn.value) {
-      inputElement.value.value = "";
-      suggestionsList.value.style.display = "none";
-      clearSearchBtn.value.style.display = "none";
-
-      if (marker) {
-        marker.setMap(null);
-        infoWindow.close();
-      }
-      inputElement.value.focus();
-    }
-  });
-}
-}
+  initSearch();
 });
 
-function initMap(): void {
-  map = new woosmap.map.Map(
+function initSearch(): void {
+  map = new window.woosmap.map.Map(
     document.getElementById("map") as HTMLElement,
     {
-      center: { lat: 42.895328519999985, lng: 1.7943832799999995 },
+      center: { lat: 51.50940214, lng: -0.133012 },
       zoom: 4,
     },
   );
-
-  const marker = new woosmap.map.Marker({
-    position: map.getCenter(),
-    icon: {
-      url: 'https://images.woosmap.com/marker.png',
-      scaledSize: {
-        height: 50,
-        width: 32,
-      },
-    },
-  });
-  marker.setMap(map);
-
   infoWindow = new woosmap.map.InfoWindow({});
   localitiesService = new window.woosmap.map.LocalitiesService();
 
@@ -111,11 +39,41 @@ function initMap(): void {
   );
 }
 
-function handleAutocomplete(): void {
-  console.log('SEARCH');
-  if (inputElement.value && suggestionsList.value && inputElement.value) {
-    request.input = inputElement.value.value;
+const inputElement = document.getElementById(
+  "autocomplete-input",
+) as HTMLInputElement;
+const suggestionsList = document.getElementById(
+  "suggestions-list",
+) as HTMLUListElement;
+const clearSearchBtn = document.getElementsByClassName(
+  "clear-searchButton",
+)[0] as HTMLButtonElement;
+if (inputElement && suggestionsList) {
+  inputElement.addEventListener("input", handleAutocomplete);
+  inputElement.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      const firstLi = suggestionsList.querySelector("li");
+      if (firstLi) {
+        firstLi.click();
+      }
+    }
+  });
+}
 
+clearSearchBtn.addEventListener("click", () => {
+  inputElement.value = "";
+  suggestionsList.style.display = "none";
+  clearSearchBtn.style.display = "none";
+  if (marker) {
+    marker.setMap(null);
+    infoWindow.close();
+  }
+  inputElement.focus();
+});
+
+function handleAutocomplete(): void {
+  if (inputElement && suggestionsList) {
+    request.input = inputElement.value;
     if (request.input) {
       debouncedLocalitiesAutocomplete(request)
         .then((localities) => displaySuggestions(localities))
@@ -123,10 +81,8 @@ function handleAutocomplete(): void {
           console.error("Error autocomplete localities:", error),
         );
     } else {
-      if (suggestionsList.value && clearSearchBtn.value) {
-        suggestionsList.value.style.display = "none";
-        clearSearchBtn.value.style.display = "none";
-      }
+      suggestionsList.style.display = "none";
+      clearSearchBtn.style.display = "none";
     }
   }
 }
@@ -145,7 +101,6 @@ function displayLocality(
     marker.setMap(null);
     infoWindow.close();
   }
-
   if (locality?.geometry) {
     marker = new woosmap.map.Marker({
       position: locality.geometry.location,
@@ -157,7 +112,6 @@ function displayLocality(
         },
       },
     });
-
     marker.setMap(map);
     infoWindow.setContent(`<span>${locality.formatted_address}</span>`);
     infoWindow.open(map, marker);
@@ -168,31 +122,23 @@ function displayLocality(
 function displaySuggestions(
   localitiesPredictions: woosmap.map.localities.LocalitiesAutocompleteResponse,
 ) {
-  if (inputElement.value && suggestionsList.value && clearSearchBtn.value) {
-    suggestionsList.value.innerHTML = "";
-
+  if (inputElement && suggestionsList) {
+    suggestionsList.innerHTML = "";
     if (localitiesPredictions.localities.length > 0 && request["input"]) {
       localitiesPredictions.localities.forEach((locality) => {
         const li = document.createElement("li");
         li.textContent = locality.description ?? "";
-        
         li.addEventListener("click", () => {
-          if (inputElement.value && suggestionsList.value) {
-            inputElement.value.value = locality.description ?? "";
-            suggestionsList.value.style.display = "none";
-            handleDetails(locality.public_id);
-          }
+          inputElement.value = locality.description ?? "";
+          suggestionsList.style.display = "none";
+          handleDetails(locality.public_id);
         });
-
-        if (suggestionsList.value) {
-          suggestionsList.value.appendChild(li);
-        }
+        suggestionsList.appendChild(li);
       });
-
-      suggestionsList.value.style.display = "block";
-      clearSearchBtn.value.style.display = "block";
+      suggestionsList.style.display = "block";
+      clearSearchBtn.style.display = "block";
     } else {
-      suggestionsList.value.style.display = "none";
+      suggestionsList.style.display = "none";
     }
   }
 }
@@ -203,8 +149,8 @@ document.addEventListener("click", (event) => {
     "#autocomplete-container",
   );
 
-  if (!isClickInsideAutocomplete && suggestionsList.value) {
-    suggestionsList.value.style.display = "none";
+  if (!isClickInsideAutocomplete && suggestionsList) {
+    suggestionsList.style.display = "none";
   }
 });
 
@@ -221,10 +167,8 @@ function debouncePromise<T, Args extends any[]>(
       if (timeoutId !== null) {
         clearTimeout(timeoutId);
       }
-
       latestResolve = resolve;
       latestReject = reject;
-
       timeoutId = setTimeout(() => {
         fn(...args)
           .then((result) => {
@@ -241,86 +185,46 @@ function debouncePromise<T, Args extends any[]>(
     });
   };
 }
-
-/* function initMap(): void {
-  const center: woosmap.map.LatLngLiteral = {
-    lat: coords.value.latitude ?? '',
-    lng: coords.value.longitude ?? '',
-  };
-
-  const map = new woosmap.map.Map(
-    document.getElementById('map') as HTMLElement,
-    {
-      zoom: 13,
-      center: center,
-    }
-  );
-
-  const marker = new woosmap.map.Marker({
-    position: map.getCenter(),
-    icon: {
-      url: 'https://images.woosmap.com/marker.png',
-      scaledSize: {
-        height: 50,
-        width: 32,
-      },
-    },
-  });
-  marker.setMap(map);
-} */
 </script>
 
 <template>
-<!--   <div id="map">
-    <SearchContainer />
-    <div id="app"></div>
-  </div> -->
+  <div id="map">
+    <div id="autocomplete-container">
+    <svg class="search-icon" viewBox="0 0 16 16">
+      <path
+        d="M3.617 7.083a4.338 4.338 0 1 1 8.676 0 4.338 4.338 0 0 1-8.676 0m4.338-5.838a5.838 5.838 0 1 0 2.162 11.262l2.278 2.279a1 1 0 0 0 1.415-1.414l-1.95-1.95A5.838 5.838 0 0 0 7.955 1.245"
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+      ></path>
+    </svg>
 
-  <div id="app">
-      <div id="autocomplete-container">
-        <svg class="search-icon" viewBox="0 0 16 16">
-          <path
-            d="M3.617 7.083a4.338 4.338 0 1 1 8.676 0 4.338 4.338 0 0 1-8.676 0m4.338-5.838a5.838 5.838 0 1 0 2.162 11.262l2.278 2.279a1 1 0 0 0 1.415-1.414l-1.95-1.95A5.838 5.838 0 0 0 7.955 1.245"
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
+    <input
+      type="text"
+      id="autocomplete-input"
+      placeholder="Search Localities..."
+      autocomplete="off"
+    />
+    <button aria-label="Clear" class="clear-searchButton" type="button">
+      <svg class="clear-icon" viewBox="0 0 24 24">
+        <path
+          d="M7.074 5.754a.933.933 0 1 0-1.32 1.317L10.693 12l-4.937 4.929a.931.931 0 1 0 1.319 1.317l4.938-4.93 4.937 4.93a.933.933 0 0 0 1.581-.662.93.93 0 0 0-.262-.655L13.331 12l4.937-4.929a.93.93 0 0 0-.663-1.578.93.93 0 0 0-.656.261l-4.938 4.93z"
+        ></path>
+      </svg>
+    </button>
+    <ul id="suggestions-list"></ul>
+  </div>
+  </div>
 
-        <input
-          type="text"
-          id="autocomplete-input"
-          placeholder="Search Localities..."
-          autocomplete="off"
-        />
-        <button aria-label="Clear" class="clear-searchButton" type="button">
-          <svg class="clear-icon" viewBox="0 0 24 24">
-            <path
-              d="M7.074 5.754a.933.933 0 1 0-1.32 1.317L10.693 12l-4.937 4.929a.931.931 0 1 0 1.319 1.317l4.938-4.93 4.937 4.93a.933.933 0 0 0 1.581-.662.93.93 0 0 0-.262-.655L13.331 12l4.937-4.929a.93.93 0 0 0-.663-1.578.93.93 0 0 0-.656.261l-4.938 4.93z"
-            ></path>
-          </svg>
-        </button>
-        <ul id="suggestions-list"></ul>
-      </div>
-
-      <div id="map"></div>
-    </div>
 </template>
 
-<style scoped>
-#map {
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-}
+
+<style scoped lang="scss">
+
 
 #autocomplete-container {
   display: flex;
   position: absolute;
-  top: 88px;
+  top: 10px;
   left: 10px;
   z-index: 1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0px rgba(0, 0, 0, 0.02);
@@ -338,7 +242,7 @@ function debouncePromise<T, Args extends any[]>(
 }
 
 #autocomplete-container .search-icon, #autocomplete-container .clear-icon {
-  color: black;
+  color: inherit;
   flex-shrink: 0;
   height: 16px;
   width: 16px;
@@ -366,7 +270,6 @@ function debouncePromise<T, Args extends any[]>(
   overflow: visible;
   appearance: textfield;
   font-size: 100%;
-  color: black;
 }
 
 .clear-searchButton {
@@ -397,7 +300,6 @@ function debouncePromise<T, Args extends any[]>(
   display: none;
   overflow-y: auto;
   background-color: #fff;
-  color: black;
 }
 
 #suggestions-list.visible {
@@ -413,10 +315,5 @@ function debouncePromise<T, Args extends any[]>(
 #suggestions-list li:hover {
   background-color: #f2f2f2;
 }
-
-#app {
-  height: 100%;
-}
-
 
 </style>
