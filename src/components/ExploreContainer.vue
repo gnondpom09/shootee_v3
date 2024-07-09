@@ -44,9 +44,9 @@ onMounted(() => {
   });
 
   if (inputElement.value && suggestionsList.value) {
-  inputElement.value.addEventListener("input", handleAutocomplete);
+    inputElement.value.addEventListener("input", handleAutocomplete);
 
-  inputElement.value.addEventListener("keydown", (event) => {
+    inputElement.value.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       if (suggestionsList.value) {
         const firstLi = suggestionsList.value.querySelector("li");
@@ -59,20 +59,20 @@ onMounted(() => {
   });
 
   if (clearSearchBtn.value && inputElement.value && suggestionsList.value) {
-  clearSearchBtn.value.addEventListener("click", () => {
-    if (inputElement.value && suggestionsList.value && clearSearchBtn.value) {
-      inputElement.value.value = "";
-      suggestionsList.value.style.display = "none";
-      clearSearchBtn.value.style.display = "none";
+    clearSearchBtn.value.addEventListener("click", () => {
+      if (inputElement.value && suggestionsList.value && clearSearchBtn.value) {
+        inputElement.value.value = "";
+        suggestionsList.value.style.display = "none";
+        clearSearchBtn.value.style.display = "none";
 
-      if (marker) {
-        marker.setMap(null);
-        infoWindow.close();
+        if (marker) {
+          marker.setMap(null);
+          infoWindow.close();
+        }
+        inputElement.value.focus();
       }
-      inputElement.value.focus();
-    }
-  });
-}
+    });
+  }
 }
 });
 
@@ -112,7 +112,6 @@ function initMap(): void {
 }
 
 function handleAutocomplete(): void {
-  console.log('SEARCH');
   if (inputElement.value && suggestionsList.value && inputElement.value) {
     request.input = inputElement.value.value;
 
@@ -159,7 +158,11 @@ function displayLocality(
     });
 
     marker.setMap(map);
-    infoWindow.setContent(`<span>${locality.formatted_address}</span>`);
+    infoWindow.setContent(`<span id="${locality.public_id}">${locality.formatted_address}</span>`);
+    const selectedLocality = document.getElementById(locality.public_id);
+    if (selectedLocality) {
+      selectedLocality.style.color = "blue"; 
+    }
     infoWindow.open(map, marker);
     map.flyTo({ center: locality.geometry.location, zoom: 14 });
   }
@@ -174,6 +177,17 @@ function displaySuggestions(
     if (localitiesPredictions.localities.length > 0 && request["input"]) {
       localitiesPredictions.localities.forEach((locality) => {
         const li = document.createElement("li");
+
+        // Define style result item
+        li.onmouseover = () => {
+          li.style.backgroundColor = '#f2f2f2';
+        };
+        li.onmouseout = () => {
+          li.style.backgroundColor = '#FFFFFF';
+        };
+        li.style.padding = '12px';
+        li.style.transition = 'background-color 0.3s ease';
+        li.style.cursor = 'pointer';
         li.textContent = locality.description ?? "";
         
         li.addEventListener("click", () => {
@@ -306,7 +320,7 @@ function debouncePromise<T, Args extends any[]>(
     </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 #map {
   height: 100%;
   width: 100%;
@@ -402,12 +416,6 @@ function debouncePromise<T, Args extends any[]>(
 
 #suggestions-list.visible {
   display: block;
-}
-
-#suggestions-list li {
-  padding: 12px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 #suggestions-list li:hover {
