@@ -82,10 +82,37 @@ function initMap(): void {
     {
       center: { lat: 42.895328519999985, lng: 1.7943832799999995 },
       zoom: 4,
+      disableDefaultUI: true,
+      styles: [
+        {
+          "featureType": "point_of_interest",
+          "elementType": "all",
+          "stylers": [
+              {
+                  "visibility": "on"
+              }
+          ]
+      },
+      {
+          "featureType": "point_of_interest.business.shop",
+          "elementType": "all",
+          "stylers": [
+              {
+                  "visibility": "off"
+              }
+          ]
+      },
+      {
+          "featureType": "water",
+          "stylers": [{
+              "lightness": -15
+          }]
+      }
+      ]
     },
   );
 
-  const marker = new woosmap.map.Marker({
+  const currentMarker = new woosmap.map.Marker({
     position: map.getCenter(),
     icon: {
       url: 'https://images.woosmap.com/marker.png',
@@ -95,7 +122,7 @@ function initMap(): void {
       },
     },
   });
-  marker.setMap(map);
+  currentMarker.setMap(map);
 
   infoWindow = new woosmap.map.InfoWindow({});
   localitiesService = new window.woosmap.map.LocalitiesService();
@@ -159,12 +186,14 @@ function displayLocality(
 
     marker.setMap(map);
     infoWindow.setContent(`<span id="${locality.public_id}">${locality.formatted_address}</span>`);
+
+    infoWindow.open(map, marker);
+    map.flyTo({ center: locality.geometry.location, zoom: 14 });
+
     const selectedLocality = document.getElementById(locality.public_id);
     if (selectedLocality) {
       selectedLocality.style.color = "blue"; 
     }
-    infoWindow.open(map, marker);
-    map.flyTo({ center: locality.geometry.location, zoom: 14 });
   }
 }
 
@@ -329,6 +358,11 @@ function debouncePromise<T, Args extends any[]>(
   right: 0;
   top: 0;
   bottom: 0;
+}
+
+.mapboxgl-ctrl-top-right {
+  right: 0;
+  bottom: 55px !important;
 }
 
 #autocomplete-container {
