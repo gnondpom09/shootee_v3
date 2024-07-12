@@ -51,6 +51,16 @@ const routes: Array<RouteRecordRaw> = [
         meta: { requiresAuth: true },
       },
       {
+        path: 'add-spot',
+        component: () => import('@/views/AddSpotPage.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'bookmarks',
+        component: () => import('@/views/BookmarksPage.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
         path: 'profile',
         component: () => import('@/views/UserProfile.vue'),
         meta: { requiresAuth: true },

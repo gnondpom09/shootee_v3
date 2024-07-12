@@ -81,7 +81,7 @@ function initMap(): void {
     document.getElementById("map") as HTMLElement,
     {
       center: { lat: 42.895328519999985, lng: 1.7943832799999995 },
-      zoom: 4,
+      zoom: 10,
       disableDefaultUI: true,
       styles: [
         {
@@ -284,41 +284,9 @@ function debouncePromise<T, Args extends any[]>(
     });
   };
 }
-
-/* function initMap(): void {
-  const center: woosmap.map.LatLngLiteral = {
-    lat: coords.value.latitude ?? '',
-    lng: coords.value.longitude ?? '',
-  };
-
-  const map = new woosmap.map.Map(
-    document.getElementById('map') as HTMLElement,
-    {
-      zoom: 13,
-      center: center,
-    }
-  );
-
-  const marker = new woosmap.map.Marker({
-    position: map.getCenter(),
-    icon: {
-      url: 'https://images.woosmap.com/marker.png',
-      scaledSize: {
-        height: 50,
-        width: 32,
-      },
-    },
-  });
-  marker.setMap(map);
-} */
 </script>
 
 <template>
-<!--   <div id="map">
-    <SearchContainer />
-    <div id="app"></div>
-  </div> -->
-
   <div id="app">
       <div id="autocomplete-container">
         <svg class="search-icon" viewBox="0 0 16 16">

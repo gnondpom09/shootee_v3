@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { UseGeolocation } from '@vueuse/components';
+import { getUserById } from '@/services/user.service';
+import { useCurrentUser } from 'vuefire';
 
-import { usePhotoGallery } from '@/composables/usePhotoGallery';
+const currentUser = useCurrentUser();
 
+const user = getUserById(currentUser.value?.uid as string);
 // import { useGeolocation } from '@vueuse/core';
 
 // const { coords, locatedAt, error, resume, pause } = useGeolocation();
-
-const { takePhoto, photos } = usePhotoGallery();
 </script>
 
 <template>
@@ -23,30 +23,9 @@ const { takePhoto, photos } = usePhotoGallery();
           <ion-title size="large">Home page</ion-title>
         </ion-toolbar>
       </ion-header>
-
-      <div class="container">
-        <h1>Home page</h1>
-
-        <h2>vous etes ici</h2>
-        <div>
-          <UseGeolocation v-slot="{ coords: { latitude, longitude } }">
-            Latitude: {{ latitude }} Longitude: {{ longitude }}
-          </UseGeolocation>
-        </div>
-
-        <h3>Ajouter un spot</h3>
-        <ion-grid>
-          <ion-row>
-            <ion-col size="6" :key="photo.filepath" v-for="photo in photos">
-              <ion-img :src="photo.webviewPath"></ion-img>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-        <ion-fab vertical="center" horizontal="center" slot="fixed">
-          <ion-fab-button @click="takePhoto">
-            <ion-icon name="camera"></ion-icon>
-          </ion-fab-button>
-        </ion-fab>
+      <div>
+        <h1>Feed</h1>
+        bonjour {{ user?.pseudo }}
       </div>
     </ion-content>
   </ion-page>

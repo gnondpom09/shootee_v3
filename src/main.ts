@@ -50,6 +50,7 @@ defineCustomElements(window);
 import { addIcons } from 'ionicons';
 import {
   add,
+  addCircleOutline,
   chevronUp,
   logOutOutline,
   logIn,
@@ -61,6 +62,14 @@ import {
   sunny,
   personCircleOutline,
   settingsOutline,
+  person,
+  grid,
+  gridOutline,
+  bookmark,
+  bookmarkOutline,
+  bookmarksOutline,
+  location,
+  locationOutline
 } from 'ionicons/icons';
 addIcons({
   add,
@@ -70,11 +79,20 @@ addIcons({
   close,
   image,
   sunny,
+  location,
+  bookmark,
+  person,
+  grid,
   'log-in': logIn,
   'log-out-outline': logOutOutline,
   'chevron-up': chevronUp,
   'person-circle-outline': personCircleOutline,
   'settings-outline': settingsOutline,
+  'location-outline': locationOutline,
+  'bookmark-outline': bookmarkOutline,
+  'bookmarks-outline': bookmarksOutline,
+  'grid-outline': gridOutline,
+  'add-circle-outline': addCircleOutline
 });
 
 // Components
