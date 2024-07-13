@@ -8,15 +8,10 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Wall</ion-title>
+        <ion-title class="oswald-title">SHOOTEE</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Home page</ion-title>
-        </ion-toolbar>
-      </ion-header>
       <div>
         <h1>Feed</h1>
       </div>

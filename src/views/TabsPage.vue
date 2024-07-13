@@ -11,7 +11,7 @@
           <ion-icon aria-hidden="true" :icon="locationOutline" />
         </ion-tab-button>
 
-        <ion-tab-button tab="add-spot" href="/tabs/add-spot">
+        <ion-tab-button tab="add-spot" href="/add-spot">
           <ion-icon aria-hidden="true" :icon="addCircleOutline" />
         </ion-tab-button>
 

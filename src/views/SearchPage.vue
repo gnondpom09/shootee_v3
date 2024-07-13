@@ -7,7 +7,7 @@ import ExploreContainer from '@/components/ExploreContainer.vue';
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Recherche</ion-title>
+        <ion-title class="oswald-title">SHOOTEE</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>

@@ -1,49 +1,59 @@
 <script setup lang="ts">
-import { usePhotoGallery } from '@/composables/usePhotoGallery';
-import { getUserById } from '@/services/user.service';
-import { UseGeolocation } from '@vueuse/components';
-import { useCurrentUser } from 'vuefire';
+import { onMounted, ref } from "vue";
+import { getUserById } from "@/services/user.service";
+import { UseGeolocation } from "@vueuse/components";
+import { useCurrentUser } from "vuefire";
+import StepLocation from "../components/StepLocation.vue";
+import { useMap } from "../composables/useMap";
+import { API_KEY_WOOSMAP } from "../constants/map";
 
 const currentUser = useCurrentUser();
 
 const user = getUserById(currentUser.value?.uid as string);
 
-const { takePhoto, photos } = usePhotoGallery();
+const spotName = ref<string>("");
+
+const slideData = ref<any>([
+  { id: "1", name: "localisation" },
+  { id: "2", name: "ajout photos" },
+  { id: "3", name: "recommandations" },
+]);
+
+const currentStep = ref<number>(1);
+
+function nextStep() {
+  console.log("valider");
+}
 </script>
 
 <template>
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>New spot</ion-title>
+        <ion-buttons slot="start">
+          <ion-buttons slot="start">
+            <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+          </ion-buttons>
+        </ion-buttons>
+        <ion-title class="oswald-title">SHOOTEE</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
-        bonjour {{ user?.pseudo }}
+      <div v-if="user" class="container">
+        <StepLocation v-if="currentStep === 1" />
 
-        <div class="container">
-        <h1>Home page</h1>
-
-        <h2>vous etes ici</h2>
-        <div>
-          <UseGeolocation v-slot="{ coords: { latitude, longitude } }">
-            Latitude: {{ latitude }} Longitude: {{ longitude }}
-          </UseGeolocation>
+        <div class="action">
+          <ion-button
+            class="action"
+            block
+            color="primary"
+            type="submit"
+            expand="full"
+            @click="nextStep"
+          >
+            Continuer
+          </ion-button>
         </div>
-
-        <h3>Ajouter un spot</h3>
-        <ion-grid>
-          <ion-row>
-            <ion-col size="6" :key="photo.filepath" v-for="photo in photos">
-              <ion-img :src="photo.webviewPath"></ion-img>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-        <ion-fab vertical="center" horizontal="center" slot="fixed">
-          <ion-fab-button @click="takePhoto">
-            <ion-icon name="camera"></ion-icon>
-          </ion-fab-button>
-        </ion-fab>
       </div>
     </ion-content>
   </ion-page>
@@ -51,8 +61,22 @@ const { takePhoto, photos } = usePhotoGallery();
 
 <style scoped lang="scss">
 .container {
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+}
+
+.action {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.swiper-slide {
+  padding: 12px;
+  text-align: center;
+  font-size: 28px;
+  background: #fff;
+}
+.swiper-container {
+  width: 100%;
+  height: 50%;
 }
 </style>

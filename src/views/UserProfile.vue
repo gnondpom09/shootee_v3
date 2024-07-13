@@ -69,7 +69,7 @@ function changeAvatarFromLibrary() {
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Profile</ion-title>
+        <ion-title class="oswald-title">SHOOTEE</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content v-if="user">

@@ -28,6 +28,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/SettingsPage.vue'),
   },
   {
+    path: '/add-spot',
+    component: () => import('@/views/AddSpotPage.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/',
     redirect: '/tabs/home',
   },
@@ -46,11 +51,6 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'search',
         component: () => import('@/views/SearchPage.vue'),
-      },
-      {
-        path: 'add-spot',
-        component: () => import('@/views/AddSpotPage.vue'),
-        meta: { requiresAuth: true },
       },
       {
         path: 'bookmarks',

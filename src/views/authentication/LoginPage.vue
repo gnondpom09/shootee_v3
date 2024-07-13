@@ -1,43 +1,43 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useRouter } from 'vue-router';
-import { useFirebaseAuth } from 'vuefire';
+import { ref } from "vue";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "vue-router";
+import { useFirebaseAuth } from "vuefire";
 
 const auth = useFirebaseAuth();
 
-const email = ref('');
-const password = ref('');
-const errMsg = ref('');
+const email = ref("");
+const password = ref("");
+const errMsg = ref("");
 
 const router = useRouter();
 
 function signIn() {
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then((data) => {
-      console.log('Successfully logged in!', data);
-      router.push('/tabs');
+      console.log("Successfully logged in!", data);
+      router.push("/tabs");
     })
     .catch((error) => {
       switch (error.code) {
-        case 'auth/invalid-email':
-          errMsg.value = 'Invalid email';
+        case "auth/invalid-email":
+          errMsg.value = "Invalid email";
           break;
-        case 'auth/user-not-found':
-          errMsg.value = 'No account with that email was found';
+        case "auth/user-not-found":
+          errMsg.value = "No account with that email was found";
           break;
-        case 'auth/wrong-password':
-          errMsg.value = 'Incorrect password';
+        case "auth/wrong-password":
+          errMsg.value = "Incorrect password";
           break;
         default:
-          errMsg.value = 'Email or password was incorrect';
+          errMsg.value = "Email or password was incorrect";
           break;
       }
     });
 }
 
 function resetPassword() {
-  window.alert('reset password');
+  window.alert("reset password");
 }
 </script>
 
@@ -96,11 +96,8 @@ function resetPassword() {
         </div>
 
         <p v-if="errMsg">{{ errMsg }}</p>
-
-        <ion-button @click="signIn" expand="block" fill="clear" shape="round">
-          Se connecter
-        </ion-button>
       </ion-card>
+      <ion-button @click="signIn" expand="full"> Se connecter </ion-button>
     </ion-content>
   </ion-page>
 </template>
