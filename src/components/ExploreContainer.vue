@@ -82,7 +82,7 @@ function initMap(): void {
     {
       center: { lat: 42.895328519999985, lng: 1.7943832799999995 },
       zoom: 10,
-      disableDefaultUI: true,
+      disableDefaultUI: false,
       styles: [
         {
           "featureType": "point_of_interest",
@@ -336,7 +336,7 @@ function debouncePromise<T, Args extends any[]>(
 #autocomplete-container {
   display: flex;
   position: absolute;
-  top: 88px;
+  top: 10px;
   left: 10px;
   z-index: 1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0px rgba(0, 0, 0, 0.02);
