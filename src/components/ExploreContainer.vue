@@ -209,6 +209,7 @@ function displayLocality(
     );
 
     infoWindow.open(map, marker);
+    console.log(locality.geometry.location);
     map.flyTo({ center: locality.geometry.location, zoom: 14 });
 
     const selectedLocality = document.getElementById(locality.public_id);

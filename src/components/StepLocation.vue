@@ -1,20 +1,27 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-
+import { ref } from "vue";
 import { UseGeolocation } from "@vueuse/components";
 import { useMap } from "@/composables/useMap";
-import { API_KEY_WOOSMAP } from "@/constants/map";
 import { useGeolocation } from "@vueuse/core";
+
+/* defineProps<{
+  photos: Image[];
+}>(); */
 
 const { coords } = useGeolocation();
 
 const spotName = ref<string>("");
+
 const city = ref<string>("");
 
-useMap();
+const initMap = useMap("map-add-spot");
 
 function localize() {
-  console.log(coords.value);
+  const { setMarker } = initMap;
+
+  if (coords.value.latitude && coords.value.longitude) {
+    setMarker(coords.value.latitude, coords.value.longitude);
+  }
 }
 </script>
 
@@ -77,7 +84,7 @@ function localize() {
       </UseGeolocation>
     </div>
 
-    <div id="map"></div>
+    <div id="map-add-spot"></div>
   </div>
 </template>
 
@@ -93,7 +100,7 @@ function localize() {
   margin-top: 44px;
   text-align: center;
 }
-#map {
+#map-add-spot {
   height: 33%;
   width: 100%;
   position: absolute;

@@ -3,9 +3,10 @@ import { API_KEY_WOOSMAP, MAP_STYLES } from "../constants/map";
 
 interface UseMap {
   initMap: () => void;
+  setMarker: (latitude: number, longitude: number) => void;
 }
 
-export function useMap(): UseMap {
+export function useMap(elementId: string): UseMap {
   let map: woosmap.map.Map;
 
   onMounted(() => {
@@ -20,15 +21,19 @@ export function useMap(): UseMap {
   });
 
   function initMap(): void {
-    map = new woosmap.map.Map(document.getElementById("map") as HTMLElement, {
-      center: { lat: 42.895328519999985, lng: 1.7943832799999995 },
-      zoom: 10,
-      disableDefaultUI: true,
-      styles: MAP_STYLES,
-    });
+    map = new woosmap.map.Map(
+      document.getElementById(elementId) as HTMLElement,
+      {
+        zoom: 4,
+        disableDefaultUI: true,
+        styles: MAP_STYLES,
+      }
+    );
+  }
 
-    const currentMarker = new woosmap.map.Marker({
-      position: map.getCenter(),
+  function setMarker(latitude: number, longitude: number): void {
+    const marker = new woosmap.map.Marker({
+      position: { lat: latitude, lng: longitude },
       icon: {
         url: "https://images.woosmap.com/marker.png",
         scaledSize: {
@@ -37,10 +42,19 @@ export function useMap(): UseMap {
         },
       },
     });
-    currentMarker.setMap(map);
+    marker.setMap(map);
+
+    console.log(latitude);
+    console.log(longitude);
+
+    map.flyTo({
+      center: { lat: latitude, lng: longitude },
+      zoom: 14,
+    });
   }
 
   return {
     initMap,
+    setMarker,
   };
 }
