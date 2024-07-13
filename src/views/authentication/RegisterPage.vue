@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'vue-router';
@@ -37,7 +37,12 @@ function signUp() {
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title> <h1>Register</h1></ion-title>
+        <ion-buttons slot="start">
+          <ion-buttons slot="start">
+            <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+          </ion-buttons>
+        </ion-buttons>
+        <ion-title>S'enregistrer</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>

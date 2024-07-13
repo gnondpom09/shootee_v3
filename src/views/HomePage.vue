@@ -1,10 +1,4 @@
 <script setup lang="ts">
-import { getUserById } from '@/services/user.service';
-import { useCurrentUser } from 'vuefire';
-
-const currentUser = useCurrentUser();
-
-const user = getUserById(currentUser.value?.uid as string);
 // import { useGeolocation } from '@vueuse/core';
 
 // const { coords, locatedAt, error, resume, pause } = useGeolocation();
@@ -25,7 +19,6 @@ const user = getUserById(currentUser.value?.uid as string);
       </ion-header>
       <div>
         <h1>Feed</h1>
-        bonjour {{ user?.pseudo }}
       </div>
     </ion-content>
   </ion-page>

@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 
 import { API_KEY_WOOSMAP } from "../constants/map";
 import { useGeolocation } from '@vueuse/core';
-import SearchContainer from '@/components/SearchContainer.vue';
+// import SearchContainer from '@/components/SearchContainer.vue';
 
 const { coords } = useGeolocation();
 

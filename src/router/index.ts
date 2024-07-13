@@ -34,7 +34,6 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/tabs/',
     component: TabsPage,
-    meta: { requiresAuth: true },
     children: [
       {
         path: '',
@@ -43,12 +42,10 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'home',
         component: () => import('@/views/HomePage.vue'),
-        meta: { requiresAuth: true },
       },
       {
         path: 'search',
         component: () => import('@/views/SearchPage.vue'),
-        meta: { requiresAuth: true },
       },
       {
         path: 'add-spot',
