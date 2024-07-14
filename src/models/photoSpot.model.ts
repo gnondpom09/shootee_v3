@@ -1,11 +1,12 @@
-import { GeoPoint } from "firebase/firestore";
+import { Photo } from "@capacitor/camera";
 
 export interface Image {
   filepath: string;
   webviewPath?: string;
+  photo?: Photo;
 }
 
-export interface SpotPhoto {
+export interface PhotoSpot {
   id: string;
   image: string;
   authorId: string;

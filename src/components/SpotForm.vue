@@ -2,7 +2,7 @@
 import { getUserById } from "@/services/user.service";
 import { useCurrentUser } from "vuefire";
 import { UseGeolocation } from "@vueuse/components";
-import { Image } from "../models/spotPhoto.model";
+import { Image } from "../models/photoSpot.model";
 
 defineProps<{
   photos: Image[];

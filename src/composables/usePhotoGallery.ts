@@ -6,7 +6,7 @@ import {
   GalleryPhoto,
   Photo,
 } from "@capacitor/camera";
-import { Image } from "../models/spotPhoto.model";
+import { Image } from "../models/photoSpot.model";
 import { useStorageFile, useFirebaseStorage } from "vuefire";
 import { ref as storageRef } from "firebase/storage";
 /* import { updateAvatar } from "../services/user.service"; */
@@ -52,13 +52,12 @@ export async function getBase64(photo: Photo): Promise<string> {
 export const usePhotoGallery = () => {
   const storage = useFirebaseStorage();
 
-  async function getPhotoFromLibrary(userId?: string): Promise<void> {
+  async function getPhotoFromLibrary(): Promise<void> {
     try {
-      const photo: GalleryPhoto = (await Camera.getLimitedLibraryPhotos()).photos[0];
+      const photo: GalleryPhoto = (await Camera.getLimitedLibraryPhotos())
+        .photos[0];
 
-      if (userId) {
-        savePhotoInStorage(photo);
-      }
+      savePhotoInStorage(photo);
     } catch {
       photos.value = [...photos.value];
     }
@@ -78,6 +77,7 @@ export const usePhotoGallery = () => {
       const savedFileImage = {
         filepath: fileName,
         webviewPath: photo.webPath,
+        photo: photo,
       };
 
       photosDraft.value = [savedFileImage, ...photosDraft.value];
@@ -90,7 +90,7 @@ export const usePhotoGallery = () => {
 
   async function takePhotoAndSave(): Promise<void> {
     const photo = await takePhoto();
-    
+
     if (photo) {
       await savePhotoInStorage(photo);
     }
@@ -151,6 +151,7 @@ export const usePhotoGallery = () => {
     photosDraft,
     takePhoto,
     takePhotoAndSave,
+    savePhotoInStorage,
     getPhotoFromLibrary,
   };
 };

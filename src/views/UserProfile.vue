@@ -66,7 +66,7 @@ async function changeAvatarFromPhoto() {
 
 async function changeAvatarFromLibrary() {
   if (user.value) {
-    await getPhotoFromLibrary(user.value.id);
+    await getPhotoFromLibrary();
 
     user.value.avatar = photos.value[0]?.webviewPath ?? user.value.avatar;
     updateAvatar(user.value.id, user.value.avatar);

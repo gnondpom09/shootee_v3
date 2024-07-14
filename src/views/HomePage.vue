@@ -2,6 +2,10 @@
 // import { useGeolocation } from '@vueuse/core';
 
 // const { coords, locatedAt, error, resume, pause } = useGeolocation();
+
+import { getAllMarkers } from "@/services/marker.service";
+
+const spots = getAllMarkers();
 </script>
 
 <template>
@@ -14,6 +18,9 @@
     <ion-content :fullscreen="true">
       <div>
         <h1>Feed</h1>
+        <ion-col size="6" :key="index" v-for="(photo, index) in spots">
+          <ion-img :src="photo.thumbnail"></ion-img>
+        </ion-col>
       </div>
     </ion-content>
   </ion-page>

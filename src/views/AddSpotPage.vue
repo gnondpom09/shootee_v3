@@ -1,18 +1,31 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from "vue";
+import { ref } from "vue";
 import { getUserById } from "@/services/user.service";
+import { createMarker } from "@/services/marker.service";
 import { useCurrentUser } from "vuefire";
+import { usePhotoGallery } from "@/composables/usePhotoGallery";
+import { useGeolocation } from "@vueuse/core";
+import { GeoPoint } from "firebase/firestore";
+import { useGeocode } from "@/composables/useGeocode";
 
-import StepLocation from "@/components/StepLocation.vue";
+import { Photo } from "@capacitor/camera";
+
+import StepLocation from "@/components/swiper/StepLocation.vue";
+import StepAddPhotos from "@/components/swiper/StepAddPhotos.vue";
+import StepRecommendations from "@/components/swiper/StepRecommendations.vue";
 
 import { Scrollbar, A11y, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/vue";
 
+import { useRouter } from "vue-router";
+
+const { photos, photosDraft, savePhotoInStorage } = usePhotoGallery();
+
+const { address } = useGeocode();
+
 import "swiper/scss/navigation";
 import "swiper/scss/pagination";
 import "swiper/scss/scrollbar";
-import { useRouter } from "vue-router";
-import StepAddPhotos from "@/components/StepAddPhotos.vue";
 
 const currentUser = useCurrentUser();
 
@@ -24,14 +37,34 @@ const spotName = ref<string>("");
 
 const slider = ref();
 
-onMounted(async () => {});
-
 const onSwiper = (event: any) => {
   slider.value = event;
 };
 
 function onSlideChange(event: any) {
-  console.log(event.activeIndex);
+  /*   console.log(event.activeIndex); */
+}
+
+async function nextStep() {
+  const { coords } = useGeolocation();
+  if (slider.value.activeIndex === 2 && coords.value) {
+    /*     const latitude = coords.value.latitude;
+    const longitude = coords.value.longitude; */
+
+    await savePhotoInStorage(photosDraft.value[0].photo as Photo);
+
+    await createMarker(
+      spotName.value,
+      String(photos.value[0]?.webviewPath),
+      new GeoPoint(48.8588377, 2.2770206),
+      String(user.value?.id),
+      address.value
+    );
+
+    router.back();
+  } else {
+    slider.value.slideNext();
+  }
 }
 </script>
 
@@ -59,7 +92,7 @@ function onSlideChange(event: any) {
         >
           <swiper-slide><StepLocation /></swiper-slide>
           <swiper-slide><StepAddPhotos /></swiper-slide>
-          <swiper-slide>Slide 3</swiper-slide>
+          <swiper-slide><StepRecommendations /></swiper-slide>
         </swiper>
 
         <div class="action">
@@ -87,7 +120,7 @@ function onSlideChange(event: any) {
                     color="primary"
                     type="submit"
                     expand="full"
-                    @click="slider.slideNext()"
+                    @click="nextStep"
                   >
                     Continuer
                   </ion-button>

@@ -1,47 +1,63 @@
+import { Spot } from '@/models/spot.model';
 import {
   collection,
   doc,
   setDoc,
+  addDoc,
   updateDoc,
   deleteDoc,
   GeoPoint,
+  Timestamp,
 } from 'firebase/firestore';
 
 import { useCollection, useDocument, useFirestore } from 'vuefire';
-import { Marker } from '../models/marker.model';
+
 
 const firestore = useFirestore();
 
 export async function createMarker(
-  id: string,
   name: string,
   thumbnail: string,
-  location: GeoPoint
+  location: GeoPoint,
+  authorId: string,
+  address: string
 ) {
-  const markerRef = doc(collection(firestore, 'markers'), id);
+/*   const markerRef = doc(collection(firestore, 'spots'), id); */
+  const markerRef = collection(firestore, 'spots');
 
-  return await setDoc(markerRef, {
+  const createdAt = Timestamp.fromDate(new Date());
+
+  return await addDoc(markerRef, {
+    name,
+    thumbnail,
+    location,
+    authorId,
+    createdAt,
+    address
+  })
+
+/*   return await setDoc(markerRef, {
     id,
     name,
     thumbnail,
     location,
-  });
+  }); */
 }
 
 export function getAllMarkers() {
-  return useCollection<Marker>(collection(firestore, 'markers'));
+  return useCollection<Spot>(collection(firestore, 'spots'));
 }
 
 export function getMarkerId(id: string) {
-  return useDocument<Marker>(doc(firestore, `markers/${id}`));
+  return useDocument<Spot>(doc(firestore, `spots/${id}`));
 }
 
 export async function updateMarker(id: string, spotsCount: number) {
-  const markerRef = doc(collection(firestore, 'markers'), id);
+  const markerRef = doc(collection(firestore, 'spots'), id);
   return await updateDoc(markerRef, { spotsCount });
 }
 
 export async function removeMarker(id: string) {
-  const markerRef = doc(collection(firestore, 'markers'), id);
+  const markerRef = doc(collection(firestore, 'spots'), id);
   return await deleteDoc(markerRef);
 }

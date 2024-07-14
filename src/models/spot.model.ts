@@ -1,16 +1,17 @@
-import { GeoPoint } from "firebase/firestore";
-import { SpotPhoto } from "./spot.model";
+import { GeoPoint, Timestamp } from "firebase/firestore";
+import { PhotoSpot } from "./photoSpot.model";
 
 export interface Spot {
   id: string;
   name: string;
   thumbnail: string;
   authorId: string;
+  createdAt: Timestamp;
   location: GeoPoint;
   address: string;
   photosCount: number;
-  photos: SpotPhoto[];
-  tags: string[];
+  photos: PhotoSpot[];
+  tags?: string[];
   schedules?: string[];
   seasons?: string[];
 }
