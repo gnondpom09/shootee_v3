@@ -127,6 +127,9 @@ import {
   IonItemOptions,
   IonActionSheet,
   IonAlert,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from "@ionic/vue";
 
 // Import Swiper Vue.js components
@@ -166,6 +169,9 @@ app.component("ion-item-option", IonItemOption);
 app.component("ion-item-options", IonItemOptions);
 app.component("ion-action-sheet", IonActionSheet);
 app.component("ion-alert", IonAlert);
+app.component("ion-grid", IonGrid);
+app.component("ion-row", IonRow);
+app.component("ion-col", IonCol);
 
 app.use(VueFire, {
   firebaseApp,

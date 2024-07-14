@@ -146,6 +146,7 @@ export function useAutoComplete() {
       map.flyTo({ center: locality.geometry.location, zoom: 14 });
 
       const selectedLocality = document.getElementById(locality.public_id);
+
       if (selectedLocality) {
         selectedLocality.style.color = "blue";
       }

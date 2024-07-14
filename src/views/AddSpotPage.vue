@@ -1,44 +1,38 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { getUserById } from "@/services/user.service";
 import { useCurrentUser } from "vuefire";
-import StepLocation from "../components/StepLocation.vue";
 
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import StepLocation from "@/components/StepLocation.vue";
+
+import { Scrollbar, A11y, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/vue";
-import { useSwiper } from "swiper/vue";
 
-/* import "swiper/css";
-import "@ionic/vue/css/ionic-swiper.css"; */
 import "swiper/scss/navigation";
 import "swiper/scss/pagination";
 import "swiper/scss/scrollbar";
+import { useRouter } from "vue-router";
+import StepAddPhotos from "@/components/StepAddPhotos.vue";
 
 const currentUser = useCurrentUser();
+
+const router = useRouter();
 
 const user = getUserById(currentUser.value?.uid as string);
 
 const spotName = ref<string>("");
 
-const slideData = ref<any>([
-  { id: "1", name: "localisation" },
-  { id: "2", name: "ajout photos" },
-  { id: "3", name: "recommandations" },
-]);
+const slider = ref();
 
-const currentStep = ref<number>(1);
+onMounted(async () => {});
 
-function nextStep() {
-  console.log("valider");
-}
+const onSwiper = (event: any) => {
+  slider.value = event;
+};
 
 function onSlideChange(event: any) {
   console.log(event.activeIndex);
 }
-
-const onSwiper = (swiper: any) => {
-  console.log(swiper);
-};
 </script>
 
 <template>
@@ -47,7 +41,7 @@ const onSwiper = (swiper: any) => {
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-buttons slot="start">
-            <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+            <ion-button @click="router.back()">Fermer</ion-button>
           </ion-buttons>
         </ion-buttons>
         <ion-title class="oswald-title">SHOOTEE</ion-title>
@@ -55,32 +49,52 @@ const onSwiper = (swiper: any) => {
     </ion-header>
     <ion-content>
       <div v-if="user" class="container">
-        <!--         <StepLocation v-if="currentStep === 1" /> -->
-
         <swiper
-          :modules="[Navigation, Pagination, Scrollbar, A11y]"
-          navigation
-          :pagination="{ clickable: true }"
-          :scrollbar="{ draggable: true }"
+          class="swiper-no-swiping"
+          :modules="[Scrollbar, A11y, Navigation]"
+          :navigation="{ enabled: true, prevEl: '.myPrev', nextEl: '.myNext' }"
+          :scrollbar="{ draggable: false }"
           @slideChange="onSlideChange"
           @swiper="onSwiper"
         >
           <swiper-slide><StepLocation /></swiper-slide>
-          <swiper-slide>Slide 2</swiper-slide>
+          <swiper-slide><StepAddPhotos /></swiper-slide>
           <swiper-slide>Slide 3</swiper-slide>
         </swiper>
 
         <div class="action">
-          <ion-button
-            class="action"
-            block
-            color="primary"
-            type="submit"
-            expand="full"
-            @click="nextStep"
-          >
-            Continuer
-          </ion-button>
+          <!--           <SwiperControls /> -->
+          <div>
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <ion-button
+                    class="action"
+                    block
+                    color="primary"
+                    type="submit"
+                    expand="full"
+                    fill="clear"
+                    @click="slider.slidePrev()"
+                  >
+                    Retour
+                  </ion-button>
+                </ion-col>
+                <ion-col>
+                  <ion-button
+                    class="action"
+                    block
+                    color="primary"
+                    type="submit"
+                    expand="full"
+                    @click="slider.slideNext()"
+                  >
+                    Continuer
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
         </div>
       </div>
     </ion-content>

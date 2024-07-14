@@ -1,18 +1,21 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { UseGeolocation } from "@vueuse/components";
 import { useMap } from "@/composables/useMap";
 import { useGeolocation } from "@vueuse/core";
+import { useGeocode } from "@/composables/useGeocode";
 
-/* defineProps<{
-  photos: Image[];
-}>(); */
+/* const props = defineProps<{
+  latitude: string;
+  longitude: string;
+}>();
+const { latitude, longitude } = toRefs(props); */
 
 const { coords, resume } = useGeolocation();
 
+const { address, reverseGeocodeMarker } = useGeocode();
+
 const spotName = ref<string>("");
 
-const city = ref<string>("");
 const latitude = ref<string>("");
 const longitude = ref<string>("");
 
@@ -21,11 +24,11 @@ const initMap = useMap("map-add-spot");
 function localize() {
   const { setMarker } = initMap;
 
-  resume();
-
   if (coords.value.latitude && coords.value.longitude) {
     latitude.value = String(coords.value.latitude);
     longitude.value = String(coords.value.longitude);
+
+    reverseGeocodeMarker(coords.value.latitude, coords.value.longitude);
 
     setMarker(coords.value.latitude, coords.value.longitude);
   }
@@ -85,15 +88,12 @@ function localize() {
       </ion-item>
     </div>
 
-    <div v-if="latitude && longitude" id="geolocation-section">
-      <h5>Montferrier</h5>
+    <div v-if="latitude && longitude && address" id="geolocation-section">
+      <h5>{{ address }}</h5>
       <p class="location-info">
         <span> Latitude : {{ coords.latitude }} </span>
         <span> Longitude : {{ coords.longitude }} </span>
       </p>
-      <!--       <UseGeolocation v-slot="{ coords: { latitude, longitude } }">
-        Latitude: {{ latitude }} Longitude: {{ longitude }}
-      </UseGeolocation> -->
     </div>
 
     <div id="map-add-spot"></div>

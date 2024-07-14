@@ -1,22 +1,22 @@
-import { ref } from 'vue';
+import { ref } from "vue";
 import {
   Camera,
   CameraResultType,
   CameraSource,
   GalleryPhoto,
   Photo,
-} from '@capacitor/camera';
-import { Image } from '../models/spot.model';
-import { useStorageFile, useFirebaseStorage } from 'vuefire';
-import { ref as storageRef } from 'firebase/storage';
-import { updateAvatar } from '../services/user.service';
-import { isPlatform } from '@ionic/vue';
+} from "@capacitor/camera";
+import { Image } from "../models/spotPhoto.model";
+import { useStorageFile, useFirebaseStorage } from "vuefire";
+import { ref as storageRef } from "firebase/storage";
+import { updateAvatar } from "../services/user.service";
+import { isPlatform } from "@ionic/vue";
 // import { Capacitor } from '@capacitor/core';
-import { Filesystem } from '@capacitor/filesystem';
+import { Filesystem } from "@capacitor/filesystem";
 
 const photos = ref<Image[]>([]);
 
-function b64toBlob(b64Data: string, contentType = '', sliceSize = 512) {
+function b64toBlob(b64Data: string, contentType = "", sliceSize = 512) {
   const byteCharacters = atob(b64Data);
   const byteArrays = [];
 
@@ -51,7 +51,7 @@ export async function getBase64(photo: Photo): Promise<string> {
 export const usePhotoGallery = () => {
   const storage = useFirebaseStorage();
 
-  async function getPhotoFormLibrary(userId?: string): Promise<void> {
+  async function getPhotoFromLibrary(userId?: string): Promise<void> {
     try {
       const photo = (await Camera.getLimitedLibraryPhotos()).photos[0];
 
@@ -87,7 +87,7 @@ export const usePhotoGallery = () => {
     try {
       let blob: Blob;
 
-      const fileName = Date.now() + '.jpeg';
+      const fileName = Date.now() + ".jpeg";
 
       const savedFileImage = {
         filepath: fileName,
@@ -96,11 +96,11 @@ export const usePhotoGallery = () => {
 
       const imageFileRef = storageRef(storage, `test/${fileName}`);
 
-      if (isPlatform('hybrid')) {
+      if (isPlatform("hybrid")) {
         const file = await Filesystem.readFile({
           path: photo.path!,
         });
-        blob = b64toBlob(file.data as string, 'image/jpeg');
+        blob = b64toBlob(file.data as string, "image/jpeg");
       } else {
         const response = await fetch(photo.webPath!);
         blob = await response.blob();
@@ -126,6 +126,6 @@ export const usePhotoGallery = () => {
   return {
     photos,
     takePhoto,
-    getPhotoFormLibrary,
+    getPhotoFromLibrary,
   };
 };

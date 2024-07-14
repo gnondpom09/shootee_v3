@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { getUserById } from '@/services/user.service';
-import { useCurrentUser } from 'vuefire';
-import { UseGeolocation } from '@vueuse/components';
-import { Image } from '../models/spot.model';
+import { getUserById } from "@/services/user.service";
+import { useCurrentUser } from "vuefire";
+import { UseGeolocation } from "@vueuse/components";
+import { Image } from "../models/spotPhoto.model";
 
 defineProps<{
   photos: Image[];
@@ -13,7 +13,7 @@ const currentUser = useCurrentUser();
 const user = getUserById(currentUser.value?.uid as string);
 
 function submit() {
-  console.log('valider');
+  console.log("valider");
 }
 </script>
 

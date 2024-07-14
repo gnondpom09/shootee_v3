@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { getAllUsers, getUserById, removeUser } from '@/services/user.service';
-import { useRouter } from 'vue-router';
-import { useCurrentUser } from 'vuefire';
+import { getAllUsers, getUserById, removeUser } from "@/services/user.service";
+import { useRouter } from "vue-router";
+import { useCurrentUser } from "vuefire";
 
-import { ActionSheetOptions, IonActionSheet } from '@ionic/vue';
+import { ActionSheetOptions, IonActionSheet } from "@ionic/vue";
 
-import { usePhotoGallery } from '@/composables/usePhotoGallery';
+import { usePhotoGallery } from "@/composables/usePhotoGallery";
 
-const { takePhoto, photos, getPhotoFormLibrary } = usePhotoGallery();
+const { takePhoto, photos, getPhotoFromLibrary } = usePhotoGallery();
 
 const router = useRouter();
 
@@ -18,36 +18,36 @@ const users = getAllUsers();
 const user = getUserById(currentUser.value?.uid as string);
 
 const actionSheet: ActionSheetOptions = {
-  header: 'Modifier mon avatar',
+  header: "Modifier mon avatar",
   buttons: [
     {
-      text: 'Prendre une photo',
+      text: "Prendre une photo",
       handler: () => {
         changeAvatarFromPhoto();
       },
     },
     {
-      text: 'Ouvrir la bibliothèque',
+      text: "Ouvrir la bibliothèque",
       handler: () => {
         changeAvatarFromLibrary();
       },
     },
     {
-      text: 'Cancel',
-      role: 'cancel',
+      text: "Cancel",
+      role: "cancel",
       data: {
-        action: 'cancel',
+        action: "cancel",
       },
     },
   ],
 };
 
 function goToAccount() {
-  router.push('/account');
+  router.push("/account");
 }
 
 function goToSettings() {
-  router.push('/settings');
+  router.push("/settings");
 }
 
 function changeAvatarFromPhoto() {
@@ -59,7 +59,7 @@ function changeAvatarFromPhoto() {
 
 function changeAvatarFromLibrary() {
   if (user.value) {
-    getPhotoFormLibrary(user.value.id);
+    getPhotoFromLibrary(user.value.id);
     user.value.avatar = photos.value[0]?.webviewPath ?? user.value.avatar;
   }
 }
