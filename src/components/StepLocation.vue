@@ -8,18 +8,25 @@ import { useGeolocation } from "@vueuse/core";
   photos: Image[];
 }>(); */
 
-const { coords } = useGeolocation();
+const { coords, resume } = useGeolocation();
 
 const spotName = ref<string>("");
 
 const city = ref<string>("");
+const latitude = ref<string>("");
+const longitude = ref<string>("");
 
 const initMap = useMap("map-add-spot");
 
 function localize() {
   const { setMarker } = initMap;
 
+  resume();
+
   if (coords.value.latitude && coords.value.longitude) {
+    latitude.value = String(coords.value.latitude);
+    longitude.value = String(coords.value.longitude);
+
     setMarker(coords.value.latitude, coords.value.longitude);
   }
 }
@@ -78,10 +85,15 @@ function localize() {
       </ion-item>
     </div>
 
-    <div id="geolocation-section">
-      <UseGeolocation v-slot="{ coords: { latitude, longitude } }">
+    <div v-if="latitude && longitude" id="geolocation-section">
+      <h5>Montferrier</h5>
+      <p class="location-info">
+        <span> Latitude : {{ coords.latitude }} </span>
+        <span> Longitude : {{ coords.longitude }} </span>
+      </p>
+      <!--       <UseGeolocation v-slot="{ coords: { latitude, longitude } }">
         Latitude: {{ latitude }} Longitude: {{ longitude }}
-      </UseGeolocation>
+      </UseGeolocation> -->
     </div>
 
     <div id="map-add-spot"></div>
@@ -89,6 +101,9 @@ function localize() {
 </template>
 
 <style scoped lang="scss">
+.add-form {
+  height: 100%;
+}
 .location-form {
   display: flex;
   flex-direction: column;
@@ -102,9 +117,17 @@ function localize() {
 }
 #map-add-spot {
   height: 33%;
-  width: 100%;
+  width: 92%;
   position: absolute;
   left: 0;
-  bottom: 22%;
+  bottom: 8%;
+  margin: 4%;
+}
+
+.location-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-weight: 300;
 }
 </style>

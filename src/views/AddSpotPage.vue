@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { getUserById } from "@/services/user.service";
-import { UseGeolocation } from "@vueuse/components";
 import { useCurrentUser } from "vuefire";
 import StepLocation from "../components/StepLocation.vue";
-import { useMap } from "../composables/useMap";
-import { API_KEY_WOOSMAP } from "../constants/map";
 
-/* import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
- */ import { Swiper, SwiperSlide } from "swiper/vue";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { useSwiper } from "swiper/vue";
 
 /* import "swiper/css";
 import "@ionic/vue/css/ionic-swiper.css"; */
+import "swiper/scss/navigation";
+import "swiper/scss/pagination";
+import "swiper/scss/scrollbar";
 
 const currentUser = useCurrentUser();
 
@@ -34,6 +35,10 @@ function nextStep() {
 function onSlideChange(event: any) {
   console.log(event.activeIndex);
 }
+
+const onSwiper = (swiper: any) => {
+  console.log(swiper);
+};
 </script>
 
 <template>
@@ -53,13 +58,14 @@ function onSlideChange(event: any) {
         <!--         <StepLocation v-if="currentStep === 1" /> -->
 
         <swiper
-          :pagination="true"
-          :scrollbar="true"
-          :zoom="true"
-          :keyboard="true"
-          @slideChange="onSlideChange($event)"
+          :modules="[Navigation, Pagination, Scrollbar, A11y]"
+          navigation
+          :pagination="{ clickable: true }"
+          :scrollbar="{ draggable: true }"
+          @slideChange="onSlideChange"
+          @swiper="onSwiper"
         >
-          <swiper-slide>Slide 1</swiper-slide>
+          <swiper-slide><StepLocation /></swiper-slide>
           <swiper-slide>Slide 2</swiper-slide>
           <swiper-slide>Slide 3</swiper-slide>
         </swiper>
@@ -82,12 +88,14 @@ function onSlideChange(event: any) {
 </template>
 
 <style scoped lang="scss">
-.container {
+.swiper {
+  display: flex;
+  height: 90%;
 }
 
 .action {
-  position: absolute;
+  /*   position: absolute;
   bottom: 0;
-  width: 100%;
+  width: 90%; */
 }
 </style>
