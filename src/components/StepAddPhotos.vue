@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { ActionSheetOptions, IonActionSheet } from "@ionic/vue";
 
-const { takePhoto, photos, getPhotoFromLibrary } = usePhotoGallery();
+const { takePhoto, photosDraft, getPhotoFromLibrary } = usePhotoGallery();
 
 const actionSheet: ActionSheetOptions = {
   header: "Modifier mon avatar",
@@ -11,6 +11,7 @@ const actionSheet: ActionSheetOptions = {
     {
       text: "Prendre une photo",
       handler: () => {
+        takePhoto();
         /*         changeAvatarFromPhoto();
          */
       },
@@ -38,20 +39,20 @@ const actionSheet: ActionSheetOptions = {
     <div class="step">
       <div class="galery">
         <h2>Ajouter des photos</h2>
-        <!--         <ion-fab vertical="start" horizontal="center">
-          <ion-fab-button @click="takePhoto">
+        <ion-fab vertical="start" horizontal="center">
+          <ion-fab-button id="open-action-photo-spot">
             <ion-icon name="camera"></ion-icon>
           </ion-fab-button>
-        </ion-fab> -->
-        <ion-button id="open-action-sheet" expand="full">
+        </ion-fab>
+        <!-- <ion-button id="open-action-sheet" expand="full">
           test photo
-        </ion-button>
+        </ion-button> -->
         <p>Sélectionnez une ou plusieurs photos a ajouter sur ce spot</p>
       </div>
 
       <ion-grid class="photos-preview">
         <ion-row>
-          <ion-col size="6" :key="photo.filepath" v-for="photo in photos">
+          <ion-col size="6" :key="photo.filepath" v-for="photo in photosDraft">
             <ion-img :src="photo.webviewPath"></ion-img>
           </ion-col>
         </ion-row>
@@ -59,7 +60,7 @@ const actionSheet: ActionSheetOptions = {
     </div>
 
     <ion-action-sheet
-      trigger="open-action-sheet"
+      trigger="open-action-photo-spot"
       :header="actionSheet.header"
       :buttons="actionSheet.buttons"
     ></ion-action-sheet>

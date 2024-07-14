@@ -15,6 +15,7 @@ import { isPlatform } from "@ionic/vue";
 import { Filesystem } from "@capacitor/filesystem";
 
 const photos = ref<Image[]>([]);
+const photosDraft = ref<Image[]>([]);
 
 function b64toBlob(b64Data: string, contentType = "", sliceSize = 512) {
   const byteCharacters = atob(b64Data);
@@ -53,35 +54,49 @@ export const usePhotoGallery = () => {
 
   async function getPhotoFromLibrary(userId?: string): Promise<void> {
     try {
-      const photo = (await Camera.getLimitedLibraryPhotos()).photos[0];
+      const photo: GalleryPhoto = (await Camera.getLimitedLibraryPhotos()).photos[0];
 
       if (userId) {
-        savePhoto(userId, photo);
+        savePhotoInStorage(photo);
       }
     } catch {
       photos.value = [...photos.value];
     }
   }
 
-  async function takePhoto(userId?: string): Promise<void> {
+  async function takePhoto(): Promise<Photo | undefined> {
     try {
-      const photo = await Camera.getPhoto({
+      const photo: Photo = await Camera.getPhoto({
         resultType: CameraResultType.Uri,
         allowEditing: true,
         source: CameraSource.Camera,
         quality: 100,
       });
 
-      if (userId) {
-        await savePhoto(userId, photo);
-      }
+      const fileName = Date.now() + ".jpeg";
+
+      const savedFileImage = {
+        filepath: fileName,
+        webviewPath: photo.webPath,
+      };
+
+      photosDraft.value = [savedFileImage, ...photosDraft.value];
+
+      return photo;
     } catch {
-      photos.value = [...photos.value];
+      photosDraft.value = [...photosDraft.value];
     }
   }
 
-  async function savePhoto(
-    userId: string,
+  async function takePhotoAndSave(): Promise<void> {
+    const photo = await takePhoto();
+    
+    if (photo) {
+      await savePhotoInStorage(photo);
+    }
+  }
+
+  async function savePhotoInStorage(
     photo: Photo | GalleryPhoto
   ): Promise<void> {
     try {
@@ -121,7 +136,10 @@ export const usePhotoGallery = () => {
       await upload(blob);
       await refresh();
 
-      savedFileImage.webviewPath = url.value;
+      if (url.value) {
+        savedFileImage.webviewPath = url.value;
+      }
+
       photos.value = [savedFileImage, ...photos.value];
     } catch {
       photos.value = [...photos.value];
@@ -130,7 +148,9 @@ export const usePhotoGallery = () => {
 
   return {
     photos,
+    photosDraft,
     takePhoto,
+    takePhotoAndSave,
     getPhotoFromLibrary,
   };
 };

@@ -9,9 +9,9 @@ interface UseGeocode {
 export function useGeocode(): UseGeocode {
   const address = ref<string>("");
 
-  function reverseGeocode(lat_lng, API_KEY_WOOSMAP) {
+  function reverseGeocode(lat_lng: string, apiKey: string) {
     const args = {
-      key: API_KEY_WOOSMAP,
+      key: apiKey,
       latlng: lat_lng,
     };
 
@@ -20,7 +20,7 @@ export function useGeocode(): UseGeocode {
     ).then((response) => response.json());
   }
 
-  function buildQueryString(params) {
+  function buildQueryString(params: any) {
     const queryStringParts = [];
 
     for (let key in params) {
