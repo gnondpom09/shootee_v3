@@ -9,7 +9,7 @@ import {
 import { Image } from "../models/spotPhoto.model";
 import { useStorageFile, useFirebaseStorage } from "vuefire";
 import { ref as storageRef } from "firebase/storage";
-import { updateAvatar } from "../services/user.service";
+/* import { updateAvatar } from "../services/user.service"; */
 import { isPlatform } from "@ionic/vue";
 // import { Capacitor } from '@capacitor/core';
 import { Filesystem } from "@capacitor/filesystem";
@@ -73,7 +73,7 @@ export const usePhotoGallery = () => {
       });
 
       if (userId) {
-        savePhoto(userId, photo);
+        await savePhoto(userId, photo);
       }
     } catch {
       photos.value = [...photos.value];
@@ -106,17 +106,22 @@ export const usePhotoGallery = () => {
         blob = await response.blob();
       }
 
-      const { url, upload } = await useStorageFile(imageFileRef);
+      const { url, upload, refresh } = await useStorageFile(imageFileRef);
 
-      upload(blob)?.then(() => {
+      // TODO: await and generic function
+      /*       upload(blob)?.then(() => {
         setTimeout(() => {
           if (url.value) {
             updateAvatar(userId, url.value);
             savedFileImage.webviewPath = url.value;
           }
         }, 800);
-      });
+      }); */
 
+      await upload(blob);
+      await refresh();
+
+      savedFileImage.webviewPath = url.value;
       photos.value = [savedFileImage, ...photos.value];
     } catch {
       photos.value = [...photos.value];

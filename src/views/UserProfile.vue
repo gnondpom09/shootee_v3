@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { getAllUsers, getUserById, removeUser } from "@/services/user.service";
+import {
+  getAllUsers,
+  getUserById,
+  removeUser,
+  updateAvatar,
+} from "@/services/user.service";
 import { useRouter } from "vue-router";
 import { useCurrentUser } from "vuefire";
 
@@ -50,10 +55,12 @@ function goToSettings() {
   router.push("/settings");
 }
 
-function changeAvatarFromPhoto() {
+async function changeAvatarFromPhoto() {
   if (user.value) {
-    takePhoto(user.value.id);
+    await takePhoto(user.value.id);
+
     user.value.avatar = photos.value[0]?.webviewPath ?? user.value.avatar;
+    updateAvatar(user.value.id, user.value.avatar);
   }
 }
 
