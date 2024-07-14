@@ -82,7 +82,7 @@ onMounted(() => {
 
 function initMap(): void {
   map = new woosmap.map.Map(document.getElementById("map") as HTMLElement, {
-    center: { lat: 42.895328519999985, lng: 1.7943832799999995 },
+    center: { lat: 42.895328519999985, lng: 1.7943832799999995 }, // TODO condition geolocation active
     zoom: 10,
     disableDefaultUI: false,
     styles: [

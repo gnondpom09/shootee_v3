@@ -7,6 +7,12 @@ import StepLocation from "../components/StepLocation.vue";
 import { useMap } from "../composables/useMap";
 import { API_KEY_WOOSMAP } from "../constants/map";
 
+/* import { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from "swiper";
+ */ import { Swiper, SwiperSlide } from "swiper/vue";
+
+/* import "swiper/css";
+import "@ionic/vue/css/ionic-swiper.css"; */
+
 const currentUser = useCurrentUser();
 
 const user = getUserById(currentUser.value?.uid as string);
@@ -24,6 +30,10 @@ const currentStep = ref<number>(1);
 function nextStep() {
   console.log("valider");
 }
+
+function onSlideChange(event: any) {
+  console.log(event.activeIndex);
+}
 </script>
 
 <template>
@@ -40,7 +50,19 @@ function nextStep() {
     </ion-header>
     <ion-content>
       <div v-if="user" class="container">
-        <StepLocation v-if="currentStep === 1" />
+        <!--         <StepLocation v-if="currentStep === 1" /> -->
+
+        <swiper
+          :pagination="true"
+          :scrollbar="true"
+          :zoom="true"
+          :keyboard="true"
+          @slideChange="onSlideChange($event)"
+        >
+          <swiper-slide>Slide 1</swiper-slide>
+          <swiper-slide>Slide 2</swiper-slide>
+          <swiper-slide>Slide 3</swiper-slide>
+        </swiper>
 
         <div class="action">
           <ion-button
@@ -67,16 +89,5 @@ function nextStep() {
   position: absolute;
   bottom: 0;
   width: 100%;
-}
-
-.swiper-slide {
-  padding: 12px;
-  text-align: center;
-  font-size: 28px;
-  background: #fff;
-}
-.swiper-container {
-  width: 100%;
-  height: 50%;
 }
 </style>

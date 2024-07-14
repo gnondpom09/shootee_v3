@@ -133,7 +133,8 @@ import {
 import { Swiper, SwiperSlide } from "swiper/vue";
 
 // Import Swiper styles
-/* import "swiper/swiper.scss"; */
+import "swiper/scss";
+import "@ionic/vue/css/ionic-swiper.css";
 
 const app = createApp(App).use(IonicVue).use(router);
 
