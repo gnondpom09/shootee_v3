@@ -9,7 +9,6 @@ import {
 import { Image } from "../models/photoSpot.model";
 import { useStorageFile, useFirebaseStorage } from "vuefire";
 import { ref as storageRef } from "firebase/storage";
-/* import { updateAvatar } from "../services/user.service"; */
 import { isPlatform } from "@ionic/vue";
 // import { Capacitor } from '@capacitor/core';
 import { Filesystem } from "@capacitor/filesystem";
@@ -123,16 +122,6 @@ export const usePhotoGallery = () => {
 
       const { url, upload, refresh } = await useStorageFile(imageFileRef);
 
-      // TODO: await and generic function
-      /*       upload(blob)?.then(() => {
-        setTimeout(() => {
-          if (url.value) {
-            updateAvatar(userId, url.value);
-            savedFileImage.webviewPath = url.value;
-          }
-        }, 800);
-      }); */
-
       await upload(blob);
       await refresh();
 
@@ -146,6 +135,11 @@ export const usePhotoGallery = () => {
     }
   }
 
+  function resetPhotos(): void {
+    photos.value = [];
+    photosDraft.value = [];
+  }
+
   return {
     photos,
     photosDraft,
@@ -153,5 +147,6 @@ export const usePhotoGallery = () => {
     takePhotoAndSave,
     savePhotoInStorage,
     getPhotoFromLibrary,
+    resetPhotos,
   };
 };

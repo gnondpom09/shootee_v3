@@ -1,8 +1,9 @@
-import { ref, Ref, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { API_KEY_WOOSMAP, MAP_STYLES } from "../constants/map";
 
 interface UseMap {
   initMap: () => void;
+  resetMap: () => void;
   setMarker: (latitude: number, longitude: number) => void;
 }
 
@@ -44,17 +45,19 @@ export function useMap(elementId: string): UseMap {
     });
     marker.setMap(map);
 
-    console.log(latitude);
-    console.log(longitude);
-
     map.flyTo({
       center: { lat: latitude, lng: longitude },
       zoom: 14,
     });
   }
 
+  function resetMap(): void {
+    map = {} as woosmap.map.Map;
+  }
+
   return {
     initMap,
+    resetMap,
     setMarker,
   };
 }

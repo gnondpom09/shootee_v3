@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-
+import { getAllMarkers } from "@/services/marker.service";
 import { API_KEY_WOOSMAP } from "../constants/map";
-import { useGeolocation } from "@vueuse/core";
-// import SearchContainer from '@/components/SearchContainer.vue';
-
-// const { coords } = useGeolocation();
+import { useMarkers } from "@/composables/useMarkers";
 
 type DebouncePromiseFunction<T, Args extends any[]> = (
   ...args: Args
@@ -21,6 +18,8 @@ let debouncedLocalitiesAutocomplete: (...args: any[]) => Promise<any>;
 const inputElement = ref<HTMLInputElement | null>(null);
 const suggestionsList = ref<HTMLUListElement | null>(null);
 const clearSearchBtn = ref<HTMLButtonElement | null>(null);
+
+const { setMarkersOnMap } = useMarkers();
 
 onMounted(() => {
   const script = document.createElement("script");
@@ -82,8 +81,8 @@ onMounted(() => {
 
 function initMap(): void {
   map = new woosmap.map.Map(document.getElementById("map") as HTMLElement, {
-    center: { lat: 42.895328519999985, lng: 1.7943832799999995 }, // TODO condition geolocation active
-    zoom: 10,
+    // center: { lat: 42.895328519999985, lng: 1.7943832799999995 }, // TODO condition geolocation active
+    zoom: 5,
     disableDefaultUI: false,
     styles: [
       {
@@ -115,17 +114,7 @@ function initMap(): void {
     ],
   });
 
-  const currentMarker = new woosmap.map.Marker({
-    position: map.getCenter(),
-    icon: {
-      url: "https://images.woosmap.com/marker.png",
-      scaledSize: {
-        height: 50,
-        width: 32,
-      },
-    },
-  });
-  currentMarker.setMap(map);
+  setMarkersOnMap(map);
 
   infoWindow = new woosmap.map.InfoWindow({});
   localitiesService = new window.woosmap.map.LocalitiesService();
@@ -213,6 +202,7 @@ function displayLocality(
     map.flyTo({ center: locality.geometry.location, zoom: 14 });
 
     const selectedLocality = document.getElementById(locality.public_id);
+
     if (selectedLocality) {
       selectedLocality.style.color = "blue";
     }

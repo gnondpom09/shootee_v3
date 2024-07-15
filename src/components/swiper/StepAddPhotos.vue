@@ -12,8 +12,6 @@ const actionSheet: ActionSheetOptions = {
       text: "Prendre une photo",
       handler: () => {
         takePhoto();
-        /*         changeAvatarFromPhoto();
-         */
       },
     },
     {
@@ -44,9 +42,6 @@ const actionSheet: ActionSheetOptions = {
             <ion-icon name="camera"></ion-icon>
           </ion-fab-button>
         </ion-fab>
-        <!-- <ion-button id="open-action-sheet" expand="full">
-          test photo
-        </ion-button> -->
         <p>Sélectionnez une ou plusieurs photos a ajouter sur ce spot</p>
       </div>
 

@@ -1,14 +1,25 @@
 import { ref, Ref } from "vue";
 import { API_KEY_WOOSMAP } from "../constants/map";
+import { useMarkers } from "@/composables/useMarkers";
 
 interface UseGeocode {
+  spotName: Ref<string>;
   address: Ref<string>;
+  latitude: Ref<number | null>;
+  longitude: Ref<number | null>;
+  setCoordonates: (latitude: number, longitude: number) => void;
+  resetCoordonates: () => void;
   reverseGeocodeMarker: (latitude: number, longitude: number) => void;
 }
 
-export function useGeocode(): UseGeocode {
-  const address = ref<string>("");
+const spotName = ref<string>("");
+const address = ref<string>("");
+const latitude = ref<number | null>(null);
+const longitude = ref<number | null>(null);
 
+const { removeMarker } = useMarkers();
+
+export function useGeocode(): UseGeocode {
   function reverseGeocode(lat_lng: string, apiKey: string) {
     const args = {
       key: apiKey,
@@ -43,27 +54,39 @@ export function useGeocode(): UseGeocode {
 
         address.value = result.formatted_address;
 
-        console.log(address.value);
-
         if (
           addressDetails.results == null ||
           addressDetails.results.length === 0
         ) {
           return;
         }
-
-        let lat = result.geometry.location.lat;
-        let lng = result.geometry.location.lng;
-        let markerPosition = {
-          lat,
-          lng,
-        };
       }
     );
   }
 
+  function setCoordonates(lat: number, lng: number): void {
+    latitude.value = lat;
+    longitude.value = lng;
+  }
+
+  function resetCoordonates(): void {
+    if (latitude.value && longitude.value) {
+      removeMarker(latitude.value, longitude.value);
+    }
+
+    latitude.value = null;
+    longitude.value = null;
+    address.value = "";
+    spotName.value = "";
+  }
+
   return {
+    spotName,
     address,
+    latitude,
+    longitude,
+    setCoordonates,
+    resetCoordonates,
     reverseGeocodeMarker,
   };
 }

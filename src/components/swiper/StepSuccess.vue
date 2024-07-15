@@ -1,0 +1,9 @@
+<script setup lang="ts">
+// imports
+</script>
+
+<template>
+  <h1>Félicitations</h1>
+</template>
+
+<style scoped lang="scss"></style>

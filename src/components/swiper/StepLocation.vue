@@ -4,29 +4,22 @@ import { useMap } from "@/composables/useMap";
 import { useGeolocation } from "@vueuse/core";
 import { useGeocode } from "@/composables/useGeocode";
 
-/* const props = defineProps<{
-  latitude: string;
-  longitude: string;
-}>();
-const { latitude, longitude } = toRefs(props); */
+const { coords } = useGeolocation();
 
-const { coords, resume } = useGeolocation();
+const {
+  spotName,
+  address,
+  reverseGeocodeMarker,
+  setCoordonates,
+  latitude,
+  longitude,
+} = useGeocode();
 
-const { address, reverseGeocodeMarker } = useGeocode();
-
-const spotName = ref<string>("");
-
-const latitude = ref<string>("");
-const longitude = ref<string>("");
-
-const initMap = useMap("map-add-spot");
+const { setMarker } = useMap("map-add-spot");
 
 function localize() {
-  const { setMarker } = initMap;
-
   if (coords.value.latitude && coords.value.longitude) {
-    latitude.value = String(coords.value.latitude);
-    longitude.value = String(coords.value.longitude);
+    setCoordonates(coords.value.latitude, coords.value.longitude);
 
     reverseGeocodeMarker(coords.value.latitude, coords.value.longitude);
 

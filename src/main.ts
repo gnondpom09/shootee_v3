@@ -130,6 +130,8 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonSegment,
+  IonSegmentButton,
 } from "@ionic/vue";
 
 // Import Swiper Vue.js components
@@ -172,6 +174,8 @@ app.component("ion-alert", IonAlert);
 app.component("ion-grid", IonGrid);
 app.component("ion-row", IonRow);
 app.component("ion-col", IonCol);
+app.component("ion-segment", IonSegment);
+app.component("ion-segment-button", IonSegmentButton);
 
 app.use(VueFire, {
   firebaseApp,
@@ -190,7 +194,7 @@ router.isReady().then(() => {
   app.mount("#app");
 });
 
-const API_KEY_WOOSMAP = "woos-fc8fe374-edf7-3d11-86b2-7e787c73d350";
+/* const API_KEY_WOOSMAP = "woos-fc8fe374-edf7-3d11-86b2-7e787c73d350";
 
 fetch(
   "https://api.woosmap.com/localities/autocomplete/?input=Lond&components=country%3Agb&no_deprecated_fields=true&key=" +
@@ -198,4 +202,4 @@ fetch(
 )
   .then((response) => response.text())
   .then((result) => console.log(result))
-  .catch((error) => console.log("error", error));
+  .catch((error) => console.log("error", error)); */

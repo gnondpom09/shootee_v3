@@ -13,19 +13,22 @@ import { Photo } from "@capacitor/camera";
 import StepLocation from "@/components/swiper/StepLocation.vue";
 import StepAddPhotos from "@/components/swiper/StepAddPhotos.vue";
 import StepRecommendations from "@/components/swiper/StepRecommendations.vue";
+import SwiperControls from "@/components/SwiperControls.vue";
 
 import { Scrollbar, A11y, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/vue";
 
 import { useRouter } from "vue-router";
 
-const { photos, photosDraft, savePhotoInStorage } = usePhotoGallery();
-
-const { address } = useGeocode();
-
 import "swiper/scss/navigation";
 import "swiper/scss/pagination";
 import "swiper/scss/scrollbar";
+
+const { photos, photosDraft, savePhotoInStorage, resetPhotos } =
+  usePhotoGallery();
+
+const { spotName, address, latitude, longitude, resetCoordonates } =
+  useGeocode();
 
 const currentUser = useCurrentUser();
 
@@ -33,38 +36,42 @@ const router = useRouter();
 
 const user = getUserById(currentUser.value?.uid as string);
 
-const spotName = ref<string>("");
-
 const slider = ref();
 
 const onSwiper = (event: any) => {
   slider.value = event;
 };
 
-function onSlideChange(event: any) {
-  /*   console.log(event.activeIndex); */
-}
-
 async function nextStep() {
   const { coords } = useGeolocation();
-  if (slider.value.activeIndex === 2 && coords.value) {
-    /*     const latitude = coords.value.latitude;
-    const longitude = coords.value.longitude; */
 
+  if (slider.value.activeIndex === 2 && coords.value) {
     await savePhotoInStorage(photosDraft.value[0].photo as Photo);
 
-    await createMarker(
-      spotName.value,
-      String(photos.value[0]?.webviewPath),
-      new GeoPoint(48.8588377, 2.2770206),
-      String(user.value?.id),
-      address.value
-    );
+    if (latitude.value && longitude.value) {
+      await createMarker(
+        spotName.value,
+        String(photos.value[0]?.webviewPath),
+        new GeoPoint(latitude.value, longitude.value),
+        String(user.value?.id),
+        address.value
+      );
+    }
 
-    router.back();
+    closeAddForm();
   } else {
     slider.value.slideNext();
   }
+}
+
+function closeAddForm() {
+  router.back();
+  clearDatas();
+}
+
+function clearDatas() {
+  resetCoordonates();
+  resetPhotos();
 }
 </script>
 
@@ -74,20 +81,19 @@ async function nextStep() {
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-buttons slot="start">
-            <ion-button @click="router.back()">Fermer</ion-button>
+            <ion-button @click="closeAddForm">Fermer</ion-button>
           </ion-buttons>
         </ion-buttons>
         <ion-title class="oswald-title">SHOOTEE</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <div v-if="user" class="container">
+      <div class="container">
         <swiper
           class="swiper-no-swiping"
           :modules="[Scrollbar, A11y, Navigation]"
           :navigation="{ enabled: true, prevEl: '.myPrev', nextEl: '.myNext' }"
           :scrollbar="{ draggable: false }"
-          @slideChange="onSlideChange"
           @swiper="onSwiper"
         >
           <swiper-slide><StepLocation /></swiper-slide>
@@ -95,39 +101,8 @@ async function nextStep() {
           <swiper-slide><StepRecommendations /></swiper-slide>
         </swiper>
 
-        <div class="action">
-          <!--           <SwiperControls /> -->
-          <div>
-            <ion-grid>
-              <ion-row>
-                <ion-col>
-                  <ion-button
-                    class="action"
-                    block
-                    color="primary"
-                    type="submit"
-                    expand="full"
-                    fill="clear"
-                    @click="slider.slidePrev()"
-                  >
-                    Retour
-                  </ion-button>
-                </ion-col>
-                <ion-col>
-                  <ion-button
-                    class="action"
-                    block
-                    color="primary"
-                    type="submit"
-                    expand="full"
-                    @click="nextStep"
-                  >
-                    Continuer
-                  </ion-button>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </div>
+        <div class="actions">
+          <SwiperControls :slider="slider" @nextStep="nextStep" />
         </div>
       </div>
     </ion-content>
@@ -138,11 +113,5 @@ async function nextStep() {
 .swiper {
   display: flex;
   height: 90%;
-}
-
-.action {
-  /*   position: absolute;
-  bottom: 0;
-  width: 90%; */
 }
 </style>
