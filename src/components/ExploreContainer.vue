@@ -198,7 +198,6 @@ function displayLocality(
     );
 
     infoWindow.open(map, marker);
-    console.log(locality.geometry.location);
     map.flyTo({ center: locality.geometry.location, zoom: 14 });
 
     const selectedLocality = document.getElementById(locality.public_id);
@@ -353,5 +352,11 @@ function debouncePromise<T, Args extends any[]>(
 
 #app {
   height: 100%;
+}
+
+.info-content {
+  background-color: white;
+  width: 300px;
+  height: 100px;
 }
 </style>

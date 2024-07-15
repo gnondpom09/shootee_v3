@@ -46,8 +46,6 @@ export function useMarkers(): UseMarkers {
 
     if (spots.value) {
       spots.value.forEach((spot, index) => {
-        console.log(spot.location);
-
         const center = {
           lat: spot.location.latitude,
           lng: spot.location.longitude,
@@ -65,13 +63,39 @@ export function useMarkers(): UseMarkers {
         });
 
         const infoWindow = new woosmap.map.InfoWindow({});
-        infoWindow.setContent(
-          `<span id="${index}-${spot.createdAt}">${spot.address}</span>`
-        );
-        // infoWindow.open(map, marker);
+        const id = `${index}-${spot.createdAt}`;
+
+        const infoHTML =
+          `<div id="${id}" class="info-content">` +
+          `<ion-thumbnail slot="start"><img src="${spot.thumbnail}" /></ion-thumbnail>` +
+          "<ion-label>" +
+          `<h4>${spot.address}</h4>` +
+          `<p>${
+            spot.photosCount ?? 0
+          } photos. <a href='/tabs'>Voir les détails</a>` +
+          "</ion-label>" +
+          "</div>";
+
+        infoWindow.setOffset(new woosmap.map.Point(50, -500));
+        // infoWindow.setContent(`<span id="${id}">${spot.address}</span>`);
+        infoWindow.setContent(infoHTML);
 
         marker.addListener("click", function () {
-          console.log(marker);
+          infoWindow.open(map, marker);
+
+          map.flyTo({
+            center: marker.getPosition(),
+            zoom: 14,
+          });
+
+          const element = document.getElementById(id);
+
+          if (element) {
+            element.style.color = "blue";
+            element.style.background = "white";
+            element.style.display = "flex";
+            element.style.gap = "8px";
+          }
         });
         marker.setMap(map);
       });
