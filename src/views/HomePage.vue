@@ -48,7 +48,7 @@ function segmentChanged(e: CustomEvent) {
           </ion-segment-button>
         </ion-segment>
 
-        <div class="pins">
+        <div v-if="spots" class="pins">
           <div
             v-if="selectedSegment === 'default'"
             class="pin"

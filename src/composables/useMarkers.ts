@@ -70,9 +70,9 @@ export function useMarkers(): UseMarkers {
           `<ion-thumbnail slot="start"><img src="${spot.thumbnail}" /></ion-thumbnail>` +
           "<ion-label>" +
           `<h4>${spot.address}</h4>` +
-          `<p>${
-            spot.photosCount ?? 0
-          } photos. <a href='/tabs'>Voir les détails</a>` +
+          `<p>${spot.photosCount ?? 0} photos. <a href='/spot-detail/${
+            spot.id
+          }'>Voir les détails</a>` +
           "</ion-label>" +
           "</div>";
 

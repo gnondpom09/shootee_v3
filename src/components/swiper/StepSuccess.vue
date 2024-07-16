@@ -1,9 +1,16 @@
 <script setup lang="ts">
-// imports
+const emit = defineEmits<{
+  (event: "close"): void;
+}>();
 </script>
 
 <template>
-  <h1>Félicitations</h1>
+  <ion-content>
+    <h1>Merci de votre contribution</h1>
+    <ion-img src="../../assets/success.png"></ion-img>
+
+    <p>Vous venez d'ajouter un nouveau sopt avec 7 photos.</p>
+  </ion-content>
 </template>
 
 <style scoped lang="scss"></style>

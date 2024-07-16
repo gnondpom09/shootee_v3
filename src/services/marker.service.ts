@@ -1,4 +1,5 @@
-import { Spot } from '@/models/spot.model';
+import { PhotoSpot } from "@/models/photoSpot.model";
+import { Spot } from "@/models/spot.model";
 import {
   collection,
   doc,
@@ -8,10 +9,9 @@ import {
   deleteDoc,
   GeoPoint,
   Timestamp,
-} from 'firebase/firestore';
+} from "firebase/firestore";
 
-import { useCollection, useDocument, useFirestore } from 'vuefire';
-
+import { useCollection, useDocument, useFirestore } from "vuefire";
 
 const firestore = useFirestore();
 
@@ -20,10 +20,10 @@ export async function createMarker(
   thumbnail: string,
   location: GeoPoint,
   authorId: string,
-  address: string
+  address: string,
+  photos: PhotoSpot[]
 ) {
-/*   const markerRef = doc(collection(firestore, 'spots'), id); */
-  const markerRef = collection(firestore, 'spots');
+  const markerRef = collection(firestore, "spots");
 
   const createdAt = Timestamp.fromDate(new Date());
 
@@ -33,19 +33,13 @@ export async function createMarker(
     location,
     authorId,
     createdAt,
-    address
-  })
-
-/*   return await setDoc(markerRef, {
-    id,
-    name,
-    thumbnail,
-    location,
-  }); */
+    address,
+    photos,
+  });
 }
 
 export function getAllMarkers() {
-  return useCollection<Spot>(collection(firestore, 'spots'));
+  return useCollection<Spot>(collection(firestore, "spots"));
 }
 
 export function getMarkerId(id: string) {
@@ -53,11 +47,11 @@ export function getMarkerId(id: string) {
 }
 
 export async function updateMarker(id: string, spotsCount: number) {
-  const markerRef = doc(collection(firestore, 'spots'), id);
+  const markerRef = doc(collection(firestore, "spots"), id);
   return await updateDoc(markerRef, { spotsCount });
 }
 
 export async function removeMarker(id: string) {
-  const markerRef = doc(collection(firestore, 'spots'), id);
+  const markerRef = doc(collection(firestore, "spots"), id);
   return await deleteDoc(markerRef);
 }

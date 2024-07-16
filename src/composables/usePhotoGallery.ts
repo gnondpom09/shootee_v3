@@ -6,7 +6,7 @@ import {
   GalleryPhoto,
   Photo,
 } from "@capacitor/camera";
-import { Image } from "../models/photoSpot.model";
+import { Image, PhotoSpot } from "../models/photoSpot.model";
 import { useStorageFile, useFirebaseStorage } from "vuefire";
 import { ref as storageRef } from "firebase/storage";
 import { isPlatform } from "@ionic/vue";
@@ -15,6 +15,7 @@ import { Filesystem } from "@capacitor/filesystem";
 
 const photos = ref<Image[]>([]);
 const photosDraft = ref<Image[]>([]);
+const photosSaved = ref<PhotoSpot[]>([]);
 
 function b64toBlob(b64Data: string, contentType = "", sliceSize = 512) {
   const byteCharacters = atob(b64Data);
@@ -95,6 +96,59 @@ export const usePhotoGallery = () => {
     }
   }
 
+  async function savePhotosAndGetImagesPath(
+    photosDraft: Image[],
+    authorId: string
+  ): Promise<PhotoSpot[]> {
+    const photosToSave: PhotoSpot[] = [];
+
+    try {
+      photosDraft.forEach(async (draft, index) => {
+        let blob: Blob;
+
+        const fileName = index + Date.now() + ".jpeg";
+        const imageFileRef = storageRef(storage, `test/${fileName}`);
+
+        const savedFileImage = {
+          filepath: fileName,
+          webviewPath: draft.photo?.webPath,
+        };
+
+        if (isPlatform("hybrid")) {
+          const file = await Filesystem.readFile({
+            path: String(draft.photo?.path),
+          });
+          blob = b64toBlob(file.data as string, "image/jpeg");
+        } else {
+          const response = await fetch(String(draft.photo?.webPath));
+          blob = await response.blob();
+        }
+
+        const { url, upload, refresh } = await useStorageFile(imageFileRef);
+
+        await upload(blob);
+        await refresh();
+
+        if (url.value) {
+          savedFileImage.webviewPath = url.value;
+
+          const savedImage = {
+            image: url.value,
+            authorId,
+          };
+          photosToSave.push(savedImage);
+
+          photos.value = [savedFileImage, ...photos.value];
+          photosSaved.value = [savedImage, ...photosSaved.value];
+        }
+      });
+    } catch {
+      photos.value = [...photos.value];
+    } finally {
+      return photosToSave;
+    }
+  }
+
   async function savePhotoInStorage(
     photo: Photo | GalleryPhoto
   ): Promise<void> {
@@ -143,8 +197,10 @@ export const usePhotoGallery = () => {
   return {
     photos,
     photosDraft,
+    photosSaved,
     takePhoto,
     takePhotoAndSave,
+    savePhotosAndGetImagesPath,
     savePhotoInStorage,
     getPhotoFromLibrary,
     resetPhotos,

@@ -7,7 +7,6 @@ export interface Image {
 }
 
 export interface PhotoSpot {
-  id: string;
   image: string;
-  authorId: string;
+  authorId?: string;
 }

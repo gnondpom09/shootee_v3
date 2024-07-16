@@ -1,65 +1,70 @@
-import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
-import TabsPage from '../views/TabsPage.vue';
+import { createRouter, createWebHistory } from "@ionic/vue-router";
+import { RouteRecordRaw } from "vue-router";
+import TabsPage from "../views/TabsPage.vue";
 
-import { getCurrentUser } from 'vuefire';
+import { getCurrentUser } from "vuefire";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    name: 'login',
-    path: '/login',
-    component: () => import('@/views/authentication/LoginPage.vue'),
+    name: "login",
+    path: "/login",
+    component: () => import("@/views/authentication/LoginPage.vue"),
   },
   {
-    name: 'register',
-    path: '/register',
-    component: () => import('@/views/authentication/RegisterPage.vue'),
+    name: "register",
+    path: "/register",
+    component: () => import("@/views/authentication/RegisterPage.vue"),
   },
   {
-    name: 'account',
-    path: '/account',
+    name: "account",
+    path: "/account",
     meta: { requiresAuth: true },
-    component: () => import('@/views/AccountPage.vue'),
+    component: () => import("@/views/AccountPage.vue"),
   },
   {
-    name: 'settings',
-    path: '/settings',
+    name: "settings",
+    path: "/settings",
     meta: { requiresAuth: true },
-    component: () => import('@/views/SettingsPage.vue'),
+    component: () => import("@/views/SettingsPage.vue"),
   },
   {
-    path: '/add-spot',
-    component: () => import('@/views/AddSpotPage.vue'),
+    path: "/add-spot",
+    component: () => import("@/views/AddSpotPage.vue"),
     meta: { requiresAuth: true },
   },
   {
-    path: '/',
-    redirect: '/tabs/home',
+    path: "/spot-detail/:id",
+    component: () => import("@/views/SpotDetailPage.vue"),
+    meta: { requiresAuth: true },
   },
   {
-    path: '/tabs/',
+    path: "/",
+    redirect: "/tabs/home",
+  },
+  {
+    path: "/tabs/",
     component: TabsPage,
     children: [
       {
-        path: '',
-        redirect: '/tabs/home',
+        path: "",
+        redirect: "/tabs/home",
       },
       {
-        path: 'home',
-        component: () => import('@/views/HomePage.vue'),
+        path: "home",
+        component: () => import("@/views/HomePage.vue"),
       },
       {
-        path: 'search',
-        component: () => import('@/views/SearchPage.vue'),
+        path: "search",
+        component: () => import("@/views/SearchPage.vue"),
       },
       {
-        path: 'bookmarks',
-        component: () => import('@/views/BookmarksPage.vue'),
+        path: "bookmarks",
+        component: () => import("@/views/BookmarksPage.vue"),
         meta: { requiresAuth: true },
       },
       {
-        path: 'profile',
-        component: () => import('@/views/UserProfile.vue'),
+        path: "profile",
+        component: () => import("@/views/UserProfile.vue"),
         meta: { requiresAuth: true },
       },
     ],
@@ -80,7 +85,7 @@ router.beforeEach(async (to) => {
     // if the user is not logged in, redirect to the login page
     if (!currentUser) {
       return {
-        path: '/login',
+        path: "/login",
         query: {
           // we keep the current path in the query so we can
           // redirect to it after login with

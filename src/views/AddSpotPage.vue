@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { getUserById } from "@/services/user.service";
 import { createMarker } from "@/services/marker.service";
 import { useCurrentUser } from "vuefire";
@@ -13,19 +13,27 @@ import { Photo } from "@capacitor/camera";
 import StepLocation from "@/components/swiper/StepLocation.vue";
 import StepAddPhotos from "@/components/swiper/StepAddPhotos.vue";
 import StepRecommendations from "@/components/swiper/StepRecommendations.vue";
+import StepSuccess from "@/components/swiper/StepSuccess.vue";
 import SwiperControls from "@/components/SwiperControls.vue";
 
 import { Scrollbar, A11y, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/vue";
 
 import { useRouter } from "vue-router";
+import { PhotoSpot } from "@/models/photoSpot.model";
 
 import "swiper/scss/navigation";
 import "swiper/scss/pagination";
 import "swiper/scss/scrollbar";
 
-const { photos, photosDraft, savePhotoInStorage, resetPhotos } =
-  usePhotoGallery();
+const {
+  photos,
+  photosDraft,
+  photosSaved,
+  savePhotoInStorage,
+  savePhotosAndGetImagesPath,
+  resetPhotos,
+} = usePhotoGallery();
 
 const { spotName, address, latitude, longitude, resetCoordonates } =
   useGeocode();
@@ -42,10 +50,21 @@ const onSwiper = (event: any) => {
   slider.value = event;
 };
 
+const nextButtonLabel = computed<string>(() => {
+  /*   if (slider.value.activeIndex === 2) {
+    return "Valider";
+  }
+  if (slider.value.activeIndex === 3) {
+    return "Fermer";
+  } */
+  return "Suivant";
+});
+
 async function nextStep() {
   const { coords } = useGeolocation();
 
   if (slider.value.activeIndex === 2 && coords.value) {
+    await savePhotosAndGetImagesPath(photosDraft.value, String(user.value?.id));
     await savePhotoInStorage(photosDraft.value[0].photo as Photo);
 
     if (latitude.value && longitude.value) {
@@ -54,10 +73,12 @@ async function nextStep() {
         String(photos.value[0]?.webviewPath),
         new GeoPoint(latitude.value, longitude.value),
         String(user.value?.id),
-        address.value
+        address.value,
+        photosSaved.value
       );
     }
-
+    slider.value.slideNext();
+  } else if (slider.value.activeIndex === 3) {
     closeAddForm();
   } else {
     slider.value.slideNext();
@@ -84,7 +105,7 @@ function clearDatas() {
             <ion-button @click="closeAddForm">Fermer</ion-button>
           </ion-buttons>
         </ion-buttons>
-        <ion-title class="oswald-title">SHOOTEE</ion-title>
+        <ion-title>Nouveau spot</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -96,13 +117,20 @@ function clearDatas() {
           :scrollbar="{ draggable: false }"
           @swiper="onSwiper"
         >
-          <swiper-slide><StepLocation /></swiper-slide>
-          <swiper-slide><StepAddPhotos /></swiper-slide>
-          <swiper-slide><StepRecommendations /></swiper-slide>
+          <swiper-slide><StepLocation @close="closeAddForm" /></swiper-slide>
+          <swiper-slide><StepAddPhotos @close="closeAddForm" /></swiper-slide>
+          <swiper-slide
+            ><StepRecommendations @close="closeAddForm"
+          /></swiper-slide>
+          <swiper-slide><StepSuccess @close="closeAddForm" /></swiper-slide>
         </swiper>
 
         <div class="actions">
-          <SwiperControls :slider="slider" @nextStep="nextStep" />
+          <SwiperControls
+            :next-button-label="nextButtonLabel"
+            :slider="slider"
+            @nextStep="nextStep"
+          />
         </div>
       </div>
     </ion-content>

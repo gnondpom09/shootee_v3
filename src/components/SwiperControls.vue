@@ -1,18 +1,16 @@
 <script setup lang="ts">
 import { toRefs } from "vue";
-import { useSwiper } from "swiper/vue";
 
 const props = defineProps<{
   slider: any;
+  nextButtonLabel: string;
 }>();
 
-const { slider } = toRefs(props);
+const { slider, nextButtonLabel } = toRefs(props);
 
 const emit = defineEmits<{
   (e: "nextStep"): void;
 }>();
-
-const swiper = useSwiper();
 </script>
 
 <template>
@@ -39,9 +37,9 @@ const swiper = useSwiper();
             color="primary"
             type="submit"
             expand="full"
-            @click="$emit('nextStep')"
+            @click="emit('nextStep')"
           >
-            Continuer
+            {{ nextButtonLabel }}
           </ion-button>
         </ion-col>
       </ion-row>

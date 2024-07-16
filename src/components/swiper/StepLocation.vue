@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { useMap } from "@/composables/useMap";
 import { useGeolocation } from "@vueuse/core";
 import { useGeocode } from "@/composables/useGeocode";
+
+const emit = defineEmits<{
+  (event: "close"): void;
+}>();
 
 const { coords } = useGeolocation();
 
