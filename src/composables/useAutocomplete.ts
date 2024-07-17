@@ -7,6 +7,7 @@ type DebouncePromiseFunction<T, Args extends any[]> = (
 let request: woosmap.map.localities.LocalitiesAutocompleteRequest;
 let debouncedLocalitiesAutocomplete: (...args: any[]) => Promise<any>;
 
+let map: woosmap.map.Map;
 let marker: woosmap.map.Marker;
 let infoWindow: woosmap.map.InfoWindow;
 let localitiesService: woosmap.map.LocalitiesService;

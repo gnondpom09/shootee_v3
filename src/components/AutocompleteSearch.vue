@@ -1,4 +1,47 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { toRefs, ref, onMounted } from "vue";
+
+const props = defineProps<{
+  map: woosmap.map.Map;
+}>();
+const { map } = toRefs(props);
+
+type DebouncePromiseFunction<T, Args extends any[]> = (
+  ...args: Args
+) => Promise<T>;
+
+let request: woosmap.map.localities.LocalitiesAutocompleteRequest;
+let debouncedLocalitiesAutocomplete: (...args: any[]) => Promise<any>;
+
+let marker: woosmap.map.Marker;
+let infoWindow: woosmap.map.InfoWindow;
+let localitiesService: woosmap.map.LocalitiesService;
+
+const inputElement = ref<HTMLInputElement | null>(null);
+const suggestionsList = ref<HTMLUListElement | null>(null);
+const clearSearchBtn = ref<HTMLButtonElement | null>(null);
+
+onMounted(() => {
+  inputElement.value = document.getElementById(
+    "autocomplete-input"
+  ) as HTMLInputElement;
+
+  suggestionsList.value = document.getElementById(
+    "suggestions-list"
+  ) as HTMLUListElement;
+  clearSearchBtn.value = document.getElementsByClassName(
+    "clear-searchButton"
+  )[0] as HTMLButtonElement;
+
+  infoWindow = new woosmap.map.InfoWindow({});
+  localitiesService = new window.woosmap.map.LocalitiesService();
+
+  request = {
+    input: "",
+    types: ["locality", "address", "postal_code"],
+  };
+});
+</script>
 
 <template>
   <div id="autocomplete-container">
