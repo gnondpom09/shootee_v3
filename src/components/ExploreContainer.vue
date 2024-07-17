@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { getAllMarkers } from "@/services/marker.service";
-import { API_KEY_WOOSMAP } from "../constants/map";
+import { API_KEY_WOOSMAP, MAP_STYLES } from "../constants/map";
 import { useMarkers } from "@/composables/useMarkers";
 
 type DebouncePromiseFunction<T, Args extends any[]> = (
@@ -22,11 +21,6 @@ const clearSearchBtn = ref<HTMLButtonElement | null>(null);
 const { setMarkersOnMap } = useMarkers();
 
 onMounted(() => {
-  const script = document.createElement("script");
-  script.src = `https://sdk.woosmap.com/map/map.js?key=${API_KEY_WOOSMAP}&callback=initMap`;
-  script.async = true;
-  document.body.appendChild(script);
-
   inputElement.value = document.getElementById(
     "autocomplete-input"
   ) as HTMLInputElement;
@@ -38,9 +32,7 @@ onMounted(() => {
     "clear-searchButton"
   )[0] as HTMLButtonElement;
 
-  script.addEventListener("load", () => {
-    initMap();
-  });
+  initMap();
 
   if (inputElement.value && suggestionsList.value) {
     inputElement.value.addEventListener("input", handleAutocomplete);
@@ -81,37 +73,9 @@ onMounted(() => {
 
 function initMap(): void {
   map = new woosmap.map.Map(document.getElementById("map") as HTMLElement, {
-    // center: { lat: 42.895328519999985, lng: 1.7943832799999995 }, // TODO condition geolocation active
     zoom: 5,
     disableDefaultUI: false,
-    styles: [
-      {
-        featureType: "point_of_interest",
-        elementType: "all",
-        stylers: [
-          {
-            visibility: "on",
-          },
-        ],
-      },
-      {
-        featureType: "point_of_interest.business.shop",
-        elementType: "all",
-        stylers: [
-          {
-            visibility: "off",
-          },
-        ],
-      },
-      {
-        featureType: "water",
-        stylers: [
-          {
-            lightness: -15,
-          },
-        ],
-      },
-    ],
+    styles: MAP_STYLES,
   });
 
   setMarkersOnMap(map);

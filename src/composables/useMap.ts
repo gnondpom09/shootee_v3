@@ -1,5 +1,5 @@
-import { ref, onMounted } from "vue";
-import { API_KEY_WOOSMAP, MAP_STYLES } from "../constants/map";
+import { onMounted } from "vue";
+import { MAP_STYLES } from "../constants/map";
 
 interface UseMap {
   initMap: () => void;
@@ -11,14 +11,7 @@ export function useMap(elementId: string): UseMap {
   let map: woosmap.map.Map;
 
   onMounted(() => {
-    const script = document.createElement("script");
-    script.src = `https://sdk.woosmap.com/map/map.js?key=${API_KEY_WOOSMAP}&callback=initMap`;
-    script.async = true;
-    document.body.appendChild(script);
-
-    script.addEventListener("load", () => {
-      initMap();
-    });
+    initMap();
   });
 
   function initMap(): void {

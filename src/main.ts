@@ -142,6 +142,7 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 // Import Swiper styles
 import "swiper/scss";
 import "@ionic/vue/css/ionic-swiper.css";
+import { API_KEY_WOOSMAP } from "./constants/map";
 
 const app = createApp(App).use(IonicVue).use(router);
 
@@ -197,6 +198,11 @@ app.use(VueFire, {
 router.isReady().then(() => {
   app.mount("#app");
 });
+
+const script = document.createElement("script");
+script.src = `https://sdk.woosmap.com/map/map.js?key=${API_KEY_WOOSMAP}&callback=initMap`;
+script.async = true;
+document.head.appendChild(script);
 
 /* const API_KEY_WOOSMAP = "woos-fc8fe374-edf7-3d11-86b2-7e787c73d350";
 
