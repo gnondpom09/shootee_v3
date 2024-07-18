@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { ActionSheetOptions, IonActionSheet } from "@ionic/vue";
 
@@ -47,8 +46,8 @@ const actionSheet: ActionSheetOptions = {
 
       <ion-grid class="photos-preview">
         <ion-row>
-          <ion-col size="6" :key="photo.filepath" v-for="photo in photosDraft">
-            <ion-img :src="photo.webviewPath"></ion-img>
+          <ion-col size="6" :key="index" v-for="(photo, index) in photosDraft">
+            <ion-img :src="photo.webPath"></ion-img>
           </ion-col>
         </ion-row>
       </ion-grid>

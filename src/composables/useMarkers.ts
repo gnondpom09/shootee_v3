@@ -65,14 +65,14 @@ export function useMarkers(): UseMarkers {
         const infoWindow = new woosmap.map.InfoWindow({});
         const id = `${index}-${spot.createdAt}`;
 
+        const photosCount = spot.photos ? spot.photos.length : 0;
+
         const infoHTML =
           `<div id="${id}" class="info-content">` +
           `<ion-thumbnail slot="start"><img src="${spot.thumbnail}" /></ion-thumbnail>` +
           "<ion-label>" +
           `<h4>${spot.address}</h4>` +
-          `<p>${spot.photosCount ?? 0} photos. <a href='/spot-detail/${
-            spot.id
-          }'>Voir les détails</a>` +
+          `<p>${photosCount} photos. <a href='/spot-detail/${spot.id}'>Voir les détails</a>` +
           "</ion-label>" +
           "</div>";
 

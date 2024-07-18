@@ -2,12 +2,16 @@
 const emit = defineEmits<{
   (event: "close"): void;
 }>();
+
+function getImageUrl(url: string) {
+  return new URL(url, import.meta.url).href;
+}
 </script>
 
 <template>
   <ion-content>
     <h1>Merci de votre contribution</h1>
-    <ion-img src="../../assets/success.png"></ion-img>
+    <ion-img :src="getImageUrl('../../assets/success.png')"></ion-img>
 
     <p>Vous venez d'ajouter un nouveau sopt avec 7 photos.</p>
   </ion-content>

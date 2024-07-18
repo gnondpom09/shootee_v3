@@ -13,9 +13,16 @@ import { isPlatform } from "@ionic/vue";
 // import { Capacitor } from '@capacitor/core';
 import { Filesystem } from "@capacitor/filesystem";
 
-const photos = ref<Image[]>([]);
-const photosDraft = ref<Image[]>([]);
+const photoUrl = ref<string>("");
+
+const photosDraft = ref<PhotoDraft[]>([]);
+
 const photosSaved = ref<PhotoSpot[]>([]);
+
+export interface PhotoDraft {
+  path: string;
+  webPath: string;
+}
 
 function b64toBlob(b64Data: string, contentType = "", sliceSize = 512) {
   const byteCharacters = atob(b64Data);
@@ -59,7 +66,7 @@ export const usePhotoGallery = () => {
 
       savePhotoInStorage(photo);
     } catch {
-      photos.value = [...photos.value];
+      photoUrl.value = "";
     }
   }
 
@@ -72,17 +79,16 @@ export const usePhotoGallery = () => {
         quality: 100,
       });
 
-      const fileName = Date.now() + ".jpeg";
+      if (photo) {
+        const draft: PhotoDraft = {
+          path: photo.path ?? "",
+          webPath: photo.webPath ?? "",
+        };
 
-      const savedFileImage = {
-        filepath: fileName,
-        webviewPath: photo.webPath,
-        photo: photo,
-      };
+        photosDraft.value = [draft, ...photosDraft.value];
 
-      photosDraft.value = [savedFileImage, ...photosDraft.value];
-
-      return photo;
+        return photo;
+      }
     } catch {
       photosDraft.value = [...photosDraft.value];
     }
@@ -97,30 +103,23 @@ export const usePhotoGallery = () => {
   }
 
   async function savePhotosAndGetImagesPath(
-    photosDraft: Image[],
+    photosDraft: PhotoDraft[],
     authorId: string
   ): Promise<PhotoSpot[]> {
-    const photosToSave: PhotoSpot[] = [];
-
-    try {
+    return new Promise((resolve) => {
       photosDraft.forEach(async (draft, index) => {
         let blob: Blob;
 
         const fileName = index + Date.now() + ".jpeg";
         const imageFileRef = storageRef(storage, `test/${fileName}`);
 
-        const savedFileImage = {
-          filepath: fileName,
-          webviewPath: draft.photo?.webPath,
-        };
-
         if (isPlatform("hybrid")) {
           const file = await Filesystem.readFile({
-            path: String(draft.photo?.path),
+            path: String(draft.path),
           });
           blob = b64toBlob(file.data as string, "image/jpeg");
         } else {
-          const response = await fetch(String(draft.photo?.webPath));
+          const response = await fetch(String(draft.webPath));
           blob = await response.blob();
         }
 
@@ -130,23 +129,23 @@ export const usePhotoGallery = () => {
         await refresh();
 
         if (url.value) {
-          savedFileImage.webviewPath = url.value;
-
           const savedImage = {
             image: url.value,
             authorId,
           };
-          photosToSave.push(savedImage);
 
-          photos.value = [savedFileImage, ...photos.value];
           photosSaved.value = [savedImage, ...photosSaved.value];
+
+          if (index === photosDraft.length - 1) {
+            setTimeout(() => {
+              if (photosSaved.value) {
+                resolve(photosSaved.value);
+              }
+            }, 100);
+          }
         }
       });
-    } catch {
-      photos.value = [...photos.value];
-    } finally {
-      return photosToSave;
-    }
+    });
   }
 
   async function savePhotoInStorage(
@@ -156,11 +155,6 @@ export const usePhotoGallery = () => {
       let blob: Blob;
 
       const fileName = Date.now() + ".jpeg";
-
-      const savedFileImage = {
-        filepath: fileName,
-        webviewPath: photo.webPath,
-      };
 
       const imageFileRef = storageRef(storage, `test/${fileName}`);
 
@@ -180,22 +174,19 @@ export const usePhotoGallery = () => {
       await refresh();
 
       if (url.value) {
-        savedFileImage.webviewPath = url.value;
+        photoUrl.value = url.value;
       }
-
-      photos.value = [savedFileImage, ...photos.value];
     } catch {
-      photos.value = [...photos.value];
+      photoUrl.value = "";
     }
   }
 
   function resetPhotos(): void {
-    photos.value = [];
-    photosDraft.value = [];
+    photoUrl.value = "";
   }
 
   return {
-    photos,
+    photoUrl,
     photosDraft,
     photosSaved,
     takePhoto,

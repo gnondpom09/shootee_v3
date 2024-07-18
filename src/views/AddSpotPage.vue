@@ -8,8 +8,6 @@ import { useGeolocation } from "@vueuse/core";
 import { GeoPoint } from "firebase/firestore";
 import { useGeocode } from "@/composables/useGeocode";
 
-import { Photo } from "@capacitor/camera";
-
 import StepLocation from "@/components/swiper/StepLocation.vue";
 import StepAddPhotos from "@/components/swiper/StepAddPhotos.vue";
 import StepRecommendations from "@/components/swiper/StepRecommendations.vue";
@@ -20,18 +18,15 @@ import { Scrollbar, A11y, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/vue";
 
 import { useRouter } from "vue-router";
-import { PhotoSpot } from "@/models/photoSpot.model";
 
 import "swiper/scss/navigation";
 import "swiper/scss/pagination";
 import "swiper/scss/scrollbar";
 
 const {
-  photos,
   photosDraft,
-  photosSaved,
-  savePhotoInStorage,
   savePhotosAndGetImagesPath,
+  savePhotoInStorage,
   resetPhotos,
 } = usePhotoGallery();
 
@@ -63,20 +58,23 @@ const nextButtonLabel = computed<string>(() => {
 async function nextStep() {
   const { coords } = useGeolocation();
 
-  if (slider.value.activeIndex === 2 && coords.value) {
-    await savePhotosAndGetImagesPath(photosDraft.value, String(user.value?.id));
-    await savePhotoInStorage(photosDraft.value[0].photo as Photo);
+  if (slider.value.activeIndex === 2 && coords.value && user.value) {
+    const photos = await savePhotosAndGetImagesPath(
+      photosDraft.value,
+      user.value.id
+    );
 
     if (latitude.value && longitude.value) {
       await createMarker(
         spotName.value,
-        String(photos.value[0]?.webviewPath),
+        photos[0].image,
         new GeoPoint(latitude.value, longitude.value),
-        String(user.value?.id),
+        user.value.id,
         address.value,
-        photosSaved.value
+        photos
       );
     }
+
     slider.value.slideNext();
   } else if (slider.value.activeIndex === 3) {
     closeAddForm();

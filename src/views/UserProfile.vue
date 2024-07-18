@@ -12,7 +12,7 @@ import { ActionSheetOptions, IonActionSheet } from "@ionic/vue";
 
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 
-const { takePhotoAndSave, photos, getPhotoFromLibrary } = usePhotoGallery();
+const { takePhotoAndSave, photoUrl, getPhotoFromLibrary } = usePhotoGallery();
 
 const router = useRouter();
 
@@ -59,7 +59,7 @@ async function changeAvatarFromPhoto() {
   if (user.value) {
     await takePhotoAndSave();
 
-    user.value.avatar = photos.value[0]?.webviewPath ?? user.value.avatar;
+    user.value.avatar = photoUrl.value ?? user.value.avatar;
     updateAvatar(user.value.id, user.value.avatar);
   }
 }
@@ -68,7 +68,7 @@ async function changeAvatarFromLibrary() {
   if (user.value) {
     await getPhotoFromLibrary();
 
-    user.value.avatar = photos.value[0]?.webviewPath ?? user.value.avatar;
+    user.value.avatar = photoUrl.value ?? user.value.avatar;
     updateAvatar(user.value.id, user.value.avatar);
   }
 }
