@@ -17,8 +17,6 @@ const photoUrl = ref<string>("");
 
 const photosDraft = ref<PhotoDraft[]>([]);
 
-const photosSaved = ref<PhotoSpot[]>([]);
-
 export interface PhotoDraft {
   path: string;
   webPath: string;
@@ -106,6 +104,8 @@ export const usePhotoGallery = () => {
     photosDraft: PhotoDraft[],
     authorId: string
   ): Promise<PhotoSpot[]> {
+    const photosSaved: PhotoSpot[] = [];
+
     return new Promise((resolve) => {
       photosDraft.forEach(async (draft, index) => {
         let blob: Blob;
@@ -134,14 +134,14 @@ export const usePhotoGallery = () => {
             authorId,
           };
 
-          photosSaved.value = [savedImage, ...photosSaved.value];
+          photosSaved.push(savedImage);
 
           if (index === photosDraft.length - 1) {
             setTimeout(() => {
-              if (photosSaved.value) {
-                resolve(photosSaved.value);
-              }
-            }, 100);
+              console.log(photosSaved);
+
+              resolve(photosSaved);
+            }, 800);
           }
         }
       });
@@ -183,12 +183,12 @@ export const usePhotoGallery = () => {
 
   function resetPhotos(): void {
     photoUrl.value = "";
+    photosDraft.value = [];
   }
 
   return {
     photoUrl,
     photosDraft,
-    photosSaved,
     takePhoto,
     takePhotoAndSave,
     savePhotosAndGetImagesPath,

@@ -23,12 +23,8 @@ import "swiper/scss/navigation";
 import "swiper/scss/pagination";
 import "swiper/scss/scrollbar";
 
-const {
-  photosDraft,
-  savePhotosAndGetImagesPath,
-  savePhotoInStorage,
-  resetPhotos,
-} = usePhotoGallery();
+const { photosDraft, savePhotosAndGetImagesPath, resetPhotos } =
+  usePhotoGallery();
 
 const { spotName, address, latitude, longitude, resetCoordonates } =
   useGeocode();
