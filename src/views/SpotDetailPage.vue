@@ -31,7 +31,7 @@ function segmentChanged(e: CustomEvent) {
     </ion-header>
     <ion-content v-if="spot">
       <div class="spot-container">
-        <ion-img :src="spot.thumbnail"></ion-img>
+        <img :src="spot.thumbnail" />
       </div>
       <ion-item>
         <ion-label>
@@ -63,7 +63,7 @@ function segmentChanged(e: CustomEvent) {
         <h5>Les points de vue</h5>
         <div v-if="spot.photos" class="pins">
           <div class="pin" :key="index" v-for="(photo, index) in spot.photos">
-            <ion-img :src="photo.image"></ion-img>
+            <img :src="photo.image" />
           </div>
         </div>
       </div>

@@ -83,7 +83,7 @@ function segmentChanged(e: CustomEvent) {
             :key="index"
             v-for="(photo, index) in spots"
           >
-            <ion-img :src="photo.thumbnail"></ion-img>
+            <img :src="photo.thumbnail" />
           </div>
           <div v-if="selectedSegment === 'recents'">
             <h2>segment 2</h2>

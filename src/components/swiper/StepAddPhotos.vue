@@ -47,7 +47,7 @@ const actionSheet: ActionSheetOptions = {
       <ion-grid class="photos-preview">
         <ion-row>
           <ion-col size="6" :key="index" v-for="(photo, index) in photosDraft">
-            <ion-img :src="photo.webPath"></ion-img>
+            <img :src="photo.webPath" />
           </ion-col>
         </ion-row>
       </ion-grid>

@@ -12,7 +12,7 @@ function getImageUrl(url: string) {
   <ion-content>
     <div class="success-content">
       <h1>Merci de votre contribution</h1>
-      <ion-img :src="getImageUrl('../../assets/success.png')"></ion-img>
+      <img :src="getImageUrl('../../assets/success.png')" />
 
       <p>
         Vous venez d'ajouter un nouveau sopt, retrouvez toutes ses informations

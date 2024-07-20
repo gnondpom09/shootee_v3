@@ -29,7 +29,7 @@ function submit() {
       <ion-grid>
         <ion-row>
           <ion-col size="6" :key="photo.filepath" v-for="photo in photos">
-            <ion-img :src="photo.webviewPath"></ion-img>
+            <img :src="photo.webviewPath" />
           </ion-col>
         </ion-row>
       </ion-grid>
