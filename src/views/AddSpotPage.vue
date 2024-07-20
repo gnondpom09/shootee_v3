@@ -36,18 +36,19 @@ const router = useRouter();
 const user = getUserById(currentUser.value?.uid as string);
 
 const slider = ref();
+const activeIndex = ref<number>(0);
 
 const onSwiper = (event: any) => {
   slider.value = event;
 };
 
 const nextButtonLabel = computed<string>(() => {
-  /*   if (slider.value.activeIndex === 2) {
+  if (activeIndex.value === 2) {
     return "Valider";
   }
-  if (slider.value.activeIndex === 3) {
+  if (activeIndex.value === 3) {
     return "Fermer";
-  } */
+  }
   return "Suivant";
 });
 
@@ -88,6 +89,11 @@ function clearDatas() {
   resetCoordonates();
   resetPhotos();
 }
+
+function onSlideChange() {
+  console.log("Slide active index : " + slider.value.activeIndex);
+  activeIndex.value = slider.value.activeIndex;
+}
 </script>
 
 <template>
@@ -110,6 +116,7 @@ function clearDatas() {
           :navigation="{ enabled: true, prevEl: '.myPrev', nextEl: '.myNext' }"
           :scrollbar="{ draggable: false }"
           @swiper="onSwiper"
+          @slideChange="onSlideChange"
         >
           <swiper-slide><StepLocation @close="closeAddForm" /></swiper-slide>
           <swiper-slide><StepAddPhotos @close="closeAddForm" /></swiper-slide>

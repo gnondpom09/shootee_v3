@@ -1,14 +1,42 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { onIonViewWillEnter } from "@ionic/vue";
 import { getAllMarkers } from "@/services/marker.service";
 
 const spots = getAllMarkers();
 
 const selectedSegment = ref<string>("default");
 
+const header = ref<HTMLElement | null>(null);
+
+onIonViewWillEnter(() => {
+  console.log("Home page will enter");
+});
+
+onMounted(() => {
+  /*   initHeader(); */
+});
+
+function initHeader(): void {
+  if (header.value) {
+    //  this.renderer.setStyle(this.header['el'], 'webkitTransition', 'top 700ms');
+    header.value.style("webkitTransition: top 700ms;");
+  }
+}
+
 function segmentChanged(e: CustomEvent) {
   selectedSegment.value = e.detail.value;
 }
+
+/* function onContentScroll(event: any) {
+  if (header.value) {
+    if (event.detail.scrollTop >= 50) {
+      header.value.style("top: -76px; opacity: 0; transition: all ease 1s;");
+    } else {
+      header.value.style("top: 28px; opacity: 1; transition: all ease 1s;");
+    }
+  }
+} */
 </script>
 
 <template>
@@ -18,13 +46,13 @@ function segmentChanged(e: CustomEvent) {
         <ion-title class="oswald-title">SHOOTEE</ion-title>
       </ion-toolbar>
     </ion-header>
-    <!--     <ion-header #header class="home-title ion-padding">
+    <!--     <ion-header ref="header" class="home-title ion-padding">
       <ion-toolbar>
         <ion-row>
           <ion-col size="12">
             <ion-title>
               <h1>Shootee</h1>
-              <h4>Books de modèles et photographes</h4>
+              <h4>Trouvez votre spot idéal</h4>
             </ion-title>
           </ion-col>
         </ion-row>

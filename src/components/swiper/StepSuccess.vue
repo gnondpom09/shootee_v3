@@ -10,11 +10,23 @@ function getImageUrl(url: string) {
 
 <template>
   <ion-content>
-    <h1>Merci de votre contribution</h1>
-    <ion-img :src="getImageUrl('../../assets/success.png')"></ion-img>
+    <div class="success-content">
+      <h1>Merci de votre contribution</h1>
+      <ion-img :src="getImageUrl('../../assets/success.png')"></ion-img>
 
-    <p>Vous venez d'ajouter un nouveau sopt avec 7 photos.</p>
+      <p>
+        Vous venez d'ajouter un nouveau sopt, retrouvez toutes ses informations
+        additionelles sur la carte.
+      </p>
+    </div>
   </ion-content>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.success-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+</style>
