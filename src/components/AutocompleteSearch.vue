@@ -40,6 +40,11 @@ onMounted(() => {
     input: "",
     types: ["locality", "address", "postal_code"],
   };
+
+  debouncedLocalitiesAutocomplete = debouncePromise(
+    localitiesService.autocomplete,
+    0
+  );
 });
 </script>
 
