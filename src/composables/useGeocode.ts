@@ -1,6 +1,5 @@
 import { ref, Ref } from "vue";
 import { API_KEY_WOOSMAP } from "../constants/map";
-import { useMarkers } from "@/composables/useMarkers";
 
 interface UseGeocode {
   spotName: Ref<string>;
@@ -16,8 +15,6 @@ const spotName = ref<string>("");
 const address = ref<string>("");
 const latitude = ref<number | null>(null);
 const longitude = ref<number | null>(null);
-
-const { removeMarker } = useMarkers();
 
 export function useGeocode(): UseGeocode {
   function reverseGeocode(lat_lng: string, apiKey: string) {
@@ -70,10 +67,6 @@ export function useGeocode(): UseGeocode {
   }
 
   function resetCoordonates(): void {
-    if (latitude.value && longitude.value) {
-      removeMarker(latitude.value, longitude.value);
-    }
-
     latitude.value = null;
     longitude.value = null;
     address.value = "";

@@ -1,11 +1,9 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { useMap } from "@/composables/useMap";
 import { useGeolocation } from "@vueuse/core";
 import { useGeocode } from "@/composables/useGeocode";
-
-const emit = defineEmits<{
-  (event: "close"): void;
-}>();
+import AutocompleteSearch from "@/components/AutocompleteSearch.vue";
 
 const { coords } = useGeolocation();
 
@@ -18,22 +16,39 @@ const {
   longitude,
 } = useGeocode();
 
-const { setMarker } = useMap("map-add-spot");
+const initializeMap = useMap("map-add-spot");
 
 function localize() {
   if (coords.value.latitude && coords.value.longitude) {
     setCoordonates(coords.value.latitude, coords.value.longitude);
-
     reverseGeocodeMarker(coords.value.latitude, coords.value.longitude);
+    initializeMap.setMarker(coords.value.latitude, coords.value.longitude);
+  }
+}
 
-    setMarker(coords.value.latitude, coords.value.longitude);
+function validLocality(
+  locality: woosmap.map.localities.LocalitiesDetailsResult
+) {
+  if (locality.geometry?.location) {
+    setCoordonates(
+      locality.geometry.location.lat,
+      locality.geometry.location.lng
+    );
+    reverseGeocodeMarker(
+      locality.geometry.location.lat,
+      locality.geometry.location.lng
+    );
+    initializeMap.setMarker(
+      locality.geometry.location.lat,
+      locality.geometry.location.lng
+    );
   }
 }
 </script>
 
 <template>
   <div class="add-form">
-    <ion-item>
+    <ion-item class="spot-name" lines="full">
       <ion-input
         type="text"
         label="Nom du spot"
@@ -44,44 +59,19 @@ function localize() {
     </ion-item>
 
     <div class="location-form">
-      <div id="autocomplete-container">
-        <svg class="search-icon" viewBox="0 0 16 16">
-          <path
-            d="M3.617 7.083a4.338 4.338 0 1 1 8.676 0 4.338 4.338 0 0 1-8.676 0m4.338-5.838a5.838 5.838 0 1 0 2.162 11.262l2.278 2.279a1 1 0 0 0 1.415-1.414l-1.95-1.95A5.838 5.838 0 0 0 7.955 1.245"
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-
-        <input
-          type="text"
-          id="autocomplete-input"
-          placeholder="Search Localities..."
-          autocomplete="off"
-        />
-        <button aria-label="Clear" class="clear-searchButton" type="button">
-          <svg class="clear-icon" viewBox="0 0 24 24">
-            <path
-              d="M7.074 5.754a.933.933 0 1 0-1.32 1.317L10.693 12l-4.937 4.929a.931.931 0 1 0 1.319 1.317l4.938-4.93 4.937 4.93a.933.933 0 0 0 1.581-.662.93.93 0 0 0-.262-.655L13.331 12l4.937-4.929a.93.93 0 0 0-.663-1.578.93.93 0 0 0-.656.261l-4.938 4.93z"
-            ></path>
-          </svg>
-        </button>
-        <ul id="suggestions-list"></ul>
-      </div>
+      <AutocompleteSearch @select-city="validLocality($event)" />
 
       <p>ou</p>
 
-      <ion-item>
-        <ion-button
-          block
-          color="primary"
-          type="submit"
-          expand="block"
-          @click="localize"
-        >
-          Me localiser
-        </ion-button>
-      </ion-item>
+      <ion-button
+        block
+        color="primary"
+        type="submit"
+        expand="block"
+        @click="localize"
+      >
+        Me localiser
+      </ion-button>
     </div>
 
     <div v-if="latitude && longitude && address" id="geolocation-section">
@@ -97,8 +87,17 @@ function localize() {
 </template>
 
 <style scoped lang="scss">
+.autocomplete-container {
+  position: absolute;
+  top: 88px;
+  left: 10px;
+}
+.spot-name {
+  text-align: left;
+}
 .add-form {
   height: 100%;
+  width: 100%;
 }
 .location-form {
   display: flex;
