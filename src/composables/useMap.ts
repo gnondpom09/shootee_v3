@@ -1,12 +1,13 @@
 import { onMounted } from "vue";
 import { MAP_STYLES } from "../constants/map";
 import { getAllMarkers } from "@/services/marker.service";
+import { Spot } from "@/models/spot.model";
 
 interface UseMap {
   initMap: () => void;
   resetMap: () => void;
   setMarker: (latitude: number, longitude: number) => void;
-  setMarkersOnMap: () => void;
+  setMarkersOnMap: (spots: Spot[]) => void;
   removeMarker: (latitude: number, longitude: number) => void;
 }
 
@@ -54,11 +55,9 @@ export function useMap(elementId: string): UseMap {
     marker.setMap(null);
   }
 
-  function setMarkersOnMap(): void {
-    const spots = getAllMarkers();
-
-    if (spots.value) {
-      spots.value.forEach((spot, index) => {
+  function setMarkersOnMap(spots: Spot[]): void {
+    if (spots) {
+      spots.forEach((spot, index) => {
         const center = {
           lat: spot.location.latitude,
           lng: spot.location.longitude,

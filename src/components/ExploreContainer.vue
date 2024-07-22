@@ -3,13 +3,18 @@ import { onMounted } from "vue";
 import { useMap } from "@/composables/useMap";
 import { useGeocode } from "@/composables/useGeocode";
 import AutocompleteSearch from "@/components/AutocompleteSearch.vue";
+import { getAllMarkers } from "@/services/marker.service";
 
 const { reverseGeocodeMarker, setCoordonates } = useGeocode();
+
+const spots = getAllMarkers();
 
 const initializeMap = useMap("map");
 
 onMounted(() => {
-  initializeMap.setMarkersOnMap();
+  if (spots.value) {
+    initializeMap.setMarkersOnMap(spots.value);
+  }
 });
 
 function validLocality(
