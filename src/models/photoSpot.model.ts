@@ -1,4 +1,5 @@
 import { Photo } from "@capacitor/camera";
+import { Timestamp } from "firebase/firestore";
 
 export interface Image {
   filepath: string;
@@ -9,4 +10,5 @@ export interface Image {
 export interface PhotoSpot {
   image: string;
   authorId?: string;
+  shootedAt?: Timestamp;
 }

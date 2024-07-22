@@ -134,10 +134,8 @@ import {
   IonSegmentButton,
   IonChip,
   IonImg,
+  IonModal,
 } from "@ionic/vue";
-
-// Import Swiper Vue.js components
-import { Swiper, SwiperSlide } from "swiper/vue";
 
 // Import Swiper styles
 import "swiper/scss";
@@ -181,6 +179,7 @@ app.component("ion-segment", IonSegment);
 app.component("ion-segment-button", IonSegmentButton);
 app.component("ion-chip", IonChip);
 app.component("ion-img", IonImg);
+app.component("ion-modal", IonModal);
 
 app.use(VueFire, {
   firebaseApp,

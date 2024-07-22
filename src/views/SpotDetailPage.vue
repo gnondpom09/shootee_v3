@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { getMarkerId } from "@/services/marker.service";
 import { getUserById } from "@/services/user.service";
 import { useRoute } from "vue-router";
+import { PhotoSpot } from "@/models/photoSpot.model";
 
 const route = useRoute();
 const id = String(route.params.id);
@@ -11,6 +12,15 @@ const spot = getMarkerId(id);
 /* const user = getUserById(spot.value?.authorId ?? ""); */
 
 const selectedSegment = ref<string>("default");
+
+const currentPhoto = ref<PhotoSpot | null>(null);
+
+const isOpen = ref(false);
+
+const setOpen = (open: boolean, photo: PhotoSpot | null) => {
+  currentPhoto.value = photo;
+  isOpen.value = open;
+};
 
 function segmentChanged(e: CustomEvent) {
   selectedSegment.value = e.detail.value;
@@ -63,10 +73,31 @@ function segmentChanged(e: CustomEvent) {
         <h5>Les points de vue</h5>
         <div v-if="spot.photos" class="pins">
           <div class="pin" :key="index" v-for="(photo, index) in spot.photos">
-            <img :src="photo.image" />
+            <img :src="photo.image" @click="setOpen(true, photo)" />
           </div>
         </div>
       </div>
+
+      <ion-modal :is-open="isOpen">
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Modal</ion-title>
+            <ion-buttons slot="end">
+              <ion-button @click="setOpen(false, null)">Close</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <img :src="currentPhoto?.image" />
+          <p>
+            {{
+              currentPhoto?.shootedAt
+                ? currentPhoto.shootedAt.toDate()
+                : spot.createdAt.toDate()
+            }}
+          </p>
+        </ion-content>
+      </ion-modal>
     </ion-content>
   </ion-page>
 </template>
@@ -83,6 +114,7 @@ function segmentChanged(e: CustomEvent) {
   z-index: 500;
   .pin {
     display: inline-block;
+    height: 150px;
     margin: 0;
     padding: 4px;
     img,
