@@ -17,12 +17,12 @@ onMounted(() => {
   /*   initHeader(); */
 });
 
-function initHeader(): void {
+/* function initHeader(): void {
   if (header.value) {
     //  this.renderer.setStyle(this.header['el'], 'webkitTransition', 'top 700ms');
     header.value.style("webkitTransition: top 700ms;");
   }
-}
+} */
 
 function segmentChanged(e: CustomEvent) {
   selectedSegment.value = e.detail.value;

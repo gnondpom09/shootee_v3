@@ -37,6 +37,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/SpotDetailPage.vue"),
     meta: { requiresAuth: true },
   },
+
+  {
+    path: "/author/:id",
+    component: () => import("@/views/AuthorDetail.vue"),
+    meta: { requiresAuth: true },
+  },
   {
     path: "/",
     redirect: "/tabs/home",

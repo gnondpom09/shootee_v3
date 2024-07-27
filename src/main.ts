@@ -212,3 +212,11 @@ fetch(
   .then((response) => response.text())
   .then((result) => console.log(result))
   .catch((error) => console.log("error", error)); */
+
+// test nearby
+fetch(
+  `https://api.woosmap.com/localities/nearby?key=${API_KEY_WOOSMAP}&location=42.895424,1.794908&types=point_of_interest`
+)
+  .then((response) => response.text())
+  //.then((result) => console.log(result))
+  .catch((error) => console.log("error", error));

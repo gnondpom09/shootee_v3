@@ -74,7 +74,8 @@ async function nextStep() {
 
     slider.value.slideNext();
   } else if (slider.value.activeIndex === 3) {
-    closeAddForm();
+    router.push("/tabs/search");
+    clearDatas();
   } else {
     slider.value.slideNext();
   }
