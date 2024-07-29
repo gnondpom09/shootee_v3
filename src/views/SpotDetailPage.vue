@@ -4,7 +4,8 @@ import { getMarkerId } from "@/services/marker.service";
 
 import { useRoute } from "vue-router";
 import SpotPresentation from "@/components/spot/SpotPresentation.vue";
-import SpotNearby from "@/components/spot/SpotNearby.vue";
+import SpotNearbyRestaurants from "@/components/spot/SpotNearbyRestaurants.vue";
+import SpotNearbyBed from "@/components/spot/SpotNearbyBed.vue";
 
 const route = useRoute();
 const id = String(route.params.id);
@@ -43,19 +44,28 @@ function segmentChanged(e: CustomEvent) {
       </ion-item>
       <ion-segment :value="selectedSegment" @ionChange="segmentChanged">
         <ion-segment-button value="default">
-          <ion-icon name="call"></ion-icon>
+          <ion-icon name="albums-outline"></ion-icon>
         </ion-segment-button>
-        <ion-segment-button value="nearby">
-          <ion-icon name="heart"></ion-icon>
+        <ion-segment-button value="route">
+          <ion-icon name="car-outline"></ion-icon>
         </ion-segment-button>
-        <ion-segment-button value="pin">
-          <ion-icon name="pin"></ion-icon>
+        <ion-segment-button value="nearby-restaurant">
+          <ion-icon name="restaurant-outline"></ion-icon>
+        </ion-segment-button>
+        <ion-segment-button value="nearby-bed">
+          <ion-icon name="bed-outline"></ion-icon>
         </ion-segment-button>
       </ion-segment>
       <div v-if="selectedSegment === 'default'">
         <SpotPresentation :spot="spot" />
       </div>
-      <div v-if="selectedSegment === 'nearby'"><SpotNearby :spot="spot" /></div>
+      <div v-if="selectedSegment === 'route'"></div>
+      <div v-if="selectedSegment === 'nearby-restaurant'">
+        <SpotNearbyRestaurants :spot="spot" />
+      </div>
+      <div v-if="selectedSegment === 'nearby-bed'">
+        <SpotNearbyBed :spot="spot" />
+      </div>
     </ion-content>
   </ion-page>
 </template>

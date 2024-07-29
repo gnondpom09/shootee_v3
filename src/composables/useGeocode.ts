@@ -9,6 +9,7 @@ interface UseGeocode {
   setCoordonates: (latitude: number, longitude: number) => void;
   resetCoordonates: () => void;
   reverseGeocodeMarker: (latitude: number, longitude: number) => void;
+  reverseGeocode: (lat_lng: string) => any;
 }
 
 const spotName = ref<string>("");
@@ -17,9 +18,9 @@ const latitude = ref<number | null>(null);
 const longitude = ref<number | null>(null);
 
 export function useGeocode(): UseGeocode {
-  function reverseGeocode(lat_lng: string, apiKey: string) {
+  function reverseGeocode(lat_lng: string) {
     const args = {
-      key: apiKey,
+      key: API_KEY_WOOSMAP,
       latlng: lat_lng,
     };
 
@@ -45,20 +46,18 @@ export function useGeocode(): UseGeocode {
   function reverseGeocodeMarker(lat: number, lng: number): void {
     let reverseGeocodeLatLng = lat + "," + lng;
 
-    reverseGeocode(reverseGeocodeLatLng, API_KEY_WOOSMAP).then(
-      (addressDetails) => {
-        let result = addressDetails.results[0];
+    reverseGeocode(reverseGeocodeLatLng).then((addressDetails) => {
+      let result = addressDetails.results[0];
 
-        address.value = result.formatted_address;
+      address.value = result.formatted_address;
 
-        if (
-          addressDetails.results == null ||
-          addressDetails.results.length === 0
-        ) {
-          return;
-        }
+      if (
+        addressDetails.results == null ||
+        addressDetails.results.length === 0
+      ) {
+        return;
       }
-    );
+    });
   }
 
   function setCoordonates(lat: number, lng: number): void {
@@ -81,5 +80,6 @@ export function useGeocode(): UseGeocode {
     setCoordonates,
     resetCoordonates,
     reverseGeocodeMarker,
+    reverseGeocode,
   };
 }

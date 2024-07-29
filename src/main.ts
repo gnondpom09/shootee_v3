@@ -71,6 +71,12 @@ import {
   bookmarksOutline,
   location,
   locationOutline,
+  bedOutline,
+  albumsOutline,
+  locateOutline,
+  restaurantOutline,
+  fastFoodOutline,
+  carOutline,
 } from "ionicons/icons";
 addIcons({
   add,
@@ -94,6 +100,12 @@ addIcons({
   "bookmarks-outline": bookmarksOutline,
   "grid-outline": gridOutline,
   "add-circle-outline": addCircleOutline,
+  "bed-outline": bedOutline,
+  "albums-outline": albumsOutline,
+  "locate-outline": locateOutline,
+  "restaurant-outline": restaurantOutline,
+  "fast-food-outline": fastFoodOutline,
+  "car-outline": carOutline,
 });
 
 // Components
@@ -135,6 +147,7 @@ import {
   IonChip,
   IonImg,
   IonModal,
+  IonRange,
 } from "@ionic/vue";
 
 // Import Swiper styles
@@ -180,6 +193,7 @@ app.component("ion-segment-button", IonSegmentButton);
 app.component("ion-chip", IonChip);
 app.component("ion-img", IonImg);
 app.component("ion-modal", IonModal);
+app.component("ion-range", IonRange);
 
 app.use(VueFire, {
   firebaseApp,
