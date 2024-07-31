@@ -1,6 +1,5 @@
 import { onMounted } from "vue";
 import { MAP_STYLES } from "../constants/map";
-import { getAllMarkers } from "@/services/marker.service";
 import { Spot } from "@/models/spot.model";
 
 interface UseMap {
@@ -116,6 +115,15 @@ export function useMap(elementId: string): UseMap {
 
   function resetMap(): void {
     map = {} as woosmap.map.Map;
+  }
+
+  function clearMarkers(): void {
+    let markersArray: woosmap.map.Marker[] = [];
+
+    for (const marker of markersArray) {
+      marker.setMap(null);
+    }
+    markersArray = [];
   }
 
   return {

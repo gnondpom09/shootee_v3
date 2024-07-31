@@ -77,6 +77,7 @@ import {
   restaurantOutline,
   fastFoodOutline,
   carOutline,
+  partlySunnyOutline,
 } from "ionicons/icons";
 addIcons({
   add,
@@ -106,6 +107,7 @@ addIcons({
   "restaurant-outline": restaurantOutline,
   "fast-food-outline": fastFoodOutline,
   "car-outline": carOutline,
+  "partly-sunny-outline": partlySunnyOutline,
 });
 
 // Components

@@ -6,6 +6,7 @@ import { useRoute } from "vue-router";
 import SpotPresentation from "@/components/spot/SpotPresentation.vue";
 import SpotNearbyRestaurants from "@/components/spot/SpotNearbyRestaurants.vue";
 import SpotNearbyBed from "@/components/spot/SpotNearbyBed.vue";
+import SpotDistance from "@/components/spot/spotDistance.vue";
 
 const route = useRoute();
 const id = String(route.params.id);
@@ -59,7 +60,9 @@ function segmentChanged(e: CustomEvent) {
       <div v-if="selectedSegment === 'default'">
         <SpotPresentation :spot="spot" />
       </div>
-      <div v-if="selectedSegment === 'route'"></div>
+      <div v-if="selectedSegment === 'route'">
+        <SpotDistance :spot="spot" />
+      </div>
       <div v-if="selectedSegment === 'nearby-restaurant'">
         <SpotNearbyRestaurants :spot="spot" />
       </div>

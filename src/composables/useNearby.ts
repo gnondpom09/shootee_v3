@@ -2,7 +2,7 @@ import { onMounted, ref } from "vue";
 import { measure } from "@/utils/map.utils";
 import { useGeocode } from "@/composables/useGeocode";
 
-const { address, reverseGeocode } = useGeocode();
+const { reverseGeocode } = useGeocode();
 
 let results: HTMLOListElement;
 let localitiesService: woosmap.map.LocalitiesService;

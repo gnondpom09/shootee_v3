@@ -18,3 +18,11 @@ export function measure(
   const d = R * c;
   return d * 1000; // meters
 }
+
+export function formatDistance(meters: number): string {
+  if (meters < 1000) {
+    return `${meters} m`;
+  } else {
+    return `${(meters / 1000).toFixed(2)} km`;
+  }
+}
