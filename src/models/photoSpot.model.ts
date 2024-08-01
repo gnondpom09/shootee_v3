@@ -12,7 +12,12 @@ export interface PhotoDraft {
 
 export interface Exif {
   DateTimeOriginal: string;
-  cameraDevice?: string;
-  focalLength?: string;
-  iso?: number;
+  ExposureTime: string;
+  Flash: string;
+  FocalLength: string;
+  ISOSpeedRatings: string;
+  LensModel: string;
+  Make: string;
+  Model: string;
+  Software: string;
 }

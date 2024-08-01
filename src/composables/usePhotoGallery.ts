@@ -23,22 +23,23 @@ const photosDraft = ref<PhotoDraft[]>([]);
 async function previewFile(file: File): Promise<Exif> {
   const tags = await ExifReader.load(file);
 
-  if (tags["DateTimeOriginal"] && tags["DateTimeOriginal"]) {
-    const imageDate = tags["DateTimeOriginal"].description;
-    const unprocessedTagValue = tags["DateTimeOriginal"].value;
+  console.log(tags);
 
-    console.log(imageDate);
-    console.log(unprocessedTagValue);
-    console.log(tags);
-
-    return {
-      DateTimeOriginal: imageDate,
-    };
-  }
-
-  return {
-    DateTimeOriginal: new Date().toISOString(),
+  const exif = {
+    DateTimeOriginal:
+      tags.DateTimeOriginal?.description ?? new Date().toISOString(),
+    ExposureTime: tags.ExposureTime?.description ?? "",
+    Flash: tags.Flash?.description ?? "",
+    FocalLength: tags.FocalLength?.description ?? "",
+    ISOSpeedRatings: tags.ISOSpeedRatings?.description ?? "",
+    LensModel: tags.LensModel?.description ?? "",
+    Make: tags.Make?.description ?? "",
+    Model: tags.Model?.description ?? "",
+    Software: tags.Software?.description ?? "",
   };
+  console.log(exif);
+
+  return exif;
 }
 
 function b64toBlob(b64Data: string, contentType = "", sliceSize = 512) {

@@ -39,13 +39,13 @@ const actionSheet: ActionSheetOptions = {
     {
       text: "Ouvrir la bibliothèque",
       handler: async () => {
-        if (!isPlatform("desktop")) {
+        if (isPlatform("hybrid")) {
           changeAvatarFromLibrary();
         } else {
           const alert = await alertController.create({
             header: "Fonctionnalité indisponible",
             message:
-              "Cette fonctionnalité n'est disponible que sur mobile et tablette.",
+              "Cette fonctionnalité n'est disponible que sur l'application mobile.",
             buttons: ["Fermer"],
           });
 
