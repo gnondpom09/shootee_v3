@@ -8,7 +8,12 @@ import {
 import { useRouter } from "vue-router";
 import { useCurrentUser } from "vuefire";
 
-import { ActionSheetOptions, IonActionSheet } from "@ionic/vue";
+import {
+  ActionSheetOptions,
+  IonActionSheet,
+  alertController,
+  isPlatform,
+} from "@ionic/vue";
 
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 
@@ -33,8 +38,19 @@ const actionSheet: ActionSheetOptions = {
     },
     {
       text: "Ouvrir la bibliothèque",
-      handler: () => {
-        changeAvatarFromLibrary();
+      handler: async () => {
+        if (!isPlatform("desktop")) {
+          changeAvatarFromLibrary();
+        } else {
+          const alert = await alertController.create({
+            header: "Fonctionnalité indisponible",
+            message:
+              "Cette fonctionnalité n'est disponible que sur mobile et tablette.",
+            buttons: ["Fermer"],
+          });
+
+          await alert.present();
+        }
       },
     },
     {

@@ -13,6 +13,7 @@ import StepAddPhotos from "@/components/swiper/StepAddPhotos.vue";
 import StepRecommendations from "@/components/swiper/StepRecommendations.vue";
 import StepSuccess from "@/components/swiper/StepSuccess.vue";
 import SwiperControls from "@/components/SwiperControls.vue";
+import { alertController, loadingController } from "@ionic/vue";
 
 import { Scrollbar, A11y, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -62,17 +63,32 @@ async function nextStep() {
     );
 
     if (latitude.value && longitude.value) {
-      await createMarker(
-        spotName.value,
-        photos[0].image,
-        new GeoPoint(latitude.value, longitude.value),
-        user.value.id,
-        address.value,
-        photos
-      );
-    }
+      const loading = await loadingController.create({
+        message: "...",
+      });
+      loading.present();
 
-    slider.value.slideNext();
+      try {
+        await createMarker(
+          spotName.value,
+          photos[0].image,
+          new GeoPoint(latitude.value, longitude.value),
+          user.value.id,
+          address.value,
+          photos
+        );
+        slider.value.slideNext();
+      } catch {
+        const alert = await alertController.create({
+          header: "Service indisponible",
+          message: "Une erreur s'est produite, réessayez plus tard",
+          buttons: ["Fermer"],
+        });
+        await alert.present();
+      } finally {
+        loading.dismiss();
+      }
+    }
   } else if (slider.value.activeIndex === 3) {
     router.push("/tabs/search");
     clearDatas();
@@ -92,7 +108,6 @@ function clearDatas() {
 }
 
 function onSlideChange() {
-  console.log("Slide active index : " + slider.value.activeIndex);
   activeIndex.value = slider.value.activeIndex;
 }
 </script>

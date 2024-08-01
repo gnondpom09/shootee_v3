@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
-import { ActionSheetOptions, IonActionSheet } from "@ionic/vue";
+import {
+  ActionSheetOptions,
+  IonActionSheet,
+  alertController,
+  isPlatform,
+} from "@ionic/vue";
 
-const { takePhoto, photosDraft, getPhotoFromLibrary } = usePhotoGallery();
+const { takePhoto, photosDraft, getSelectedPhotosFromLibrary } =
+  usePhotoGallery();
 
 const actionSheet: ActionSheetOptions = {
   header: "Modifier mon avatar",
@@ -15,9 +21,19 @@ const actionSheet: ActionSheetOptions = {
     },
     {
       text: "Ouvrir la bibliothèque",
-      handler: () => {
-        /*         changeAvatarFromLibrary();
-         */
+      handler: async () => {
+        if (!isPlatform("desktop")) {
+          getSelectedPhotosFromLibrary();
+        } else {
+          const alert = await alertController.create({
+            header: "Fonctionnalité indisponible",
+            message:
+              "Cette fonctionnalité n'est disponible que sur mobile et tablette.",
+            buttons: ["Fermer"],
+          });
+
+          await alert.present();
+        }
       },
     },
     {

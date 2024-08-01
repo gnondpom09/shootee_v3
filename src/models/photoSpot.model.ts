@@ -11,4 +11,8 @@ export interface PhotoSpot {
   image: string;
   authorId?: string;
   shootedAt?: Timestamp;
+  cameraDevice?: string;
+  focalLength?: string;
+  iso?: number;
+  exif?: any;
 }

@@ -4,6 +4,7 @@ import {
   CameraResultType,
   CameraSource,
   GalleryPhoto,
+  GalleryPhotos,
   Photo,
 } from "@capacitor/camera";
 import { Image, PhotoSpot } from "../models/photoSpot.model";
@@ -20,6 +21,7 @@ const photosDraft = ref<PhotoDraft[]>([]);
 export interface PhotoDraft {
   path: string;
   webPath: string;
+  exif?: any | undefined;
 }
 
 function b64toBlob(b64Data: string, contentType = "", sliceSize = 512) {
@@ -59,12 +61,29 @@ export const usePhotoGallery = () => {
 
   async function getPhotoFromLibrary(): Promise<void> {
     try {
-      const photo: GalleryPhoto = (await Camera.getLimitedLibraryPhotos())
-        .photos[0];
-
-      savePhotoInStorage(photo);
+      Camera.getLimitedLibraryPhotos().then((gallery: GalleryPhotos) => {
+        const selectedPhoto = gallery.photos[0];
+        savePhotoInStorage(selectedPhoto);
+      });
     } catch {
       photoUrl.value = "";
+    }
+  }
+
+  async function getSelectedPhotosFromLibrary(): Promise<void> {
+    try {
+      Camera.getLimitedLibraryPhotos().then((gallery: GalleryPhotos) => {
+        gallery.photos.forEach((photo: GalleryPhoto) => {
+          const draft: PhotoDraft = {
+            path: photo.path ?? "",
+            webPath: photo.webPath ?? "",
+            exif: photo.exif,
+          };
+          photosDraft.value.push(draft);
+        });
+      });
+    } catch {
+      photosDraft.value = [...photosDraft.value];
     }
   }
 
@@ -81,6 +100,7 @@ export const usePhotoGallery = () => {
         const draft: PhotoDraft = {
           path: photo.path ?? "",
           webPath: photo.webPath ?? "",
+          //exif: photo?.exif || undefined,
         };
 
         photosDraft.value = [draft, ...photosDraft.value];
@@ -132,14 +152,13 @@ export const usePhotoGallery = () => {
           const savedImage = {
             image: url.value,
             authorId,
+            //exif: draft?.exif || undefined,
           };
 
           photosSaved.push(savedImage);
 
           if (index === photosDraft.length - 1) {
             setTimeout(() => {
-              console.log(photosSaved);
-
               resolve(photosSaved);
             }, 800);
           }
@@ -194,6 +213,7 @@ export const usePhotoGallery = () => {
     savePhotosAndGetImagesPath,
     savePhotoInStorage,
     getPhotoFromLibrary,
+    getSelectedPhotosFromLibrary,
     resetPhotos,
   };
 };

@@ -29,19 +29,17 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/add-spot",
-    component: () => import("@/views/AddSpotPage.vue"),
     meta: { requiresAuth: true },
+    component: () => import("@/views/AddSpotPage.vue"),
   },
   {
     path: "/spot-detail/:id",
     component: () => import("@/views/SpotDetailPage.vue"),
-    meta: { requiresAuth: true },
   },
 
   {
     path: "/author/:id",
     component: () => import("@/views/AuthorDetail.vue"),
-    meta: { requiresAuth: true },
   },
   {
     path: "/",
