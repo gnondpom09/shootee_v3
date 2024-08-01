@@ -7,21 +7,38 @@ import {
   GalleryPhotos,
   Photo,
 } from "@capacitor/camera";
-import { Image, PhotoSpot } from "../models/photoSpot.model";
+import { Exif, PhotoDraft, PhotoSpot } from "../models/photoSpot.model";
 import { useStorageFile, useFirebaseStorage } from "vuefire";
 import { ref as storageRef } from "firebase/storage";
 import { isPlatform } from "@ionic/vue";
-// import { Capacitor } from '@capacitor/core';
 import { Filesystem } from "@capacitor/filesystem";
+
+import ExifReader from "exifreader";
 
 const photoUrl = ref<string>("");
 
 const photosDraft = ref<PhotoDraft[]>([]);
 
-export interface PhotoDraft {
-  path: string;
-  webPath: string;
-  exif?: any | undefined;
+// TODO: return exif datas
+async function previewFile(file: File): Promise<Exif> {
+  const tags = await ExifReader.load(file);
+
+  if (tags["DateTimeOriginal"] && tags["DateTimeOriginal"]) {
+    const imageDate = tags["DateTimeOriginal"].description;
+    const unprocessedTagValue = tags["DateTimeOriginal"].value;
+
+    console.log(imageDate);
+    console.log(unprocessedTagValue);
+    console.log(tags);
+
+    return {
+      DateTimeOriginal: imageDate,
+    };
+  }
+
+  return {
+    DateTimeOriginal: new Date().toISOString(),
+  };
 }
 
 function b64toBlob(b64Data: string, contentType = "", sliceSize = 512) {
@@ -97,10 +114,14 @@ export const usePhotoGallery = () => {
       });
 
       if (photo) {
+        const blob = await getBlob(photo);
+        const file = new File([blob], "photo");
+        const exif = await previewFile(file);
+
         const draft: PhotoDraft = {
           path: photo.path ?? "",
           webPath: photo.webPath ?? "",
-          //exif: photo?.exif || undefined,
+          exif,
         };
 
         photosDraft.value = [draft, ...photosDraft.value];
@@ -134,6 +155,7 @@ export const usePhotoGallery = () => {
         const imageFileRef = storageRef(storage, `test/${fileName}`);
 
         if (isPlatform("hybrid")) {
+          // For App mobile
           const file = await Filesystem.readFile({
             path: String(draft.path),
           });
@@ -152,7 +174,7 @@ export const usePhotoGallery = () => {
           const savedImage = {
             image: url.value,
             authorId,
-            //exif: draft?.exif || undefined,
+            exif: draft.exif,
           };
 
           photosSaved.push(savedImage);

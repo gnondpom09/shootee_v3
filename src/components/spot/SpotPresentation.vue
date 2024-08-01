@@ -57,9 +57,10 @@ function viewAuthor(authorId: string): void {
       <ion-content class="ion-padding">
         <img :src="currentPhoto?.image" />
         <p>
+          Photo prise à
           {{
-            currentPhoto?.shootedAt
-              ? currentPhoto.shootedAt.toDate()
+            currentPhoto?.exif?.DateTimeOriginal
+              ? currentPhoto.exif.DateTimeOriginal
               : spot.createdAt.toDate()
           }}
         </p>
