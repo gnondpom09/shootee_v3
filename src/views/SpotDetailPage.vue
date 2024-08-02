@@ -33,7 +33,7 @@ function segmentChanged(e: CustomEvent) {
     </ion-header>
     <ion-content v-if="spot">
       <div class="spot-container">
-        <img :src="spot.thumbnail" />
+        <img :src="spot.photos[0].preview" />
       </div>
       <ion-item>
         <ion-label>

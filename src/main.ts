@@ -151,6 +151,9 @@ import {
   IonModal,
   IonRange,
   IonLoading,
+  IonToggle,
+  IonAccordion,
+  IonAccordionGroup,
 } from "@ionic/vue";
 
 // Import Swiper styles
@@ -198,6 +201,9 @@ app.component("ion-img", IonImg);
 app.component("ion-modal", IonModal);
 app.component("ion-range", IonRange);
 app.component("ion-lodaing", IonLoading);
+app.component("ion-toggle", IonToggle);
+app.component("ion-accordion", IonAccordion);
+app.component("ion-accordion-group", IonAccordionGroup);
 
 app.use(VueFire, {
   firebaseApp,

@@ -46,12 +46,12 @@ export function getMarkerId(id: string) {
   return useDocument<Spot>(doc(firestore, `spots/${id}`));
 }
 
-export async function updateMarker(id: string, spotsCount: number) {
-  const markerRef = doc(collection(firestore, "spots"), id);
-  return await updateDoc(markerRef, { spotsCount });
+export async function updateMarker(spotId: string, photos: PhotoSpot[]) {
+  const markerRef = doc(collection(firestore, "spots"), spotId);
+  return await updateDoc(markerRef, { photos });
 }
 
-export async function removeMarker(id: string) {
-  const markerRef = doc(collection(firestore, "spots"), id);
+export async function removeMarker(spotId: string) {
+  const markerRef = doc(collection(firestore, "spots"), spotId);
   return await deleteDoc(markerRef);
 }

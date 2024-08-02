@@ -71,7 +71,7 @@ async function nextStep() {
       try {
         await createMarker(
           spotName.value,
-          photos[0].image,
+          photos[0].preview,
           new GeoPoint(latitude.value, longitude.value),
           user.value.id,
           address.value,
@@ -87,6 +87,7 @@ async function nextStep() {
         await alert.present();
       } finally {
         loading.dismiss();
+        resetPhotos();
       }
     }
   } else if (slider.value.activeIndex === 3) {

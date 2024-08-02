@@ -1,5 +1,6 @@
 export interface PhotoSpot {
   image: string;
+  preview: string;
   authorId?: string;
   exif?: Exif;
 }
@@ -7,6 +8,7 @@ export interface PhotoSpot {
 export interface PhotoDraft {
   path: string;
   webPath: string;
+  preview: Blob | null;
   exif?: Exif;
 }
 

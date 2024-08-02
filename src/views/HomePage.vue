@@ -7,7 +7,7 @@ const spots = getAllMarkers();
 
 const selectedSegment = ref<string>("default");
 
-const header = ref<HTMLElement | null>(null);
+// const header = ref<HTMLElement | null>(null);
 
 onIonViewWillEnter(() => {
   console.log("Home page will enter");
@@ -83,7 +83,7 @@ function segmentChanged(e: CustomEvent) {
             :key="index"
             v-for="(photo, index) in spots"
           >
-            <img :src="photo.thumbnail" />
+            <img v-if="photo" :src="photo.thumbnail" />
           </div>
           <div v-if="selectedSegment === 'recents'">
             <h2>segment 2</h2>

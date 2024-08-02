@@ -17,7 +17,8 @@ import {
 
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 
-const { takePhotoAndSave, photoUrl, getPhotoFromLibrary } = usePhotoGallery();
+const { takeAvatarAndSave, photoUrl, avatarPreview, pickAvatarFromLibrary } =
+  usePhotoGallery();
 
 const router = useRouter();
 
@@ -73,19 +74,23 @@ function goToSettings() {
 
 async function changeAvatarFromPhoto() {
   if (user.value) {
-    await takePhotoAndSave();
+    await takeAvatarAndSave(user.value.id);
 
     user.value.avatar = photoUrl.value ?? user.value.avatar;
-    updateAvatar(user.value.id, user.value.avatar);
+    user.value.avatarPreview = avatarPreview.value ?? user.value.avatarPreview;
+
+    updateAvatar(user.value.id, user.value.avatar, user.value.avatarPreview);
   }
 }
 
 async function changeAvatarFromLibrary() {
   if (user.value) {
-    await getPhotoFromLibrary();
+    await pickAvatarFromLibrary(user.value.id);
 
     user.value.avatar = photoUrl.value ?? user.value.avatar;
-    updateAvatar(user.value.id, user.value.avatar);
+    user.value.avatarPreview = avatarPreview.value ?? user.value.avatarPreview;
+
+    updateAvatar(user.value.id, user.value.avatar, user.value.avatarPreview);
   }
 }
 </script>
@@ -100,7 +105,7 @@ async function changeAvatarFromLibrary() {
     <ion-content v-if="user">
       <div class="profile">
         <ion-avatar v-if="user.avatar">
-          <img :src="user.avatar" />
+          <img :src="user.avatarPreview" />
         </ion-avatar>
         <ion-button id="open-action-sheet" expand="block" fill="clear">
           Modifier l'avatar
