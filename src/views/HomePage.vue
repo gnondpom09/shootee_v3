@@ -64,7 +64,11 @@ function segmentChanged(e: CustomEvent) {
           <h1>Trouvez le spot idéal</h1>
         </div>
 
-        <ion-segment :value="selectedSegment" @ionChange="segmentChanged">
+        <ion-segment
+          mode="md"
+          :value="selectedSegment"
+          @ionChange="segmentChanged"
+        >
           <ion-segment-button value="default">
             <ion-label>Recommandés</ion-label>
           </ion-segment-button>

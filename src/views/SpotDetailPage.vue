@@ -28,54 +28,74 @@ function segmentChanged(e: CustomEvent) {
             <ion-back-button defaultHref="/tabs/search"></ion-back-button>
           </ion-buttons>
         </ion-buttons>
-        <ion-title>Detail</ion-title>
+        <ion-title v-if="spot">{{ spot.name }}</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content v-if="spot">
-      <div class="spot-container">
-        <img :src="spot.photos[0].preview" />
+    <ion-content v-if="spot" class="ion-padding">
+      <div
+        class="preview"
+        :style="{ 'background-image': 'url(' + spot.photos[0].preview + ')' }"
+        style="
+          height: 33%;
+          width: 100%;
+          background-size: cover;
+          background-color: #fff;
+          background-repeat: no-repeat;
+          background-position: center;
+          border-radius: 12px;
+        "
+      ></div>
+
+      <div class="spot-menu">
+        <ion-item class="ion-no-padding" line="none">
+          <ion-label>
+            <h4>
+              {{ spot.address }}
+            </h4>
+          </ion-label>
+        </ion-item>
+        <ion-segment
+          mode="md"
+          :value="selectedSegment"
+          @ionChange="segmentChanged"
+        >
+          <ion-segment-button value="default">
+            <ion-icon name="albums-outline"></ion-icon>
+          </ion-segment-button>
+          <ion-segment-button value="route">
+            <ion-icon name="car-outline"></ion-icon>
+          </ion-segment-button>
+          <ion-segment-button value="nearby-restaurant">
+            <ion-icon name="restaurant-outline"></ion-icon>
+          </ion-segment-button>
+          <ion-segment-button value="nearby-bed">
+            <ion-icon name="bed-outline"></ion-icon>
+          </ion-segment-button>
+        </ion-segment>
       </div>
-      <ion-item>
-        <ion-label>
-          <h4>
-            {{ spot.address }}
-          </h4>
-          <p>122 km</p>
-        </ion-label>
-      </ion-item>
-      <ion-segment :value="selectedSegment" @ionChange="segmentChanged">
-        <ion-segment-button value="default">
-          <ion-icon name="albums-outline"></ion-icon>
-        </ion-segment-button>
-        <ion-segment-button value="route">
-          <ion-icon name="car-outline"></ion-icon>
-        </ion-segment-button>
-        <ion-segment-button value="nearby-restaurant">
-          <ion-icon name="restaurant-outline"></ion-icon>
-        </ion-segment-button>
-        <ion-segment-button value="nearby-bed">
-          <ion-icon name="bed-outline"></ion-icon>
-        </ion-segment-button>
-      </ion-segment>
-      <div v-if="selectedSegment === 'default'">
-        <SpotPresentation :spot="spot" />
-      </div>
-      <div v-if="selectedSegment === 'route'">
-        <SpotDistance :spot="spot" />
-      </div>
-      <div v-if="selectedSegment === 'nearby-restaurant'">
-        <SpotNearbyRestaurants :spot="spot" />
-      </div>
-      <div v-if="selectedSegment === 'nearby-bed'">
-        <SpotNearbyBed :spot="spot" />
+
+      <div class="details-content">
+        <div v-if="selectedSegment === 'default'">
+          <SpotPresentation :spot="spot" />
+        </div>
+        <div v-if="selectedSegment === 'route'">
+          <SpotDistance :spot="spot" />
+        </div>
+        <div v-if="selectedSegment === 'nearby-restaurant'">
+          <SpotNearbyRestaurants :spot="spot" />
+        </div>
+        <div v-if="selectedSegment === 'nearby-bed'">
+          <SpotNearbyBed :spot="spot" />
+        </div>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <style scoped lang="scss">
-.spot-container {
-  display: flex;
-  flex-direction: column;
+.spot-preview {
+  display: block;
+  height: 33%;
+  overflow: hidden;
 }
 </style>
