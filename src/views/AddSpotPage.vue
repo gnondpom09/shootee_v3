@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { getUserById } from "@/services/user.service";
 import { createMarker } from "@/services/marker.service";
 import { useCurrentUser } from "vuefire";
@@ -10,7 +10,6 @@ import { useGeocode } from "@/composables/useGeocode";
 
 import StepLocation from "@/components/swiper/StepLocation.vue";
 import StepAddPhotos from "@/components/swiper/StepAddPhotos.vue";
-import StepRecommendations from "@/components/swiper/StepRecommendations.vue";
 import StepSuccess from "@/components/swiper/StepSuccess.vue";
 import SwiperControls from "@/components/SwiperControls.vue";
 import { alertController, loadingController } from "@ionic/vue";
@@ -23,6 +22,7 @@ import { useRouter } from "vue-router";
 import "swiper/scss/navigation";
 import "swiper/scss/pagination";
 import "swiper/scss/scrollbar";
+import { useMap } from "@/composables/useMap";
 
 const { photosDraft, savePhotosAndGetImagesPath, resetPhotos } =
   usePhotoGallery();
@@ -43,20 +43,19 @@ const onSwiper = (event: any) => {
   slider.value = event;
 };
 
-const nextButtonLabel = computed<string>(() => {
-  if (activeIndex.value === 2) {
-    return "Valider";
+const nextButtonLabel = ref<string>("Suivant");
+
+function previousStep() {
+  if (slider.value.activeIndex === 1) {
+    nextButtonLabel.value = "Suivant";
   }
-  if (activeIndex.value === 3) {
-    return "Fermer";
-  }
-  return "Suivant";
-});
+  slider.value.slidePrev();
+}
 
 async function nextStep() {
   const { coords } = useGeolocation();
 
-  if (slider.value.activeIndex === 2 && coords.value && user.value) {
+  if (slider.value.activeIndex === 1 && coords.value && user.value) {
     const photos = await savePhotosAndGetImagesPath(
       photosDraft.value,
       user.value.id
@@ -78,6 +77,7 @@ async function nextStep() {
           photos
         );
         slider.value.slideNext();
+        nextButtonLabel.value = "Fermer";
       } catch {
         const alert = await alertController.create({
           header: "Service indisponible",
@@ -90,10 +90,11 @@ async function nextStep() {
         resetPhotos();
       }
     }
-  } else if (slider.value.activeIndex === 3) {
+  } else if (slider.value.activeIndex === 2) {
     router.push("/tabs/search");
     clearDatas();
   } else {
+    nextButtonLabel.value = "Valider";
     slider.value.slideNext();
   }
 }
@@ -106,6 +107,12 @@ function closeAddForm() {
 function clearDatas() {
   resetCoordonates();
   resetPhotos();
+
+  slider.value.activeIndex = 0;
+  nextButtonLabel.value = "Suivant";
+
+  const { initMap } = useMap("map-add-spot");
+  initMap();
 }
 
 function onSlideChange() {
@@ -119,7 +126,7 @@ function onSlideChange() {
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-buttons slot="start">
-            <ion-button @click="closeAddForm">Fermer</ion-button>
+            <ion-button @click="closeAddForm()">Fermer</ion-button>
           </ion-buttons>
         </ion-buttons>
         <ion-title>Nouveau spot</ion-title>
@@ -137,9 +144,6 @@ function onSlideChange() {
         >
           <swiper-slide><StepLocation @close="closeAddForm" /></swiper-slide>
           <swiper-slide><StepAddPhotos @close="closeAddForm" /></swiper-slide>
-          <swiper-slide
-            ><StepRecommendations @close="closeAddForm"
-          /></swiper-slide>
           <swiper-slide><StepSuccess @close="closeAddForm" /></swiper-slide>
         </swiper>
 
@@ -147,6 +151,7 @@ function onSlideChange() {
           <SwiperControls
             :next-button-label="nextButtonLabel"
             :slider="slider"
+            @previousStep="previousStep"
             @nextStep="nextStep"
           />
         </div>

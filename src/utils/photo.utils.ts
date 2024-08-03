@@ -18,8 +18,7 @@ export async function getExifPhoto(file: File): Promise<Exif> {
     ? convertExifToTimeStamp(tags.DateTimeOriginal.description)
     : undefined;
 
-  const exif = {
-    DateTimeOriginal: stamp,
+  const exif: Exif = {
     ExposureTime: tags.ExposureTime?.description ?? "",
     Flash: tags.Flash?.description ?? "",
     FocalLength: tags.FocalLength?.description ?? "",
@@ -29,6 +28,10 @@ export async function getExifPhoto(file: File): Promise<Exif> {
     Model: tags.Model?.description ?? "",
     Software: tags.Software?.description ?? "",
   };
+
+  if (stamp) {
+    exif.DateTimeOriginal = stamp;
+  }
 
   return exif;
 }

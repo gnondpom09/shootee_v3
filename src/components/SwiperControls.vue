@@ -1,16 +1,24 @@
 <script setup lang="ts">
-import { toRefs } from "vue";
+import { toRefs, computed } from "vue";
 
 const props = defineProps<{
   slider: any;
   nextButtonLabel: string;
 }>();
 
-const { slider, nextButtonLabel } = toRefs(props);
+const { nextButtonLabel, slider } = toRefs(props);
 
 const emit = defineEmits<{
-  (e: "nextStep"): void;
+  (event: "previousStep"): void;
+  (event: "nextStep"): void;
 }>();
+
+const disabledBackButton = computed<boolean>(() => {
+  if (slider.value) {
+    return slider.value.activeIndex === 0 || slider.value.activeIndex === 2;
+  }
+  return false;
+});
 </script>
 
 <template>
@@ -25,7 +33,8 @@ const emit = defineEmits<{
             type="submit"
             expand="full"
             fill="clear"
-            @click="slider.slidePrev()"
+            :disabled="disabledBackButton"
+            @click="emit('previousStep')"
           >
             Retour
           </ion-button>
