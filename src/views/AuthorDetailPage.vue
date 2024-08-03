@@ -34,11 +34,11 @@ function viewInstagramProfile() {
         </ion-avatar>
 
         <h3>{{ user.pseudo }}</h3>
-
-        <ion-button @click="viewInstagramProfile" expnad="full">
-          Voir le profil instagram
-        </ion-button>
       </div>
+
+      <ion-button @click="viewInstagramProfile" expand="full">
+        Voir le profil instagram
+      </ion-button>
     </ion-content>
   </ion-page>
 </template>

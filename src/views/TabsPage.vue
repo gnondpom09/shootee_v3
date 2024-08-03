@@ -35,6 +35,12 @@ import {
   IonIcon,
   IonPage,
   IonRouterOutlet,
-} from '@ionic/vue';
-import { gridOutline, locationOutline, personCircleOutline, addCircleOutline, bookmarksOutline } from 'ionicons/icons';
+} from "@ionic/vue";
+import {
+  gridOutline,
+  locationOutline,
+  personCircleOutline,
+  addCircleOutline,
+  bookmarksOutline,
+} from "ionicons/icons";
 </script>

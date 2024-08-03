@@ -129,8 +129,8 @@ export function useDistance(
         }
 
         directionTrip.innerHTML = `
-              <div style="display: flex; color: black;">
-                <img class="directionTrip__travelModeIcon" src="https://images.woosmap.com/directions/drive_black.png" />
+              <div style="display: flex;">
+                <img class="directionTrip__travelModeIcon" style="background-color: red;" src="https://images.woosmap.com/directions/drive_black.png" />
                 <div class="directionTrip__description" style="padding-left: 8px;">
                     <div class="directionTrip__numbers">
                         <div class="directionTrip__duration">Temps de trajet : ${formatTime(
@@ -176,10 +176,10 @@ export function useDistance(
       tableContainer.appendChild(element)
     );
     tableContainer.style.display = "flex";
-    tableContainer.style.backgroundColor = "white";
+    //tableContainer.style.backgroundColor = "white";
     tableContainer.style.padding = "8px";
     tableContainer.style.width = "100%";
-    tableContainer.style.color = "black;";
+    //tableContainer.style.color = "black;";
   }
 
   function displayDirectionsRoute(response: woosmap.map.DirectionResult) {

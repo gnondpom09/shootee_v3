@@ -8,7 +8,7 @@ import { useAuth } from "@/composables/useAuth";
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { updateMarker } from "@/services/marker.service";
 import PhotoDetails from "@/components/spot/PhotoDetails.vue";
-import { ActionSheetOptions, alertController, isPlatform } from "@ionic/vue";
+import { ActionSheetOptions, alertController } from "@ionic/vue";
 
 const props = defineProps<{
   spot: Spot;
@@ -28,13 +28,8 @@ const isSelectionEnabled = ref<boolean>(false);
 
 const { checkUserAuth } = useAuth();
 
-const {
-  takePhoto,
-  savePhotosAndGetImagesPath,
-  photosDraft,
-  resetPhotos,
-  getSelectedPhotosFromLibrary,
-} = usePhotoGallery();
+const { takePhoto, savePhotosAndGetImagesPath, photosDraft, resetPhotos } =
+  usePhotoGallery();
 
 const setOpen = (open: boolean, photo: PhotoSpot | null) => {
   currentPhoto.value = photo;
@@ -141,7 +136,8 @@ async function removePhoto(index: number) {
         >Supprimer des images</ion-toggle
       >
     </div>
-    <div class="">
+
+    <div class="gallery">
       <ion-row>
         <ion-col :key="index" v-for="(photo, index) in spot.photos" size="4">
           <div
@@ -208,24 +204,5 @@ async function removePhoto(index: number) {
   opacity: 0;
   position: absolute;
   bottom: 0;
-}
-
-.pins {
-  column-count: 4;
-  position: relative;
-  z-index: 500;
-  .pin {
-    display: inline-block;
-    height: 150px;
-    margin: 0;
-    padding: 4px;
-    img,
-    ion-skeleton-text {
-      border-radius: 6px;
-    }
-    ion-skeleton-text {
-      background-color: aqua;
-    }
-  }
 }
 </style>

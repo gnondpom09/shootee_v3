@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { onIonViewWillEnter } from "@ionic/vue";
 import { getAllMarkers } from "@/services/marker.service";
 
 const spots = getAllMarkers();
+
+const router = useRouter();
 
 const selectedSegment = ref<string>("default");
 
@@ -26,6 +29,11 @@ onMounted(() => {
 
 function segmentChanged(e: CustomEvent) {
   selectedSegment.value = e.detail.value;
+}
+
+function viewSpot(spotId: string) {
+  console.log("open spot detail");
+  router.push(`/spot-detail/${spotId}`);
 }
 
 /* function onContentScroll(event: any) {
@@ -58,10 +66,11 @@ function segmentChanged(e: CustomEvent) {
         </ion-row>
       </ion-toolbar>
     </ion-header> -->
-    <ion-content fullscreen>
+    <ion-content fullscreen class="ion-padding">
       <div class="wall">
         <div class="home-title">
           <h1>Trouvez le spot idéal</h1>
+          <p>Version 0.1.1</p>
         </div>
 
         <ion-segment
@@ -80,15 +89,41 @@ function segmentChanged(e: CustomEvent) {
           </ion-segment-button>
         </ion-segment>
 
-        <div v-if="spots" class="pins">
-          <div
+        <div v-if="spots" class="">
+          <ion-row v-if="selectedSegment === 'default'" class="pins">
+            <ion-col
+              :key="index"
+              v-for="(spot, index) in spots"
+              size="4"
+              class="pin"
+            >
+              <div
+                class="gallery"
+                :style="{ 'background-image': 'url(' + spot.thumbnail + ')' }"
+                style="
+                  height: 120px;
+                  background-size: cover;
+                  background-color: #fff;
+                  background-repeat: no-repeat;
+                  background-position: center;
+                  border-radius: 12px;
+                "
+              >
+                <ion-button
+                  class="link"
+                  @click="viewSpot(spot.id)"
+                ></ion-button>
+              </div>
+            </ion-col>
+          </ion-row>
+          <!--           <div
             v-if="selectedSegment === 'default'"
             class="pin"
             :key="index"
             v-for="(photo, index) in spots"
           >
             <img v-if="photo" :src="photo.thumbnail" />
-          </div>
+          </div> -->
           <div v-if="selectedSegment === 'recents'">
             <h2>segment 2</h2>
           </div>
@@ -105,7 +140,10 @@ function segmentChanged(e: CustomEvent) {
 .home-title {
   height: 200px !important;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: end;
+
   ion-title {
     h1 {
       font-size: 2.4rem;
@@ -117,6 +155,16 @@ function segmentChanged(e: CustomEvent) {
     }
   }
 }
+
+.link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  position: absolute;
+  bottom: 0;
+}
+
 .pins {
   column-count: 3;
   position: relative;
