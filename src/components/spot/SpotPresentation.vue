@@ -8,7 +8,7 @@ import { useAuth } from "@/composables/useAuth";
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { updateMarker } from "@/services/marker.service";
 import PhotoDetails from "@/components/spot/PhotoDetails.vue";
-import { alertController } from "@ionic/vue";
+import { ActionSheetOptions, alertController, isPlatform } from "@ionic/vue";
 
 const props = defineProps<{
   spot: Spot;
@@ -28,12 +28,48 @@ const isSelectionEnabled = ref<boolean>(false);
 
 const { checkUserAuth } = useAuth();
 
-const { takePhoto, savePhotosAndGetImagesPath, photosDraft, resetPhotos } =
-  usePhotoGallery();
+const {
+  takePhoto,
+  savePhotosAndGetImagesPath,
+  photosDraft,
+  resetPhotos,
+  getSelectedPhotosFromLibrary,
+} = usePhotoGallery();
 
 const setOpen = (open: boolean, photo: PhotoSpot | null) => {
   currentPhoto.value = photo;
   isOpen.value = open;
+};
+
+const actionSheet: ActionSheetOptions = {
+  header: "Modifier mon avatar",
+  buttons: [
+    {
+      text: "Prendre une photo",
+      handler: () => {
+        contribute();
+      },
+    },
+    {
+      text: "Ouvrir la bibliothèque",
+      handler: async () => {
+        const alert = await alertController.create({
+          header: "Fonctionnalité indisponible",
+          message: "Cette fonctionnalité n'est pas encore disponible.",
+          buttons: ["Fermer"],
+        });
+
+        await alert.present();
+      },
+    },
+    {
+      text: "Cancel",
+      role: "cancel",
+      data: {
+        action: "cancel",
+      },
+    },
+  ],
 };
 
 function viewAuthor(authorId: string): void {
@@ -136,10 +172,16 @@ async function removePhoto(index: number) {
       horizontal="end"
       slot="fixed"
     >
-      <ion-fab-button size="small" @click="contribute">
+      <ion-fab-button size="small" id="open-action-contribute">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>
+
+    <ion-action-sheet
+      trigger="open-action-contribute"
+      :header="actionSheet.header"
+      :buttons="actionSheet.buttons"
+    ></ion-action-sheet>
 
     <ion-modal :is-open="isOpen">
       <PhotoDetails

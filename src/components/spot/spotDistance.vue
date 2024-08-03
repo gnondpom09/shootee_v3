@@ -1,28 +1,19 @@
 <script setup lang="ts">
 import { onMounted, toRefs } from "vue";
-import { useMap } from "@/composables/useMap";
 import { useDistance } from "@/composables/useDistance";
 import { Spot } from "@/models/spot.model";
-import { useGeolocation } from "@vueuse/core";
 
 const props = defineProps<{
   spot: Spot;
 }>();
 const { spot } = toRefs(props);
 
-const { coords } = useGeolocation();
-
-const origin = {
-  lat: coords.value.latitude,
-  lng: coords.value.longitude,
-};
-
-const destination = {
+const destination: woosmap.map.LatLngLiteral = {
   lat: spot.value.location.latitude,
   lng: spot.value.location.longitude,
 };
 
-const initializeDistance = useDistance("map-distance");
+const initializeDistance = useDistance("map-distance", destination);
 
 onMounted(() => {
   initializeDistance.calculateDirections();
@@ -55,6 +46,7 @@ onMounted(() => {
     font-size: 13px;
     position: absolute;
     bottom: 4px;
+    left: 0;
   }
 }
 </style>

@@ -1,6 +1,7 @@
 import { onMounted } from "vue";
 import { formatDistance } from "@/utils/map.utils";
 import { formatTime } from "@/utils/date.utils";
+import { useGeolocation } from "@vueuse/core";
 
 let map: woosmap.map.Map;
 let bounds: woosmap.map.LatLngBounds;
@@ -10,14 +11,24 @@ let markersArray: woosmap.map.Marker[] = [];
 
 let directionsRenderer: woosmap.map.DirectionsRenderer;
 
-export function useDistance(mapId: string) {
+const { coords } = useGeolocation();
+
+export function useDistance(
+  mapId: string,
+  destination: woosmap.map.LatLngLiteral
+) {
   onMounted(() => {
     initDistance();
   });
 
   function initDistance(): void {
+    console.log(coords.value.latitude);
+
     map = new woosmap.map.Map(document.getElementById(mapId) as HTMLElement, {
-      center: { lat: 51.5074, lng: -0.1478 },
+      center: {
+        lat: coords.value.latitude,
+        lng: coords.value.longitude,
+      },
       zoom: 10,
     });
     directionsService = new woosmap.map.DirectionsService();
@@ -27,7 +38,7 @@ export function useDistance(mapId: string) {
 
     bounds = new woosmap.map.LatLngBounds();
 
-    directionsRequest = createDefaultRequest();
+    directionsRequest = createDefaultRequest(destination);
   }
 
   function createMarker(
@@ -55,8 +66,12 @@ export function useDistance(mapId: string) {
   }
 
   function displayDirectionsMarkers(): void {
+    const origin = {
+      lat: coords.value.latitude,
+      lng: coords.value.longitude,
+    };
     const originMarker = createMarker(
-      directionsRequest.origin,
+      origin,
       "O",
       "https://images.woosmap.com/marker-blue.svg"
     );
@@ -70,18 +85,23 @@ export function useDistance(mapId: string) {
     markersArray.push(originMarker);
     markersArray.push(destinationMarker);
 
-    bounds.extend(directionsRequest.origin as woosmap.map.LatLngLiteral);
+    bounds.extend(origin as woosmap.map.LatLngLiteral);
     bounds.extend(directionsRequest.destination as woosmap.map.LatLngLiteral);
 
     map.fitBounds(bounds, { top: 70, bottom: 40, left: 50, right: 50 }, true);
   }
 
-  function createDefaultRequest(): woosmap.map.DirectionRequest {
-    const origin = { lat: 51.6511, lng: -0.1615 };
-    const destination = { lat: 51.5146, lng: -0.0212 };
+  function createDefaultRequest(
+    destination: woosmap.map.LatLngLiteral
+  ): woosmap.map.DirectionRequest {
+    /*     const origin = { lat: 51.6511, lng: -0.1615 }; */
+    /*     const destination = { lat: 51.5146, lng: -0.0212 }; */
 
     return {
-      origin,
+      origin: {
+        lat: coords.value.latitude,
+        lng: coords.value.longitude,
+      },
       destination,
       details: "full",
       provideRouteAlternatives: true,
@@ -109,29 +129,25 @@ export function useDistance(mapId: string) {
         }
 
         directionTrip.innerHTML = `
-                <div class="directionTrip__description">
+              <div style="display: flex; color: black;">
+                <img class="directionTrip__travelModeIcon" src="https://images.woosmap.com/directions/drive_black.png" />
+                <div class="directionTrip__description" style="padding-left: 8px;">
                     <div class="directionTrip__numbers">
-                        <div class="directionTrip__duration">${formatTime(
+                        <div class="directionTrip__duration">Temps de trajet : ${formatTime(
                           durationTotal
                         )}</div>
                         <div class="directionTrip__distance">${formatDistance(
                           distanceTotal
                         )}</div>
                     </div>
-                    <div class="directionTrip__title">through ${
+                    <div class="directionTrip__title">par ${
                       leg.start_address
                         ? leg.start_address
                         : JSON.stringify(leg.start_location)
                     }</div>
-                    <div class="directionTrip__summary">${formatTime(
-                      durationTotal
-                    )} ${
-          directionsRequest.departure_time || directionsRequest.arrival_time
-            ? "with"
-            : "without"
-        } traffic</div>
                     <div class="directionTrip__detailsMsg"></div>
                 </div>
+              </div>
             `;
 
         directionTrip.addEventListener("click", () => {
@@ -160,6 +176,10 @@ export function useDistance(mapId: string) {
       tableContainer.appendChild(element)
     );
     tableContainer.style.display = "flex";
+    tableContainer.style.backgroundColor = "white";
+    tableContainer.style.padding = "8px";
+    tableContainer.style.width = "100%";
+    tableContainer.style.color = "black;";
   }
 
   function displayDirectionsRoute(response: woosmap.map.DirectionResult) {

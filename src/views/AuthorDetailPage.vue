@@ -9,6 +9,10 @@ const id = String(route.params.id);
 const currentUser = getUserById(id);
 
 const user = getUserById(currentUser.value?.id as string);
+
+function viewInstagramProfile() {
+  console.log("instagram");
+}
 </script>
 
 <template>
@@ -30,6 +34,10 @@ const user = getUserById(currentUser.value?.id as string);
         </ion-avatar>
 
         <h3>{{ user.pseudo }}</h3>
+
+        <ion-button @click="viewInstagramProfile" expnad="full">
+          Voir le profil instagram
+        </ion-button>
       </div>
     </ion-content>
   </ion-page>

@@ -39,7 +39,7 @@ const routes: Array<RouteRecordRaw> = [
 
   {
     path: "/author/:id",
-    component: () => import("@/views/AuthorDetail.vue"),
+    component: () => import("@/views/AuthorDetailPage.vue"),
   },
   {
     path: "/",
@@ -68,7 +68,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: "profile",
-        component: () => import("@/views/UserProfile.vue"),
+        component: () => import("@/views/UserProfilePage.vue"),
         meta: { requiresAuth: true },
       },
     ],
