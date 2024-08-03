@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { PhotoSpot } from "@/models/photoSpot.model";
 import { Spot } from "@/models/spot.model";
 import { getUserById } from "@/services/user.service";
@@ -15,6 +16,18 @@ const emit = defineEmits<{
 }>();
 
 const author = getUserById(photo.value.authorId ?? "");
+
+const shootedAt = computed<string>(() => {
+  if (photo.value.exif?.DateTimeOriginal) {
+    const date =
+      photo.value.exif.DateTimeOriginal.toDate().toLocaleDateString("fr-FR");
+    const time =
+      photo.value.exif.DateTimeOriginal.toDate().toLocaleTimeString("fr-FR");
+    return `Photo prise le ${date} à ${time}`;
+  }
+
+  return "";
+});
 </script>
 
 <template>
@@ -37,15 +50,8 @@ const author = getUserById(photo.value.authorId ?? "");
             <ion-list-header>
               <ion-label>Informations</ion-label>
             </ion-list-header>
-            <ion-item lines="none">
-              <ion-label
-                >Photo Prise à
-                {{
-                  photo?.exif?.DateTimeOriginal
-                    ? photo.exif.DateTimeOriginal
-                    : spot.createdAt.toDate()
-                }}</ion-label
-              >
+            <ion-item v-if="photo.exif?.DateTimeOriginal" lines="none">
+              <ion-label>{{ shootedAt }}</ion-label>
             </ion-item>
             <ion-item lines="none">
               <ion-label

@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface PhotoSpot {
   image: string;
   preview: string;
@@ -13,7 +15,7 @@ export interface PhotoDraft {
 }
 
 export interface Exif {
-  DateTimeOriginal: string;
+  DateTimeOriginal?: Timestamp;
   ExposureTime: string;
   Flash: string;
   FocalLength: string;

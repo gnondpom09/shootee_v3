@@ -106,6 +106,7 @@ async function removePhoto(index: number) {
           handler: () => {
             spot.value.photos.splice(index, 1);
             updateMarker(spot.value.id, spot.value.photos);
+            isSelectionEnabled.value = false;
           },
         },
       ],

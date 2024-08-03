@@ -3,6 +3,8 @@ import { Photo } from "@capacitor/camera";
 import { Filesystem } from "@capacitor/filesystem";
 
 import ExifReader from "exifreader";
+import { convertExifToTimeStamp } from "./date.utils";
+import { Timestamp } from "firebase/firestore";
 
 const MAX_WIDTH = 800;
 const MAX_HEIGHT = 800;
@@ -12,9 +14,12 @@ const QUALITY = 0.9;
 export async function getExifPhoto(file: File): Promise<Exif> {
   const tags = await ExifReader.load(file);
 
+  const stamp = tags.DateTimeOriginal
+    ? convertExifToTimeStamp(tags.DateTimeOriginal.description)
+    : undefined;
+
   const exif = {
-    DateTimeOriginal:
-      tags.DateTimeOriginal?.description ?? new Date().toISOString(),
+    DateTimeOriginal: stamp,
     ExposureTime: tags.ExposureTime?.description ?? "",
     Flash: tags.Flash?.description ?? "",
     FocalLength: tags.FocalLength?.description ?? "",
