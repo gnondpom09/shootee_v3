@@ -1,13 +1,33 @@
 <script setup lang="ts">
-import { getUserById, updateUser } from '@/services/user.service';
-import { useCurrentUser } from 'vuefire';
+import { getUserById, updateUser } from "@/services/user.service";
+import { alertController } from "@ionic/vue";
+import { useCurrentUser } from "vuefire";
 
-const currentUser = useCurrentUser();
+const userAuth = useCurrentUser();
 
-const user = getUserById(currentUser.value?.uid as string);
+const currentUser = getUserById(userAuth.value?.uid as string);
 
-function updateFirstname() {
-  updateUser(user.value?.id as string, user.value?.firstname as string);
+async function updateInformation() {
+  // TODO: check instagram url
+  if (currentUser.value) {
+    try {
+      await updateUser(currentUser.value.id, currentUser.value);
+      const alert = await alertController.create({
+        message: "Les informations ont été mise à jour.",
+        buttons: ["Fermer"],
+      });
+
+      await alert.present();
+    } catch {
+      const alert = await alertController.create({
+        header: "Service indisponible",
+        message: "Un problème est survenu, veuillez réessayer plus tard.",
+        buttons: ["Fermer"],
+      });
+
+      await alert.present();
+    }
+  }
 }
 </script>
 
@@ -24,28 +44,64 @@ function updateFirstname() {
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-list v-if="user">
-        <ion-item>
+      <ion-list v-if="currentUser">
+        <ion-list-header>
+          <ion-label>Information personelles</ion-label>
+        </ion-list-header>
+        <ion-item lines="none">
           <ion-input
             type="text"
             label="email"
             labelPlacement="stacked"
-            v-model="user.email"
+            v-model="currentUser.email"
             disabled
           ></ion-input>
         </ion-item>
-        <ion-item>
+        <ion-item lines="none">
           <ion-input
             type="text"
-            label="firstname"
+            label="Pseudo"
             labelPlacement="stacked"
-            v-model="user.firstname"
+            v-model="currentUser.pseudo"
+          ></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-input
+            type="text"
+            label="Prénom"
+            labelPlacement="stacked"
+            v-model="currentUser.firstname"
+          ></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-input
+            type="text"
+            label="Nom"
+            labelPlacement="stacked"
+            v-model="currentUser.lastname"
+          ></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-input
+            type="text"
+            label="Date d'inscription"
+            labelPlacement="stacked"
+            readOnly
+            v-model="currentUser.inscriptionDate"
+          ></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-input
+            type="text"
+            label="Compte instagram"
+            labelPlacement="stacked"
+            v-model="currentUser.instagramAccount"
           ></ion-input>
         </ion-item>
       </ion-list>
 
       <ion-button
-        @click="updateFirstname"
+        @click="updateInformation"
         expand="block"
         fill="clear"
         color="primary"

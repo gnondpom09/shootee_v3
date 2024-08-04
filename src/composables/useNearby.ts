@@ -1,6 +1,7 @@
 import { onMounted, ref } from "vue";
 import { measure } from "@/utils/map.utils";
 import { useGeocode } from "@/composables/useGeocode";
+import { RADIUS_POINTS_OF_INTEREST } from "@/constants/map";
 
 const { reverseGeocode } = useGeocode();
 
@@ -23,7 +24,7 @@ export function useNearby(
     lat: latitude,
     lng: longitude,
   });
-  const radius = ref<number>(1000);
+  const radius = ref<number>(RADIUS_POINTS_OF_INTEREST);
 
   localitiesService = new woosmap.map.LocalitiesService();
 

@@ -22,11 +22,9 @@ const { takeAvatarAndSave, photoUrl, avatarPreview, pickAvatarFromLibrary } =
 
 const router = useRouter();
 
-const currentUser = useCurrentUser();
+const userAuth = useCurrentUser();
 
-const users = getAllUsers();
-
-const user = getUserById(currentUser.value?.uid as string);
+const currentUser = getUserById(userAuth.value?.uid as string);
 
 const actionSheet: ActionSheetOptions = {
   header: "Modifier mon avatar",
@@ -72,26 +70,40 @@ function goToSettings() {
   router.push("/settings");
 }
 
+function goToAdminSection() {
+  router.push("/admin");
+}
+
 async function changeAvatarFromPhoto() {
-  if (user.value) {
-    await takeAvatarAndSave(user.value.id);
-
-    user.value.avatar = photoUrl.value ?? user.value.avatar;
-    user.value.avatarPreview = avatarPreview.value ?? user.value.avatarPreview;
-
-    updateAvatar(user.value.id, user.value.avatar, user.value.avatarPreview);
+  if (currentUser.value) {
+    await takeAvatarAndSave(currentUser.value.id);
+    updatUserAvatar();
   }
 }
 
 async function changeAvatarFromLibrary() {
-  if (user.value) {
-    await pickAvatarFromLibrary(user.value.id);
-
-    user.value.avatar = photoUrl.value ?? user.value.avatar;
-    user.value.avatarPreview = avatarPreview.value ?? user.value.avatarPreview;
-
-    updateAvatar(user.value.id, user.value.avatar, user.value.avatarPreview);
+  if (currentUser.value) {
+    await pickAvatarFromLibrary(currentUser.value.id);
+    updatUserAvatar();
   }
+}
+
+function updatUserAvatar() {
+  if (currentUser.value) {
+    currentUser.value.avatar = photoUrl.value ?? currentUser.value.avatar;
+    currentUser.value.avatarPreview =
+      avatarPreview.value ?? currentUser.value.avatarPreview;
+
+    updateAvatar(
+      currentUser.value.id,
+      currentUser.value.avatar,
+      currentUser.value.avatarPreview
+    );
+  }
+}
+
+function viewInstagramProfile() {
+  console.log("instagram");
 }
 </script>
 
@@ -102,42 +114,41 @@ async function changeAvatarFromLibrary() {
         <ion-title class="oswald-title">SHOOTEE</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content v-if="user">
+    <ion-content v-if="currentUser">
       <div class="profile">
-        <ion-avatar v-if="user.avatar">
-          <img :src="user.avatarPreview" />
+        <ion-avatar v-if="currentUser.avatar">
+          <img :src="currentUser.avatarPreview" />
         </ion-avatar>
         <ion-button id="open-action-sheet" expand="block" fill="clear">
           Modifier l'avatar
         </ion-button>
 
-        <h3>{{ user.pseudo }}</h3>
+        <h3>{{ currentUser.pseudo }}</h3>
       </div>
 
-      <ion-list>
-        <ion-list-header>
-          <ion-label>Users</ion-label>
-        </ion-list-header>
-        <ion-item-sliding v-for="user in users" :key="user.id">
-          <ion-item>
-            <ion-avatar>
-              <img :src="user.avatar" />
-            </ion-avatar>
-            <ion-label>{{ user.email }}</ion-label>
-          </ion-item>
-          <ion-item-options side="end">
-            <ion-item-option color="danger" @click="removeUser(user.id)"
-              >delete</ion-item-option
-            >
-          </ion-item-options>
-        </ion-item-sliding>
-      </ion-list>
+      <div class="insta-section">
+        <ion-button v-if="currentUser.instagramAccount" expand="full">
+          <a
+            class="link"
+            :href="currentUser.instagramAccount"
+            target="_blank"
+            rel="noopener noreferrer"
+          ></a
+          >Voir mon profil Instagram
+        </ion-button>
+        <ion-button v-else @click="goToAccount" expand="full">
+          Ajouter un compte Instagram
+        </ion-button>
+      </div>
 
       <ion-fab slot="fixed" vertical="bottom" horizontal="end">
         <ion-fab-button>
           <ion-icon icon="chevron-up"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="top">
+          <ion-fab-button v-if="currentUser.isAdmin" @click="goToAdminSection">
+            <ion-icon name="lock-closed-outline"></ion-icon>
+          </ion-fab-button>
           <ion-fab-button @click="goToSettings">
             <ion-icon name="settings-outline"></ion-icon>
           </ion-fab-button>
@@ -163,5 +174,10 @@ async function changeAvatarFromLibrary() {
   justify-content: center;
   align-items: center;
   height: 33%;
+}
+.link {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 </style>

@@ -10,4 +10,7 @@ export interface Profile {
   level?: string;
   firstname?: string;
   lastname?: string;
+  isAdmin?: boolean;
+  instagramAccount?: string;
+  isPrivateAccount?: boolean;
 }

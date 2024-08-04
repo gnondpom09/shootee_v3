@@ -15,7 +15,7 @@
           <ion-icon aria-hidden="true" :icon="addCircleOutline" />
         </ion-tab-button>
 
-        <ion-tab-button tab="bookmarks" href="/tabs/bookmarks">
+        <ion-tab-button tab="bookmarks" href="/tabs/bookmarks" disabled>
           <ion-icon aria-hidden="true" :icon="bookmarksOutline" />
         </ion-tab-button>
 

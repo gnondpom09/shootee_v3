@@ -70,7 +70,7 @@ function viewSpot(spotId: string) {
       <div class="wall">
         <div class="home-title">
           <h1>Trouvez le spot idéal</h1>
-          <p>Version 0.2.1</p>
+          <p>Version 0.3.0</p>
         </div>
 
         <ion-segment
@@ -81,10 +81,10 @@ function viewSpot(spotId: string) {
           <ion-segment-button value="default">
             <ion-label>Recommandés</ion-label>
           </ion-segment-button>
-          <ion-segment-button value="recents">
+          <ion-segment-button value="recents" disabled>
             <ion-label>Récents</ion-label>
           </ion-segment-button>
-          <ion-segment-button value="nearby">
+          <ion-segment-button value="nearby" disabled>
             <ion-label>A Proximité</ion-label>
           </ion-segment-button>
         </ion-segment>

@@ -16,16 +16,19 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/authentication/RegisterPage.vue"),
   },
   {
-    name: "account",
     path: "/account",
     meta: { requiresAuth: true },
     component: () => import("@/views/AccountPage.vue"),
   },
   {
-    name: "settings",
     path: "/settings",
     meta: { requiresAuth: true },
     component: () => import("@/views/SettingsPage.vue"),
+  },
+  {
+    path: "/admin",
+    meta: { requiresAuth: true },
+    component: () => import("@/views/AdminPage.vue"),
   },
   {
     path: "/add-spot",

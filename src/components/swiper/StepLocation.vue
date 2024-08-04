@@ -70,6 +70,7 @@ function validLocality(
         expand="block"
         @click="localize"
       >
+        <ion-icon slot="start" name="locate-outline"></ion-icon>
         Me localiser
       </ion-button>
     </div>

@@ -33,9 +33,9 @@ export function getUserById(id: string) {
   return useDocument<Profile>(doc(firestore, `users/${id}`));
 }
 
-export async function updateUser(id: string, firstname: string) {
+export async function updateUser(id: string, user: Profile) {
   const userRef = doc(collection(firestore, "users"), id);
-  return await updateDoc(userRef, { firstname });
+  return await updateDoc(userRef, { ...user });
 }
 
 export async function updateAvatar(

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { toRefs, ref } from "vue";
+import { toRefs, ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { getUserById } from "@/services/user.service";
 import { PhotoSpot } from "@/models/photoSpot.model";
@@ -9,6 +9,7 @@ import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { updateMarker } from "@/services/marker.service";
 import PhotoDetails from "@/components/spot/PhotoDetails.vue";
 import { ActionSheetOptions, alertController } from "@ionic/vue";
+import { useCompareTime } from "@/composables/useCompareTime";
 
 const props = defineProps<{
   spot: Spot;
@@ -26,10 +27,23 @@ const currentPhoto = ref<PhotoSpot | null>(null);
 
 const isSelectionEnabled = ref<boolean>(false);
 
+const selectedSegment = ref<string>("all");
+
 const { checkUserAuth } = useAuth();
+
+const { getPhotosByDayTime, filteredPhotos } = useCompareTime();
 
 const { takePhoto, savePhotosAndGetImagesPath, photosDraft, resetPhotos } =
   usePhotoGallery();
+
+onMounted(() => {
+  getPhotosByDayTime(spot.value.photos, "all");
+});
+
+function segmentChanged(e: CustomEvent) {
+  selectedSegment.value = e.detail.value;
+  getPhotosByDayTime(spot.value.photos, selectedSegment.value);
+}
 
 const setOpen = (open: boolean, photo: PhotoSpot | null) => {
   currentPhoto.value = photo;
@@ -138,9 +152,30 @@ async function removePhoto(index: number) {
       >
     </div>
 
+    <div class="menu-photos">
+      <ion-segment
+        mode="md"
+        :value="selectedSegment"
+        @ionChange="segmentChanged"
+      >
+        <ion-segment-button value="all">
+          <ion-label>Tous</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="morning">
+          <ion-label>Matin</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="evening">
+          <ion-label>Soir</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="night">
+          <ion-label>Nuit</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
     <div class="gallery">
       <ion-row>
-        <ion-col :key="index" v-for="(photo, index) in spot.photos" size="4">
+        <ion-col :key="index" v-for="(photo, index) in filteredPhotos" size="4">
           <div
             class="gallery"
             :style="{ 'background-image': 'url(' + photo.preview + ')' }"

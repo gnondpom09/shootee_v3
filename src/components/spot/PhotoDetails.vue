@@ -43,48 +43,57 @@ const shootedAt = computed<string>(() => {
     <ion-accordion-group>
       <ion-accordion value="first">
         <ion-item slot="header" color="light">
-          <ion-label>Photo de {{ author?.pseudo }}</ion-label>
+          <ion-label>Information</ion-label>
+     
         </ion-item>
-        <div class="ion-padding" slot="content">
+
+        <div slot="content">
           <ion-list>
-            <ion-list-header>
-              <ion-label>Informations</ion-label>
-            </ion-list-header>
-            <ion-item v-if="photo.exif?.DateTimeOriginal" lines="none">
-              <ion-label>{{ shootedAt }}</ion-label>
-            </ion-item>
-            <ion-item lines="none">
-              <ion-label
-                >ISO : {{ photo.exif?.ISOSpeedRatings || "N/A" }}</ion-label
-              >
-            </ion-item>
-            <ion-item lines="none">
-              <ion-label
-                >Ouverture : {{ photo.exif?.ExposureTime || "N/A" }}</ion-label
-              >
-            </ion-item>
-            <ion-item lines="none">
-              <ion-label
-                >Focale : {{ photo.exif?.FocalLength || "N/A" }}</ion-label
-              >
-            </ion-item>
-            <ion-item>
-              <ion-label>Flash : {{ photo.exif?.Flash || "N/A" }}</ion-label>
-            </ion-item>
-            <ion-list-header>
-              <ion-label>Matériel</ion-label>
-            </ion-list-header>
-            <ion-item lines="none">
-              <ion-label>Marque : {{ photo.exif?.Make || "N/A" }}</ion-label>
-            </ion-item>
-            <ion-item lines="none">
-              <ion-label>Modèle : {{ photo.exif?.Model || "N/A" }}</ion-label>
-            </ion-item>
-            <ion-item lines="none">
-              <ion-label
-                >Objectif : {{ photo.exif?.LensModel || "N/A" }}</ion-label
-              >
-            </ion-item>
+            <ion-item-group>
+              <ion-item>
+                <ion-label>Photo de {{ author?.pseudo }}</ion-label>
+              </ion-item>
+            
+              <ion-item v-if="photo.exif?.DateTimeOriginal" lines="none">
+                <ion-label>{{ shootedAt }}</ion-label>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label
+                  >ISO : {{ photo.exif?.ISOSpeedRatings || "N/A" }}</ion-label
+                >
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label
+                  >Ouverture : {{ photo.exif?.ExposureTime || "N/A" }}</ion-label
+                >
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label
+                  >Focale : {{ photo.exif?.FocalLength || "N/A" }}</ion-label
+                >
+              </ion-item lines="none">
+              <ion-item>
+                <ion-label>Flash : {{ photo.exif?.Flash || "N/A" }}</ion-label>
+              </ion-item>
+            </ion-item-group>
+
+            <ion-item-group>
+              <ion-item-divider>
+                <ion-label>Matériel</ion-label>
+              </ion-item-divider>
+          
+              <ion-item lines="none">
+                <ion-label>Marque : {{ photo.exif?.Make || "N/A" }}</ion-label>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label>Modèle : {{ photo.exif?.Model || "N/A" }}</ion-label>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label
+                  >Objectif : {{ photo.exif?.LensModel || "N/A" }}</ion-label
+                >
+              </ion-item>
+            </ion-item-group>
           </ion-list>
         </div>
       </ion-accordion>

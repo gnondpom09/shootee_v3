@@ -78,6 +78,7 @@ import {
   fastFoodOutline,
   carOutline,
   partlySunnyOutline,
+  lockClosedOutline,
 } from "ionicons/icons";
 addIcons({
   add,
@@ -108,6 +109,7 @@ addIcons({
   "fast-food-outline": fastFoodOutline,
   "car-outline": carOutline,
   "partly-sunny-outline": partlySunnyOutline,
+  "lock-closed-outline": lockClosedOutline,
 });
 
 // Components
@@ -124,6 +126,8 @@ import {
   IonCardSubtitle,
   IonCardContent,
   IonItem,
+  IonItemGroup,
+  IonItemDivider,
   IonAvatar,
   IonThumbnail,
   IonList,
@@ -176,6 +180,8 @@ app.component("ion-card-header", IonCardHeader);
 app.component("Ino-card-subtitle", IonCardSubtitle);
 app.component("ion-card-content", IonCardContent);
 app.component("ion-item", IonItem);
+app.component("ion-item-group", IonItemGroup);
+app.component("ion-item-divider", IonItemDivider);
 app.component("ion-avatar", IonAvatar);
 app.component("ion-thumbnail", IonThumbnail);
 app.component("ion-list", IonList);
