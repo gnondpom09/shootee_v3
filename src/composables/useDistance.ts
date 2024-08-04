@@ -178,7 +178,7 @@ export function useDistance(
     tableContainer.style.display = "flex";
     //tableContainer.style.backgroundColor = "white";
     tableContainer.style.padding = "8px";
-    tableContainer.style.width = "100%";
+    //tableContainer.style.width = "100%";
     //tableContainer.style.color = "black;";
   }
 

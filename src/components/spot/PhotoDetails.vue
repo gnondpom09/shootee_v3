@@ -33,9 +33,11 @@ const shootedAt = computed<string>(() => {
 <template>
   <ion-header>
     <ion-toolbar>
-      <ion-title>Modal</ion-title>
+      <ion-title>titre</ion-title>
       <ion-buttons slot="end">
-        <ion-button @click="emit('close')">Close</ion-button>
+        <ion-button v-on:click="emit('close')">
+          <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -43,7 +45,7 @@ const shootedAt = computed<string>(() => {
     <ion-accordion-group>
       <ion-accordion value="first">
         <ion-item slot="header" color="light">
-          <ion-label>Information</ion-label>
+          <ion-label>Informations</ion-label>
      
         </ion-item>
 

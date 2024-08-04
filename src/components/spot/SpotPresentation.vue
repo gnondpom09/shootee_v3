@@ -132,24 +132,36 @@ async function removePhoto(index: number) {
 
 <template>
   <div v-if="spot" class="presentation-content">
-    <h5>Auteur</h5>
+    <div class="author">
+      <ion-item
+        button
+        v-if="spotAuthor"
+        class="ion-no-padding"
+        line="none"
+        @click="viewAuthor(spotAuthor.id)"
+      >
+        <ion-avatar slot="start">
+          <img :src="spotAuthor.avatar" />
+        </ion-avatar>
+        <ion-label>{{ spotAuthor.pseudo }}</ion-label>
+      </ion-item>
+    </div>
+
     <ion-item
-      button
-      v-if="spotAuthor"
+      v-if="checkUserAuth(spot.authorId)"
       class="ion-no-padding"
-      line="none"
-      @click="viewAuthor(spotAuthor.id)"
+      lines="none"
     >
-      <ion-avatar slot="start">
-        <img :src="spotAuthor.avatar" />
-      </ion-avatar>
-      <ion-label>{{ spotAuthor.pseudo }}</ion-label>
-    </ion-item>
-    <h5>Les points de vue</h5>
-    <div v-if="checkUserAuth(spot.authorId)" class="controls">
       <ion-toggle :checked="isSelectionEnabled" @ion-change="toggleSelection"
         >Supprimer des images</ion-toggle
       >
+    </ion-item>
+
+    <div class="header-gallery">
+      <h5>Les points de vue</h5>
+      <ion-button fill="clear" disabled>
+        <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+      </ion-button>
     </div>
 
     <div class="menu-photos">
@@ -174,6 +186,17 @@ async function removePhoto(index: number) {
     </div>
 
     <div class="gallery">
+      <ion-fab
+        edge
+        v-if="checkUserAuth(spot.authorId)"
+        vertical="top"
+        horizontal="end"
+        slot="fixed"
+      >
+        <ion-fab-button size="small" id="open-action-contribute">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
       <ion-row>
         <ion-col :key="index" v-for="(photo, index) in filteredPhotos" size="4">
           <div
@@ -198,17 +221,6 @@ async function removePhoto(index: number) {
       </ion-row>
     </div>
 
-    <ion-fab
-      v-if="checkUserAuth(spot.authorId)"
-      vertical="bottom"
-      horizontal="end"
-      slot="fixed"
-    >
-      <ion-fab-button size="small" id="open-action-contribute">
-        <ion-icon name="add"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
-
     <ion-action-sheet
       trigger="open-action-contribute"
       :header="actionSheet.header"
@@ -227,10 +239,22 @@ async function removePhoto(index: number) {
 </template>
 
 <style lang="scss">
+.author {
+  margin-bottom: 12px;
+}
 .controls {
   display: flex;
   justify-content: start;
   padding: 8px 0;
+}
+
+.header-gallery {
+  display: flex;
+  justify-content: space-between;
+}
+
+.gallery {
+  position: relative;
 }
 
 .link {

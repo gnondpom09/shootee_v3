@@ -2,7 +2,10 @@
 import { toRefs } from "vue";
 import { Spot } from "@/models/spot.model";
 import { useNearby } from "@/composables/useNearby";
-import { hospitalityCategories } from "@/constants/map";
+import {
+  hospitalityCategories,
+  RADIUS_POINTS_OF_INTEREST,
+} from "@/constants/map";
 
 const props = defineProps<{
   spot: Spot;
@@ -34,10 +37,10 @@ function updateRadius(event: any): void {
           id="radius-btn-bed"
           min="10"
           max="50000"
-          value="1000"
+          :value="RADIUS_POINTS_OF_INTEREST"
           @ionChange="updateRadius"
         ></ion-range>
-        <label id="radius-label-bed" for="radius">1&thinsp;km</label>
+        <label id="radius-label-bed" for="radius">5&thinsp;km</label>
       </div>
 
       <div class="sectionHeader">

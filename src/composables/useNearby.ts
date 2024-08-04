@@ -31,7 +31,7 @@ export function useNearby(
   nearbyRequest = {
     types: "point_of_interest",
     location: position.value,
-    radius: 1000,
+    radius: RADIUS_POINTS_OF_INTEREST,
     categories: "",
     page: 1,
     limit: 10,

@@ -46,7 +46,7 @@ function segmentChanged(e: CustomEvent) {
         "
       ></div>
 
-      <div class="spot-menu">
+      <div class="spot-address">
         <ion-item class="ion-no-padding" line="none">
           <ion-label>
             <h4>
@@ -54,6 +54,9 @@ function segmentChanged(e: CustomEvent) {
             </h4>
           </ion-label>
         </ion-item>
+      </div>
+
+      <div class="spot-menu">
         <ion-segment
           mode="md"
           :value="selectedSegment"
@@ -97,5 +100,9 @@ function segmentChanged(e: CustomEvent) {
   display: block;
   height: 33%;
   overflow: hidden;
+}
+
+.spot-address {
+  padding: 8px 0 4px 0;
 }
 </style>

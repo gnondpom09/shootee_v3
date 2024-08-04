@@ -79,6 +79,7 @@ import {
   carOutline,
   partlySunnyOutline,
   lockClosedOutline,
+  ellipsisVerticalOutline,
 } from "ionicons/icons";
 addIcons({
   add,
@@ -110,6 +111,7 @@ addIcons({
   "car-outline": carOutline,
   "partly-sunny-outline": partlySunnyOutline,
   "lock-closed-outline": lockClosedOutline,
+  "ellipsis-vertical-outline": ellipsisVerticalOutline,
 });
 
 // Components
