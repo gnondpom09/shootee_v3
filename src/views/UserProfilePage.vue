@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { getUserById, updateAvatar } from "@/services/user.service";
 import { useRouter } from "vue-router";
 import { useCurrentUser } from "vuefire";
@@ -15,7 +15,6 @@ import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { getSpotsByAuthor } from "@/services/marker.service";
 
 import SpotsCardList from "@/components/SpotsCardList.vue";
-import { Spot } from "@/models/spot.model";
 
 const { takeAvatarAndSave, photoUrl, avatarPreview, pickAvatarFromLibrary } =
   usePhotoGallery();
@@ -26,7 +25,7 @@ const userAuth = useCurrentUser();
 
 const currentUser = getUserById(userAuth.value?.uid as string);
 
-const spots = getSpotsByAuthor(currentUser.value?.id ?? "");
+const spots = ref();
 
 const actionSheet: ActionSheetOptions = {
   header: "Modifier mon avatar",
@@ -65,6 +64,14 @@ const actionSheet: ActionSheetOptions = {
 };
 
 const selectedSegment = ref<string>("spots");
+
+onMounted(() => {
+  setTimeout(() => {
+    if (currentUser.value) {
+      spots.value = getSpotsByAuthor(currentUser.value?.id);
+    }
+  }, 400);
+});
 
 function segmentChanged(e: CustomEvent) {
   selectedSegment.value = e.detail.value;
@@ -167,7 +174,7 @@ function viewSpot(id: string) {
         </ion-segment>
       </div>
 
-      <div class="content">
+      <div class="content" v-if="spots">
         <div v-if="selectedSegment === 'spots'" class="spots-list">
           <SpotsCardList :spots="spots" @view-post="viewSpot" />
         </div>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Spot } from "@/models/spot.model";
 import { DocumentData } from "firebase/firestore";
 import { toRefs } from "vue";
 
