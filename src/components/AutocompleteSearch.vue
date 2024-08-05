@@ -3,12 +3,6 @@ import { ref, onMounted } from "vue";
 import { API_KEY_WOOSMAP } from "@/constants/map";
 import { getRandomId } from "@/utils/html.utils";
 
-/* defineProps<{
-  autocompleteContainer: string;
-  autocompleteInput: string;
-  suggestionList: string;
-}>(); */
-
 const randomId = getRandomId();
 
 const emit = defineEmits<{
@@ -272,7 +266,7 @@ function debouncePromise<T, Args extends any[]>(
       type="text"
       :id="`autocomplete-input-${randomId}`"
       class="autocomplete-input"
-      placeholder="Search Localities..."
+      placeholder="Rechercher un lieu..."
       autocomplete="off"
     />
     <button

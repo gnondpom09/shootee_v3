@@ -11,3 +11,32 @@
 ion-segment {
   margin-bottom: 24px;
 }
+
+.big-avatar,
+.no-big-avatar {
+  width: 120px;
+  height: 120px;
+}
+
+.item-card {
+  .metadata-end-wrapper {
+    position: absolute;
+    top: 10px;
+    inset-inline-end: 10px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+  }
+
+  ion-label strong {
+    display: block;
+    max-width: calc(100% - 60px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-bottom: 8px;
+  }
+
+  ion-label ion-note {
+    font-size: 0.9rem;
+  }
+}

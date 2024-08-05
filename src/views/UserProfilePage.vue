@@ -1,10 +1,6 @@
 <script setup lang="ts">
-import {
-  getAllUsers,
-  getUserById,
-  removeUser,
-  updateAvatar,
-} from "@/services/user.service";
+import { ref } from "vue";
+import { getUserById, updateAvatar } from "@/services/user.service";
 import { useRouter } from "vue-router";
 import { useCurrentUser } from "vuefire";
 
@@ -16,6 +12,10 @@ import {
 } from "@ionic/vue";
 
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
+import { getSpotsByAuthor } from "@/services/marker.service";
+
+import SpotsCardList from "@/components/SpotsCardList.vue";
+import { Spot } from "@/models/spot.model";
 
 const { takeAvatarAndSave, photoUrl, avatarPreview, pickAvatarFromLibrary } =
   usePhotoGallery();
@@ -25,6 +25,8 @@ const router = useRouter();
 const userAuth = useCurrentUser();
 
 const currentUser = getUserById(userAuth.value?.uid as string);
+
+const spots = getSpotsByAuthor(currentUser.value?.id ?? "");
 
 const actionSheet: ActionSheetOptions = {
   header: "Modifier mon avatar",
@@ -61,6 +63,12 @@ const actionSheet: ActionSheetOptions = {
     },
   ],
 };
+
+const selectedSegment = ref<string>("spots");
+
+function segmentChanged(e: CustomEvent) {
+  selectedSegment.value = e.detail.value;
+}
 
 function goToAccount() {
   router.push("/account");
@@ -102,8 +110,8 @@ function updatUserAvatar() {
   }
 }
 
-function viewInstagramProfile() {
-  console.log("instagram");
+function viewSpot(id: string) {
+  router.push(`/spot-detail/${id}`);
 }
 </script>
 
@@ -116,14 +124,14 @@ function viewInstagramProfile() {
     </ion-header>
     <ion-content v-if="currentUser">
       <div class="profile">
-        <ion-avatar v-if="currentUser.avatar">
+        <h3 class="ion-padding">{{ currentUser.pseudo }}</h3>
+        <ion-avatar v-if="currentUser.avatar" class="big-avatar">
           <img :src="currentUser.avatarPreview" />
         </ion-avatar>
+        <div v-else class="no-big-avatar"></div>
         <ion-button id="open-action-sheet" expand="block" fill="clear">
           Modifier l'avatar
         </ion-button>
-
-        <h3>{{ currentUser.pseudo }}</h3>
       </div>
 
       <div class="insta-section">
@@ -139,6 +147,30 @@ function viewInstagramProfile() {
         <ion-button v-else @click="goToAccount" expand="full">
           Ajouter un compte Instagram
         </ion-button>
+      </div>
+
+      <div class="sub-menu">
+        <ion-segment
+          mode="md"
+          :value="selectedSegment"
+          @ionChange="segmentChanged"
+        >
+          <ion-segment-button value="spots">
+            <ion-label>spots</ion-label>
+          </ion-segment-button>
+          <ion-segment-button disabled value="followers">
+            <ion-label>suivis</ion-label>
+          </ion-segment-button>
+          <ion-segment-button disabled value="subscribers">
+            <ion-label>abonnés</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      <div class="content">
+        <div v-if="selectedSegment === 'spots'" class="spots-list">
+          <SpotsCardList :spots="spots" @view-post="viewSpot" />
+        </div>
       </div>
 
       <ion-fab slot="fixed" vertical="bottom" horizontal="end">
@@ -173,11 +205,15 @@ function viewInstagramProfile() {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 33%;
+  height: 38%;
 }
 .link {
   position: absolute;
   width: 100%;
   height: 100%;
+}
+
+ion-list {
+  width: 100%;
 }
 </style>

@@ -52,7 +52,7 @@ const shootedAt = computed<string>(() => {
         <div slot="content">
           <ion-list>
             <ion-item-group>
-              <ion-item>
+              <ion-item lines="none">
                 <ion-label>Photo de {{ author?.pseudo }}</ion-label>
               </ion-item>
             

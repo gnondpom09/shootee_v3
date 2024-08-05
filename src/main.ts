@@ -80,6 +80,8 @@ import {
   partlySunnyOutline,
   lockClosedOutline,
   ellipsisVerticalOutline,
+  chevronForward,
+  chevronBack,
 } from "ionicons/icons";
 addIcons({
   add,
@@ -112,6 +114,8 @@ addIcons({
   "partly-sunny-outline": partlySunnyOutline,
   "lock-closed-outline": lockClosedOutline,
   "ellipsis-vertical-outline": ellipsisVerticalOutline,
+  "chevron-forward": chevronForward,
+  "chevron-back": chevronBack,
 });
 
 // Components

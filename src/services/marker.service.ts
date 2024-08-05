@@ -3,12 +3,13 @@ import { Spot } from "@/models/spot.model";
 import {
   collection,
   doc,
-  setDoc,
   addDoc,
   updateDoc,
   deleteDoc,
   GeoPoint,
   Timestamp,
+  where,
+  query,
 } from "firebase/firestore";
 
 import { useCollection, useDocument, useFirestore } from "vuefire";
@@ -40,6 +41,13 @@ export async function createMarker(
 
 export function getAllMarkers() {
   return useCollection<Spot>(collection(firestore, "spots"));
+}
+
+export function getSpotsByAuthor(userId: string) {
+  const queryByAuthor = useCollection(
+    query(collection(firestore, "spots"), where("authorId", "==", userId))
+  );
+  return queryByAuthor;
 }
 
 export function getMarkerId(id: string) {
