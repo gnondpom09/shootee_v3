@@ -82,8 +82,8 @@ export function useMap(elementId: string): UseMap {
           `<div id="${id}" class="info-content">` +
           `<ion-thumbnail slot="start"><img src="${spot.thumbnail}" /></ion-thumbnail>` +
           "<ion-label>" +
-          `<h4>${spot.address}</h4>` +
-          `<p>${photosCount} photos. <a href='/spot-detail/${spot.id}'>Voir les détails</a>` +
+          `<h4 id="title">${spot.address}</h4>` +
+          `<p id="legend">${photosCount} photos. <span id="link-more"> <a href='/spot-detail/${spot.id}'>Voir les détails</a></span></p>` +
           "</ion-label>" +
           "</div>";
 
@@ -99,17 +99,55 @@ export function useMap(elementId: string): UseMap {
             zoom: 14,
           });
 
-          const element = document.getElementById(id);
-
-          if (element) {
-            element.style.color = "blue";
-            element.style.background = "white";
-            element.style.display = "flex";
-            element.style.gap = "8px";
-          }
+          setStyleInfo(id);
         });
         marker.setMap(map);
       });
+    }
+  }
+
+  function setStyleInfo(id: string) {
+    const title = document.getElementById("title");
+    const card = document.getElementById(id);
+    const link = document.getElementById("link-more");
+    const legend = document.getElementById("legend");
+
+    const parent = card?.parentNode as HTMLElement;
+    parent.setAttribute("id", "card-container");
+    const arrow = document.querySelector(
+      "#card-container + span"
+    ) as HTMLElement;
+
+    if (arrow) {
+      arrow.style.borderTop = "11px solid var(--ion-background-color-step-50)";
+    }
+
+    if (parent) {
+      parent.style.background = "var(--ion-background-color-step-50)";
+      parent.style.borderRadius = "4px";
+    }
+
+    if (title) {
+      title.style.color = "white";
+      title.style.fontWeight = "700";
+    }
+
+    if (card) {
+      card.style.color = "white";
+      card.style.background = "var(--ion-background-color-step-50)";
+      card.style.display = "flex";
+      card.style.gap = "8px";
+    }
+
+    if (legend) {
+      legend.style.display = "flex";
+      legend.style.justifyContent = "space-between";
+      legend.style.color = "rgba(255, 255, 255, 0.6)";
+    }
+
+    if (link) {
+      link.style.color = "var(--ion-color-primary)";
+      link.style.textAlign = "right";
     }
   }
 

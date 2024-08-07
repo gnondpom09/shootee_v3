@@ -291,9 +291,9 @@ function debouncePromise<T, Args extends any[]>(
   z-index: 1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0px rgba(0, 0, 0, 0.02);
   background: #fff;
-  border-radius: 12px;
-  padding: 0 12px;
-  max-width: 320px;
+  border-radius: 4px;
+  padding: 0 2%;
+  max-width: 96%;
   width: 100%;
   height: 42px;
   border: none;

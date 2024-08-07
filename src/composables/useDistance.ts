@@ -3,6 +3,8 @@ import { formatDistance } from "@/utils/map.utils";
 import { formatTime } from "@/utils/date.utils";
 import { useGeolocation } from "@vueuse/core";
 
+import carIcon from "@/assets/car.png";
+
 let map: woosmap.map.Map;
 let bounds: woosmap.map.LatLngBounds;
 let directionsService: woosmap.map.DirectionsService;
@@ -22,8 +24,6 @@ export function useDistance(
   });
 
   function initDistance(): void {
-    console.log(coords.value.latitude);
-
     map = new woosmap.map.Map(document.getElementById(mapId) as HTMLElement, {
       center: {
         lat: coords.value.latitude,
@@ -94,9 +94,6 @@ export function useDistance(
   function createDefaultRequest(
     destination: woosmap.map.LatLngLiteral
   ): woosmap.map.DirectionRequest {
-    /*     const origin = { lat: 51.6511, lng: -0.1615 }; */
-    /*     const destination = { lat: 51.5146, lng: -0.0212 }; */
-
     return {
       origin: {
         lat: coords.value.latitude,
@@ -113,7 +110,6 @@ export function useDistance(
   function createRoutesTable(response: woosmap.map.DirectionResult) {
     const directionTripElements = response.routes.map(
       (route: woosmap.map.DirectionRoute, index: number) => {
-        const leg = route.legs[0];
         const distanceTotal = route.legs.reduce(
           (total, leg) => total + leg.distance.value,
           0
@@ -130,21 +126,15 @@ export function useDistance(
 
         directionTrip.innerHTML = `
               <div style="display: flex;">
-                <img class="directionTrip__travelModeIcon" style="background-color: red;" src="https://images.woosmap.com/directions/drive_black.png" />
-                <div class="directionTrip__description" style="padding-left: 8px;">
+                <div class="directionTrip__description" style="padding: 8px 4px 16px 4px;">
                     <div class="directionTrip__numbers">
-                        <div class="directionTrip__duration">Temps de trajet : ${formatTime(
+                        <div class="directionTrip__duration">Temps : ${formatTime(
                           durationTotal
                         )}</div>
                         <div class="directionTrip__distance">${formatDistance(
                           distanceTotal
                         )}</div>
                     </div>
-                    <div class="directionTrip__title">par ${
-                      leg.start_address
-                        ? leg.start_address
-                        : JSON.stringify(leg.start_location)
-                    }</div>
                     <div class="directionTrip__detailsMsg"></div>
                 </div>
               </div>
@@ -171,15 +161,15 @@ export function useDistance(
     const tableContainer = document.querySelector(
       ".tableContainer"
     ) as HTMLElement;
-    tableContainer.innerHTML = "";
+    /*     tableContainer.innerHTML =
+      '<ion-icon size="large" name="car-outline"></ion-icon>'; */
     directionTripElements.forEach((element) =>
       tableContainer.appendChild(element)
     );
     tableContainer.style.display = "flex";
-    //tableContainer.style.backgroundColor = "white";
-    tableContainer.style.padding = "8px";
-    //tableContainer.style.width = "100%";
-    //tableContainer.style.color = "black;";
+    tableContainer.style.justifyContent = "space-between";
+    tableContainer.style.width = "92%";
+    tableContainer.style.margin = "8px 16px";
   }
 
   function displayDirectionsRoute(response: woosmap.map.DirectionResult) {

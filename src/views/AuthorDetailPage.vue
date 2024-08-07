@@ -23,31 +23,43 @@ function viewSpot(id: string) {
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-buttons slot="start">
-            <ion-button @click="router.back()">Retour</ion-button>
+            <ion-back-button
+              mode="ios"
+              text="Retour"
+              defaultHref="/tabs/home"
+            ></ion-back-button>
           </ion-buttons>
         </ion-buttons>
         <ion-title class="oswald-title">SHOOTEE</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content v-if="author">
-      <div class="profile">
+      <div class="profile container-flex-center">
+        <h3 class="ion-padding">{{ author.pseudo }}</h3>
         <ion-avatar v-if="author.avatar" class="big-avatar">
           <img :src="author.avatar" />
         </ion-avatar>
         <div v-else class="no-big-avatar"></div>
-
-        <h3>{{ author.pseudo }}</h3>
       </div>
 
-      <ion-button v-if="author.instagramAccount" expand="full">
-        <a
-          class="link"
-          :href="author.instagramAccount"
-          target="_blank"
-          rel="noopener noreferrer"
-        ></a
-        >Voir le profil Instagram
-      </ion-button>
+      <div
+        v-if="author.instagramAccount"
+        class="container-flex-center insta-section"
+      >
+        <ion-button shape="round">
+          <a
+            class="link"
+            :href="author.instagramAccount"
+            target="_blank"
+            rel="noopener noreferrer"
+          ></a
+          >Voir le profil Instagram
+        </ion-button>
+      </div>
+
+      <ion-item-divider mode="md">
+        <ion-label>Spots</ion-label>
+      </ion-item-divider>
 
       <div class="spots-list">
         <SpotsCardList :spots="spots" @view-post="viewSpot" />
@@ -58,10 +70,6 @@ function viewSpot(id: string) {
 
 <style scoped lang="scss">
 .profile {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 33%;
+  margin-bottom: 16px;
 }
 </style>

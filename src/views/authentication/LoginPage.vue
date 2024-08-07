@@ -47,7 +47,11 @@ function resetPassword() {
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-buttons slot="start">
-            <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+            <ion-back-button
+              mode="ios"
+              text="Retour"
+              defaultHref="/tabs/home"
+            ></ion-back-button>
           </ion-buttons>
         </ion-buttons>
         <ion-title>Login</ion-title>

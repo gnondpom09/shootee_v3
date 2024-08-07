@@ -70,12 +70,13 @@ function viewSpot(spotId: string) {
       <div class="wall">
         <div class="home-title">
           <h1>Trouvez le spot idéal</h1>
-          <p>Version 0.4.1</p>
+          <p class="legend">Version 0.5.0</p>
         </div>
 
         <ion-segment
           mode="md"
           :value="selectedSegment"
+          class="sub-menu"
           @ionChange="segmentChanged"
         >
           <ion-segment-button value="default">
@@ -116,14 +117,6 @@ function viewSpot(spotId: string) {
               </div>
             </ion-col>
           </ion-row>
-          <!--           <div
-            v-if="selectedSegment === 'default'"
-            class="pin"
-            :key="index"
-            v-for="(photo, index) in spots"
-          >
-            <img v-if="photo" :src="photo.thumbnail" />
-          </div> -->
           <div v-if="selectedSegment === 'recents'">
             <h2>segment 2</h2>
           </div>

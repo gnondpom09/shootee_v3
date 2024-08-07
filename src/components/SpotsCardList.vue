@@ -4,9 +4,10 @@ import { toRefs } from "vue";
 
 const props = defineProps<{
   spots: DocumentData[];
+  title?: string;
 }>();
 
-const { spots } = toRefs(props);
+const { spots, title } = toRefs(props);
 
 const emit = defineEmits<{
   (event: "view-post", id: string): void;
@@ -15,6 +16,9 @@ const emit = defineEmits<{
 
 <template>
   <ion-list>
+    <ion-list-header v-if="title">
+      <ion-label>{{ title }}</ion-label>
+    </ion-list-header>
     <ion-item
       button
       detail="false"

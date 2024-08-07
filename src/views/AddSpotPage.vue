@@ -63,7 +63,7 @@ async function nextStep() {
 
     if (latitude.value && longitude.value) {
       const loading = await loadingController.create({
-        message: "...",
+        message: "Chargement des photos...",
       });
       loading.present();
 

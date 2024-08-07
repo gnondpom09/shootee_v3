@@ -58,7 +58,11 @@ async function updateInformation() {
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-buttons slot="start">
-            <ion-back-button defaultHref="/tabs/profile"></ion-back-button>
+            <ion-back-button
+              mode="ios"
+              text="Retour"
+              defaultHref="/tabs/profile"
+            ></ion-back-button>
           </ion-buttons>
         </ion-buttons>
         <ion-title>Réglages</ion-title>

@@ -29,29 +29,51 @@ function updateRadius(event: any): void {
 
 <template>
   <div id="sidebar">
-    <h2>Où dormir</h2>
+    <h3>Où dormir</h3>
     <div id="innerWrapper">
-      <div class="sectionHeader"><span>Rayon</span></div>
-      <div class="radius__container">
-        <ion-range
-          id="radius-btn-bed"
-          min="10"
-          max="50000"
-          :value="RADIUS_POINTS_OF_INTEREST"
-          @ionChange="updateRadius"
-        ></ion-range>
-        <label id="radius-label-bed" for="radius">5&thinsp;km</label>
-      </div>
-
       <div class="sectionHeader">
-        <span is="pagination">
-          <ion-button id="page-previous" disabled>&#8249;</ion-button>
-          <ion-button id="page-next" disabled>&#8250;</ion-button>
+        <ion-item-divider mode="md">
+          <label id="radius-label-bed" for="radius">Rayon 5&thinsp;km</label>
+        </ion-item-divider>
+
+        <div class="radius__container">
+          <ion-range
+            id="radius-btn-bed"
+            min="10"
+            max="50000"
+            mode="md"
+            :value="RADIUS_POINTS_OF_INTEREST"
+            @ionChange="updateRadius"
+          ></ion-range>
+        </div>
+
+        <span is="pagination" class="pagination">
+          <ion-button id="page-previous" size="small" fill="clear">
+            <ion-icon slot="start" name="chevron-back"></ion-icon>
+            Précédent
+          </ion-button>
+
+          <ion-button id="page-next" size="small" fill="clear">
+            Suivant
+            <ion-icon slot="end" name="chevron-forward"></ion-icon>
+          </ion-button>
         </span>
       </div>
-      <ol id="results"></ol>
+      <ul id="results"></ul>
     </div>
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+#results {
+  padding: 0;
+}
+.radius__container {
+  width: 100%;
+}
+.pagination {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+</style>

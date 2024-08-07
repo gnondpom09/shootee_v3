@@ -42,9 +42,9 @@ const disabledBackButton = computed<boolean>(() => {
         <ion-col>
           <ion-button
             class="action"
-            block
             color="primary"
             type="submit"
+            shape="round"
             expand="full"
             @click="emit('nextStep')"
           >

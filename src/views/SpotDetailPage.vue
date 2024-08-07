@@ -25,7 +25,11 @@ function segmentChanged(e: CustomEvent) {
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-buttons slot="start">
-            <ion-back-button defaultHref="/tabs/search"></ion-back-button>
+            <ion-back-button
+              mode="ios"
+              text="Retour"
+              defaultHref="/tabs/search"
+            ></ion-back-button>
           </ion-buttons>
         </ion-buttons>
         <ion-title v-if="spot">{{ spot.name }}</ion-title>
@@ -36,7 +40,7 @@ function segmentChanged(e: CustomEvent) {
         class="preview"
         :style="{ 'background-image': 'url(' + spot.photos[0].preview + ')' }"
         style="
-          height: 33%;
+          height: 25%;
           width: 100%;
           background-size: cover;
           background-color: #fff;
@@ -49,9 +53,9 @@ function segmentChanged(e: CustomEvent) {
       <div class="spot-address">
         <ion-item class="ion-no-padding" line="none">
           <ion-label>
-            <h4>
+            <h3 class="address">
               {{ spot.address }}
-            </h4>
+            </h3>
           </ion-label>
         </ion-item>
       </div>
@@ -60,6 +64,7 @@ function segmentChanged(e: CustomEvent) {
         <ion-segment
           mode="md"
           :value="selectedSegment"
+          class="sub-menu"
           @ionChange="segmentChanged"
         >
           <ion-segment-button value="default">
@@ -96,13 +101,13 @@ function segmentChanged(e: CustomEvent) {
 </template>
 
 <style scoped lang="scss">
-.spot-preview {
-  display: block;
-  height: 33%;
-  overflow: hidden;
-}
-
 .spot-address {
   padding: 8px 0 4px 0;
+}
+
+ion-label {
+  h3 {
+    font-weight: 900;
+  }
 }
 </style>

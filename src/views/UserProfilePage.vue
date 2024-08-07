@@ -16,14 +16,23 @@ import { getSpotsByAuthor } from "@/services/marker.service";
 
 import SpotsCardList from "@/components/SpotsCardList.vue";
 
-const { takeAvatarAndSave, photoUrl, avatarPreview, pickAvatarFromLibrary } =
-  usePhotoGallery();
+const {
+  takeAvatarAndSave,
+  photoUrl,
+  avatarPreview,
+  pickAvatarFromLibrary,
+  resetPhotos,
+} = usePhotoGallery();
 
 const router = useRouter();
 
 const userAuth = useCurrentUser();
 
 const currentUser = getUserById(userAuth.value?.uid as string);
+
+const isAvatarLoading = ref<boolean>(false);
+
+const isContentLoading = ref<boolean>(true);
 
 const spots = ref();
 
@@ -69,8 +78,9 @@ onMounted(() => {
   setTimeout(() => {
     if (currentUser.value) {
       spots.value = getSpotsByAuthor(currentUser.value?.id);
+      isContentLoading.value = false;
     }
-  }, 400);
+  }, 800);
 });
 
 function segmentChanged(e: CustomEvent) {
@@ -90,30 +100,37 @@ function goToAdminSection() {
 }
 
 async function changeAvatarFromPhoto() {
+  isAvatarLoading.value = true;
+
   if (currentUser.value) {
     await takeAvatarAndSave(currentUser.value.id);
-    updatUserAvatar();
+    await updatUserAvatar();
+    isAvatarLoading.value = false;
   }
 }
 
 async function changeAvatarFromLibrary() {
+  isAvatarLoading.value = true;
   if (currentUser.value) {
     await pickAvatarFromLibrary(currentUser.value.id);
-    updatUserAvatar();
+    await updatUserAvatar();
+    isAvatarLoading.value = false;
   }
 }
 
-function updatUserAvatar() {
+async function updatUserAvatar() {
   if (currentUser.value) {
     currentUser.value.avatar = photoUrl.value ?? currentUser.value.avatar;
     currentUser.value.avatarPreview =
       avatarPreview.value ?? currentUser.value.avatarPreview;
 
-    updateAvatar(
+    await updateAvatar(
       currentUser.value.id,
       currentUser.value.avatar,
       currentUser.value.avatarPreview
     );
+
+    resetPhotos();
   }
 }
 
@@ -130,19 +147,28 @@ function viewSpot(id: string) {
       </ion-toolbar>
     </ion-header>
     <ion-content v-if="currentUser">
-      <div class="profile">
+      <div class="profile container-flex-center">
         <h3 class="ion-padding">{{ currentUser.pseudo }}</h3>
-        <ion-avatar v-if="currentUser.avatar" class="big-avatar">
+        <ion-avatar v-if="isAvatarLoading" class="big-avatar-skeleton">
+          <ion-skeleton-text :animated="true"></ion-skeleton-text>
+        </ion-avatar>
+        <ion-avatar
+          v-if="currentUser.avatar && !isAvatarLoading"
+          class="big-avatar"
+        >
           <img :src="currentUser.avatarPreview" />
         </ion-avatar>
-        <div v-else class="no-big-avatar"></div>
+        <div
+          v-if="!currentUser.avatar && !isAvatarLoading"
+          class="no-big-avatar"
+        ></div>
         <ion-button id="open-action-sheet" expand="block" fill="clear">
           Modifier l'avatar
         </ion-button>
       </div>
 
-      <div class="insta-section">
-        <ion-button v-if="currentUser.instagramAccount" expand="full">
+      <div class="insta-section container-flex-center">
+        <ion-button v-if="currentUser.instagramAccount" shape="round">
           <a
             class="link"
             :href="currentUser.instagramAccount"
@@ -151,7 +177,7 @@ function viewSpot(id: string) {
           ></a
           >Voir mon profil Instagram
         </ion-button>
-        <ion-button v-else @click="goToAccount" expand="full">
+        <ion-button v-else @click="goToAccount" shape="round">
           Ajouter un compte Instagram
         </ion-button>
       </div>
@@ -160,6 +186,7 @@ function viewSpot(id: string) {
         <ion-segment
           mode="md"
           :value="selectedSegment"
+          class="sub-menu"
           @ionChange="segmentChanged"
         >
           <ion-segment-button value="spots">
@@ -174,10 +201,57 @@ function viewSpot(id: string) {
         </ion-segment>
       </div>
 
-      <div class="content" v-if="spots">
+      <div class="content" v-if="isContentLoading">
+        <div v-if="selectedSegment === 'spots'" class="spots-list">
+          <ion-list>
+            <ion-list-header>
+              <ion-skeleton-text
+                :animated="true"
+                style="width: 80px"
+              ></ion-skeleton-text>
+            </ion-list-header>
+            <ion-item v-for="(item, index) in 5" :key="index">
+              <ion-thumbnail slot="start">
+                <ion-skeleton-text :animated="true"></ion-skeleton-text>
+              </ion-thumbnail>
+              <ion-label>
+                <h3>
+                  <ion-skeleton-text
+                    :animated="true"
+                    style="width: 80%"
+                  ></ion-skeleton-text>
+                </h3>
+                <p>
+                  <ion-skeleton-text
+                    :animated="true"
+                    style="width: 60%"
+                  ></ion-skeleton-text>
+                </p>
+                <p>
+                  <ion-skeleton-text
+                    :animated="true"
+                    style="width: 30%"
+                  ></ion-skeleton-text>
+                </p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
+
+      <div class="content" v-if="spots && !isContentLoading">
         <div v-if="selectedSegment === 'spots'" class="spots-list">
           <SpotsCardList :spots="spots" @view-post="viewSpot" />
         </div>
+      </div>
+
+      <div v-if="!isContentLoading && !spots" class="action">
+        <ion-button
+          router-link="/add-spot"
+          router-direction="back"
+          shape="round"
+          >Créer mon premier spot</ion-button
+        >
       </div>
 
       <ion-fab slot="fixed" vertical="bottom" horizontal="end">
@@ -207,17 +281,17 @@ function viewSpot(id: string) {
 </template>
 
 <style scoped lang="scss">
-.profile {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 38%;
-}
 .link {
   position: absolute;
   width: 100%;
   height: 100%;
+}
+
+.action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 33%;
 }
 
 ion-list {

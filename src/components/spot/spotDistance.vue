@@ -33,11 +33,11 @@ onMounted(() => {
   display: block;
 
   #map-distance {
-    height: 38%;
+    height: 33%;
     width: 92%;
     position: absolute;
     left: 0;
-    margin: 4%;
+    margin: 0 16px 0 16px;
   }
 
   .tableContainer {

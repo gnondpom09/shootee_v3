@@ -1,3 +1,51 @@
+/*********************/
+/** TYPOGRAPHY **/
+/*********************/
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 8px 0 16px 0;
+}
+h4 {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+h5 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+p {
+  font-size: 0.9rem;
+}
+
+ion-list-header {
+  ion-label {
+    margin-top: 24px;
+  }
+}
+
+.legend {
+  color: #6b6a79;
+}
+/*********************/
+/** LAYOUT **/
+/*********************/
+
+ion-segment {
+  margin-bottom: 16px;
+}
+
 .container {
   /*   display: flex;
   align-items: center;
@@ -8,14 +56,36 @@
   padding: 4px;
 }
 
-ion-segment {
-  margin-bottom: 24px;
+.container-flex-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.insta-section {
+  height: 100px;
+  padding: 16px;
+}
+
+/*********************/
+/** COMPONENTS **/
+/*********************/
+
+ion-button {
+  --border-radius: 4px;
 }
 
 .big-avatar,
+.no-big-avatar,
+.big-avatar-skeleton {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+}
+
 .no-big-avatar {
-  width: 120px;
-  height: 120px;
+  background-color: white;
 }
 
 .item-card {
@@ -26,6 +96,10 @@ ion-segment {
     font-size: 0.8rem;
     display: flex;
     align-items: center;
+
+    ion-note {
+      font-size: 0.8rem;
+    }
   }
 
   ion-label strong {
@@ -39,4 +113,16 @@ ion-segment {
   ion-label ion-note {
     font-size: 0.9rem;
   }
+}
+// distance
+.directionTrip__selected :before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-bottom: 5px solid #3d5afe;
+  height: 100%;
+}
+.directionTrip__selected {
+  border-bottom: 2px solid var(--ion-color-primary);
 }

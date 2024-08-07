@@ -2,6 +2,7 @@ import { onMounted, ref } from "vue";
 import { measure } from "@/utils/map.utils";
 import { useGeocode } from "@/composables/useGeocode";
 import { RADIUS_POINTS_OF_INTEREST } from "@/constants/map";
+import { getRandomId } from "@/utils/html.utils";
 
 const { reverseGeocode } = useGeocode();
 
@@ -87,7 +88,7 @@ export function useNearby(
     if (radiusValue < 1000 && label) {
       label.innerHTML = `${radiusValue}&thinsp;m`;
     } else if (label) {
-      label.innerHTML = `${radiusValue / 1000}&thinsp;km`;
+      label.innerHTML = `Rayon ${radiusValue / 1000}&thinsp;km`;
     }
 
     performNearbyRequest();
@@ -137,6 +138,7 @@ export function useNearby(
     results.innerHTML = "";
 
     updatePagination(response.pagination);
+
     response.results.forEach(
       async (result: woosmap.map.localities.LocalitiesNearbyResult) => {
         const distance = measure(
@@ -145,7 +147,7 @@ export function useNearby(
           result.geometry.location.lat,
           result.geometry.location.lng
         );
-        const resultListItem = document.createElement("li");
+        const resultListItem = document.createElement("div");
 
         reverseGeocode(
           result.geometry.location.lat + "," + result.geometry.location.lng
@@ -153,11 +155,20 @@ export function useNearby(
           const firstElement = address.results[0];
 
           resultListItem.innerHTML = `
-            <h5>${result.name}</h5>
-            <div style="display: flex;">
-                <p>${firstElement.formatted_address}</p>
-                <span class="distance">${distance.toFixed(0)}m</span>
-            </div>
+            <ion-item
+              detail="false"
+              class="item-card"
+            >
+              <ion-label>
+                <strong>${result.name}</strong>
+                <ion-note color="medium" class="ion-text-wrap">
+                  ${firstElement.formatted_address}
+                </ion-note>
+              </ion-label>
+              <div class="metadata-end-wrapper" slot="end">
+                <ion-note color="medium">${distance.toFixed(0)} m</ion-note>
+              </div>
+            </ion-item>
         `;
         });
 

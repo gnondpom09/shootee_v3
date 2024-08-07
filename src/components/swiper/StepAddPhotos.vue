@@ -50,23 +50,35 @@ const actionSheet: ActionSheetOptions = {
 <template>
   <ion-content>
     <div class="step">
-      <div class="galery">
+      <div class="camera-container">
         <h2>Ajouter des photos</h2>
-        <ion-fab vertical="start" horizontal="center">
+        <ion-fab>
           <ion-fab-button id="open-action-photo-spot">
             <ion-icon name="camera"></ion-icon>
           </ion-fab-button>
         </ion-fab>
-        <p>Sélectionnez une ou plusieurs photos a ajouter sur ce spot</p>
+        <p class="ion-padding legend">
+          Sélectionnez une ou plusieurs photos a ajouter sur ce spot
+        </p>
       </div>
 
-      <ion-grid class="photos-preview">
-        <ion-row>
-          <ion-col size="6" :key="index" v-for="(photo, index) in photosDraft">
-            <img :src="photo.webPath" />
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+      <ion-item-divider mode="md">
+        <ion-label>Photos ajoutées</ion-label>
+      </ion-item-divider>
+
+      <div class="photos-preview">
+        <ion-grid>
+          <ion-row>
+            <ion-col
+              size="6"
+              :key="index"
+              v-for="(photo, index) in photosDraft"
+            >
+              <img :src="photo.webPath" />
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
     </div>
 
     <ion-action-sheet
@@ -77,18 +89,36 @@ const actionSheet: ActionSheetOptions = {
   </ion-content>
 </template>
 
-<style>
+<style lang="scss">
 .step {
   height: 100%;
 }
-.galery {
+.camera-container {
   display: flex;
-  height: 70%;
+  height: 60%;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
 }
 .photos-preview {
-  height: 30%;
+  display: flex;
+  height: 33%;
+
+  ion-row {
+    flex-wrap: nowrap;
+    overflow-x: scroll !important;
+    overflow-y: hidden;
+    height: 100%;
+
+    ion-col {
+      display: contents;
+
+      img {
+        height: 100%;
+        margin: 0 4px;
+        border-radius: 8px;
+      }
+    }
+  }
 }
 </style>

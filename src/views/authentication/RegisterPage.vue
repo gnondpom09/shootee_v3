@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useRouter } from 'vue-router';
-import { useFirebaseAuth } from 'vuefire';
-import { createUser } from '@/services/user.service';
+import { ref } from "vue";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "vue-router";
+import { useFirebaseAuth } from "vuefire";
+import { createUser } from "@/services/user.service";
 
 const auth = useFirebaseAuth();
 
-const email = ref('');
-const pseudo = ref('');
-const password = ref('');
-const repeatPassword = ref('');
-const errMsg = ref('');
+const email = ref("");
+const pseudo = ref("");
+const password = ref("");
+const repeatPassword = ref("");
+const errMsg = ref("");
 
 const router = useRouter();
 
@@ -19,16 +19,16 @@ function signUp() {
   if (password.value === repeatPassword.value) {
     createUserWithEmailAndPassword(auth, email.value, password.value)
       .then(async (data) => {
-        console.log('registration success!', data);
+        console.log("registration success!", data);
         await createUser(data.user.uid, pseudo.value, email.value);
 
-        router.push('/tabs');
+        router.push("/tabs");
       })
       .catch((error) => {
         errMsg.value = error.message;
       });
   } else {
-    alert('Les mots de passe ne sont pas identiques');
+    alert("Les mots de passe ne sont pas identiques");
   }
 }
 </script>
@@ -39,7 +39,11 @@ function signUp() {
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-buttons slot="start">
-            <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+            <ion-back-button
+              mode="ios"
+              text="Retour"
+              defaultHref="/tabs/home"
+            ></ion-back-button>
           </ion-buttons>
         </ion-buttons>
         <ion-title>S'enregistrer</ion-title>

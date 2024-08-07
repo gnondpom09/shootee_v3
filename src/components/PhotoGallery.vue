@@ -52,7 +52,7 @@ async function removePhoto(index: number) {
   <div>
     <ion-item class="ion-no-padding" lines="none">
       <ion-toggle :checked="isSelectionEnabled" @ion-change="toggleSelection"
-        >Supprimer des images</ion-toggle
+        ><p>Supprimer des images</p></ion-toggle
       >
     </ion-item>
   </div>

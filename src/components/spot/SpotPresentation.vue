@@ -153,7 +153,7 @@ async function removePhoto(index: number) {
       lines="none"
     >
       <ion-toggle :checked="isSelectionEnabled" @ion-change="toggleSelection"
-        >Supprimer des images</ion-toggle
+        ><p>Supprimer des images</p></ion-toggle
       >
     </ion-item>
 
@@ -168,6 +168,7 @@ async function removePhoto(index: number) {
       <ion-segment
         mode="md"
         :value="selectedSegment"
+        class="sub-menu"
         @ionChange="segmentChanged"
       >
         <ion-segment-button value="all">

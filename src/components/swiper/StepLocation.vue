@@ -68,6 +68,7 @@ function validLocality(
         color="primary"
         type="submit"
         expand="block"
+        shape="round"
         @click="localize"
       >
         <ion-icon slot="start" name="locate-outline"></ion-icon>
@@ -103,9 +104,10 @@ function validLocality(
 .location-form {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: end;
   align-items: center;
   margin: 32px 0 16px 0;
+  height: 25%;
 }
 #geolocation-section {
   margin-top: 44px;
