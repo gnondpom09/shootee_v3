@@ -63,6 +63,11 @@ export async function updateMarker(spotId: string, photos: PhotoSpot[]) {
   return await updateDoc(markerRef, { photos });
 }
 
+export async function updateSpot(spotId: string, spot: Spot) {
+  const userRef = doc(collection(firestore, "spots"), spotId);
+  return await updateDoc(userRef, { ...spot });
+}
+
 export async function removeMarker(spotId: string) {
   const markerRef = doc(collection(firestore, "spots"), spotId);
   return await deleteDoc(markerRef);

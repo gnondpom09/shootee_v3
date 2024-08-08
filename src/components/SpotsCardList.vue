@@ -31,8 +31,18 @@ const emit = defineEmits<{
         <img :src="spot.thumbnail" />
       </ion-thumbnail>
       <ion-label>
-        <strong v-if="spot.name">{{ spot.name }}</strong>
-        <strong v-else>Spot {{ index + 1 }}</strong>
+        <strong v-if="spot.name"
+          >{{ spot.name
+          }}<span v-if="!spot.isPublic" class="note-danger">
+            - Privé</span
+          ></strong
+        >
+        <strong v-else
+          >Spot {{ index + 1
+          }}<span v-if="!spot.isPublic" class="note-danger">
+            - Privé</span
+          ></strong
+        >
         <ion-text>{{ spot.address }}</ion-text
         ><br />
         <ion-note color="medium" class="ion-text-wrap">
@@ -46,3 +56,10 @@ const emit = defineEmits<{
     </ion-item>
   </ion-list>
 </template>
+
+<style scoped lang="scss">
+.note-danger {
+  color: var(--ion-color-danger);
+  font-weight: 500;
+}
+</style>

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { toRefs, ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { getUserById } from "@/services/user.service";
+import { getUserById, updateUser } from "@/services/user.service";
 import { PhotoSpot } from "@/models/photoSpot.model";
 import { Spot } from "@/models/spot.model";
 import { useAuth } from "@/composables/useAuth";
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
-import { updateMarker } from "@/services/marker.service";
+import { updateMarker, updateSpot } from "@/services/marker.service";
 import PhotoDetails from "@/components/spot/PhotoDetails.vue";
 import { ActionSheetOptions, alertController } from "@ionic/vue";
 import { useCompareTime } from "@/composables/useCompareTime";
@@ -29,6 +29,8 @@ const isSelectionEnabled = ref<boolean>(false);
 
 const selectedSegment = ref<string>("all");
 
+const isPublicSpot = ref<boolean>(true);
+
 const { checkUserAuth } = useAuth();
 
 const { getPhotosByDayTime, filteredPhotos } = useCompareTime();
@@ -38,6 +40,7 @@ const { takePhoto, savePhotosAndGetImagesPath, photosDraft, resetPhotos } =
 
 onMounted(() => {
   getPhotosByDayTime(spot.value.photos, "all");
+  isPublicSpot.value = !!spot.value.isPublic;
 });
 
 function segmentChanged(e: CustomEvent) {
@@ -128,6 +131,25 @@ async function removePhoto(index: number) {
     await alert.present();
   }
 }
+
+async function updateInformation() {
+  if (spotAuthor.value) {
+    try {
+      spotAuthor.value.isPrivateAccount = !spotAuthor.value.isPrivateAccount;
+      spot.value.isPublic = !spot.value.isPublic;
+      await updateSpot(spot.value.id, spot.value);
+      isPublicSpot.value = spot.value.isPublic;
+    } catch {
+      const alert = await alertController.create({
+        header: "Service indisponible",
+        message: "Un problème est survenu, veuillez réessayer plus tard.",
+        buttons: ["Fermer"],
+      });
+
+      await alert.present();
+    }
+  }
+}
 </script>
 
 <template>
@@ -147,21 +169,42 @@ async function removePhoto(index: number) {
       </ion-item>
     </div>
 
-    <ion-item
-      v-if="checkUserAuth(spot.authorId)"
-      class="ion-no-padding"
-      lines="none"
-    >
-      <ion-toggle :checked="isSelectionEnabled" @ion-change="toggleSelection"
-        ><p>Supprimer des images</p></ion-toggle
-      >
-    </ion-item>
+    <ion-accordion-group v-if="checkUserAuth(spot.authorId)">
+      <ion-accordion value="first" mode="md">
+        <ion-item class="ion-no-padding" slot="header">
+          <ion-label>Options</ion-label>
+        </ion-item>
+        <div slot="content">
+          <ion-list>
+            <ion-item class="ion-no-padding" lines="none">
+              <ion-toggle
+                :checked="isSelectionEnabled"
+                @ion-change="toggleSelection"
+                ><p>Supprimer des images</p></ion-toggle
+              >
+            </ion-item>
+            <ion-item class="ion-no-padding" lines="none">
+              <ion-toggle
+                :checked="spot.isPublic"
+                @ion-change="updateInformation"
+                ><p>Spot Public</p></ion-toggle
+              >
+            </ion-item>
+            <ion-item class="ion-no-padding" lines="none">
+              <ion-input
+                disabled
+                type="text"
+                label="Partager avec"
+                labelPlacement="stacked"
+              ></ion-input>
+            </ion-item>
+          </ion-list>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
 
     <div class="header-gallery">
       <h5>Les points de vue</h5>
-      <ion-button fill="clear" disabled>
-        <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
-      </ion-button>
     </div>
 
     <div class="menu-photos">
