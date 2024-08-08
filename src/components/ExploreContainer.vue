@@ -3,17 +3,19 @@ import { onMounted } from "vue";
 import { useMap } from "@/composables/useMap";
 import { useGeocode } from "@/composables/useGeocode";
 import AutocompleteSearch from "@/components/AutocompleteSearch.vue";
-import { getAllMarkers } from "@/services/marker.service";
+import { getAllPublicSpots } from "@/services/marker.service";
 
 const { reverseGeocodeMarker, setCoordonates } = useGeocode();
 
-const spots = getAllMarkers();
+const spots = getAllPublicSpots();
 
 const initializeMap = useMap("map");
 
 onMounted(() => {
   if (spots.value) {
-    initializeMap.setMarkersOnMap(spots.value);
+    setTimeout(() => {
+      initializeMap.setMarkersOnMap(spots.value);
+    }, 800);
   }
 });
 

@@ -1,12 +1,13 @@
 import { onMounted } from "vue";
 import { MAP_STYLES } from "../constants/map";
 import { Spot } from "@/models/spot.model";
+import { DocumentData } from "firebase/firestore";
 
 interface UseMap {
   initMap: () => void;
   resetMap: () => void;
   setMarker: (latitude: number, longitude: number) => void;
-  setMarkersOnMap: (spots: Spot[]) => void;
+  setMarkersOnMap: (spots: DocumentData[]) => void;
   removeMarker: (latitude: number, longitude: number) => void;
 }
 
@@ -54,7 +55,7 @@ export function useMap(elementId: string): UseMap {
     marker.setMap(null);
   }
 
-  function setMarkersOnMap(spots: Spot[]): void {
+  function setMarkersOnMap(spots: DocumentData[]): void {
     if (spots) {
       spots.forEach((spot, index) => {
         const center = {

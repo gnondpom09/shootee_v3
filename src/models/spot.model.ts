@@ -11,6 +11,7 @@ export interface Spot {
   address: string;
   photosCount: number;
   photos: PhotoSpot[];
+  isPublic?: boolean;
   tags?: string[];
   schedules?: string[];
   seasons?: string[];

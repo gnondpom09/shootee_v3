@@ -2,9 +2,9 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { onIonViewWillEnter } from "@ionic/vue";
-import { getAllMarkers } from "@/services/marker.service";
+import { getAllPublicSpots } from "@/services/marker.service";
 
-const spots = getAllMarkers();
+const spots = getAllPublicSpots();
 
 const router = useRouter();
 
@@ -13,7 +13,7 @@ const selectedSegment = ref<string>("default");
 // const header = ref<HTMLElement | null>(null);
 
 onIonViewWillEnter(() => {
-  console.log("Home page will enter");
+  // console.log("Home page will enter");
 });
 
 onMounted(() => {
@@ -70,7 +70,7 @@ function viewSpot(spotId: string) {
       <div class="wall">
         <div class="home-title">
           <h1>Trouvez le spot idéal</h1>
-          <p class="legend">Version 0.5.0</p>
+          <p class="legend">Version 0.5.1</p>
         </div>
 
         <ion-segment

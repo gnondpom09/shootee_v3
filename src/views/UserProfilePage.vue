@@ -15,6 +15,7 @@ import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { getSpotsByAuthor } from "@/services/marker.service";
 
 import SpotsCardList from "@/components/SpotsCardList.vue";
+import SkeletonItemsList from "@/components/skeletons/SkeletonItemsList.vue";
 
 const {
   takeAvatarAndSave,
@@ -203,39 +204,7 @@ function viewSpot(id: string) {
 
       <div class="content" v-if="isContentLoading">
         <div v-if="selectedSegment === 'spots'" class="spots-list">
-          <ion-list>
-            <ion-list-header>
-              <ion-skeleton-text
-                :animated="true"
-                style="width: 80px"
-              ></ion-skeleton-text>
-            </ion-list-header>
-            <ion-item v-for="(item, index) in 5" :key="index">
-              <ion-thumbnail slot="start">
-                <ion-skeleton-text :animated="true"></ion-skeleton-text>
-              </ion-thumbnail>
-              <ion-label>
-                <h3>
-                  <ion-skeleton-text
-                    :animated="true"
-                    style="width: 80%"
-                  ></ion-skeleton-text>
-                </h3>
-                <p>
-                  <ion-skeleton-text
-                    :animated="true"
-                    style="width: 60%"
-                  ></ion-skeleton-text>
-                </p>
-                <p>
-                  <ion-skeleton-text
-                    :animated="true"
-                    style="width: 30%"
-                  ></ion-skeleton-text>
-                </p>
-              </ion-label>
-            </ion-item>
-          </ion-list>
+          <SkeletonItemsList />
         </div>
       </div>
 

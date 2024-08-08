@@ -36,11 +36,15 @@ export async function createMarker(
     createdAt,
     address,
     photos,
+    isPublic: true,
   });
 }
 
-export function getAllMarkers() {
-  return useCollection<Spot>(collection(firestore, "spots"));
+export function getAllPublicSpots() {
+  const queryByAuthor = useCollection(
+    query(collection(firestore, "spots"), where("isPublic", "==", true))
+  );
+  return queryByAuthor;
 }
 
 export function getSpotsByAuthor(userId: string) {
