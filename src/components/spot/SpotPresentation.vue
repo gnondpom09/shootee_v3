@@ -88,6 +88,10 @@ function viewAuthor(authorId: string): void {
   router.push(`/author/${authorId}`);
 }
 
+function sahredWith(spotId: string): void {
+  router.push(`/shared-with/${spotId}`);
+}
+
 async function contribute() {
   await takePhoto();
 
@@ -190,14 +194,19 @@ async function updateInformation() {
                 ><p>Spot Public</p></ion-toggle
               >
             </ion-item>
-            <ion-item class="ion-no-padding" lines="none">
-              <ion-input
-                disabled
-                type="text"
-                label="Partager avec"
-                labelPlacement="stacked"
-              ></ion-input>
-            </ion-item>
+            <!--             <ion-item
+              button
+              lines="none"
+              class="ion-no-padding"
+              @click="sahredWith(spot.id)"
+            >
+              <ion-label>Partager</ion-label>
+              <ion-icon
+                slot="end"
+                name="chevron-forward"
+                size="small"
+              ></ion-icon>
+            </ion-item> -->
           </ion-list>
         </div>
       </ion-accordion>

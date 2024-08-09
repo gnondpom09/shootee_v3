@@ -5,6 +5,8 @@ import {
   updateDoc,
   deleteDoc,
   Timestamp,
+  query,
+  where,
 } from "firebase/firestore";
 
 import { useCollection, useDocument, useFirestore } from "vuefire";
@@ -31,6 +33,13 @@ export function getAllUsers() {
 
 export function getUserById(id: string) {
   return useDocument<Profile>(doc(firestore, `users/${id}`));
+}
+
+export function getUserByEmail(email: string) {
+  const queryUserByEmail = useCollection(
+    query(collection(firestore, "spots"), where("email", "==", email))
+  );
+  return queryUserByEmail;
 }
 
 export async function updateUser(id: string, user: Profile) {

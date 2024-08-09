@@ -39,7 +39,7 @@ async function updateInformation() {
           <ion-buttons slot="start">
             <ion-back-button
               mode="ios"
-              test="Retour"
+              text="Retour"
               defaultHref="/tabs/profile"
             ></ion-back-button>
           </ion-buttons>

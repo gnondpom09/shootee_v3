@@ -16,10 +16,9 @@ const errMsg = ref("");
 const router = useRouter();
 
 function signUp() {
-  if (password.value === repeatPassword.value) {
+  if (password.value === repeatPassword.value && auth) {
     createUserWithEmailAndPassword(auth, email.value, password.value)
       .then(async (data) => {
-        console.log("registration success!", data);
         await createUser(data.user.uid, pseudo.value, email.value);
 
         router.push("/tabs");

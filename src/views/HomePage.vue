@@ -32,7 +32,6 @@ function segmentChanged(e: CustomEvent) {
 }
 
 function viewSpot(spotId: string) {
-  console.log("open spot detail");
   router.push(`/spot-detail/${spotId}`);
 }
 
@@ -70,7 +69,7 @@ function viewSpot(spotId: string) {
       <div class="wall">
         <div class="home-title">
           <h1>Trouvez le spot idéal</h1>
-          <p class="legend">Version 0.6.0</p>
+          <p class="legend">Version 0.6.1</p>
         </div>
 
         <ion-segment

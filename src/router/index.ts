@@ -39,7 +39,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/spot-detail/:id",
     component: () => import("@/views/SpotDetailPage.vue"),
   },
-
+  {
+    path: "/shared-with/:id",
+    component: () => import("@/views/SharedWithPage.vue"),
+    meta: { requiresAuth: true },
+  },
   {
     path: "/author/:id",
     component: () => import("@/views/AuthorDetailPage.vue"),

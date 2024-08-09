@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { getUserById, updateAvatar } from "@/services/user.service";
 import { useRouter } from "vue-router";
 import { useCurrentUser } from "vuefire";
@@ -214,7 +214,7 @@ function viewSpot(id: string) {
         </div>
       </div>
 
-      <div v-if="!isContentLoading && !spots" class="action">
+      <div v-else class="action">
         <ion-button
           router-link="/add-spot"
           router-direction="back"

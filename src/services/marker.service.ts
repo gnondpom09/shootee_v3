@@ -47,6 +47,17 @@ export function getAllPublicSpots() {
   return queryByAuthor;
 }
 
+export function getPublicAndSharedSpots(userId: string) {
+  const queryByAuthor = useCollection(
+    query(
+      collection(firestore, "spots"),
+      where("isPublic", "==", true),
+      where("sharedWith", "array-contains", userId)
+    )
+  );
+  return queryByAuthor;
+}
+
 export function getSpotsByAuthor(userId: string) {
   const queryByAuthor = useCollection(
     query(collection(firestore, "spots"), where("authorId", "==", userId))

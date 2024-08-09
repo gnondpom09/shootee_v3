@@ -70,14 +70,6 @@ async function updateInformation() {
     </ion-header>
     <ion-content v-if="currentUser">
       <ion-list>
-        <ion-item button lines="none">
-          <ion-toggle
-            disabled
-            :checked="currentUser.isPrivateAccount"
-            @ion-change="updateInformation"
-            >Masquer mes spots</ion-toggle
-          >
-        </ion-item>
         <ion-item button lines="none" @click="unavalaibleFunction">
           <ion-label>Notifications</ion-label>
         </ion-item>

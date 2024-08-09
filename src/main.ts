@@ -165,6 +165,7 @@ import {
   IonAccordion,
   IonAccordionGroup,
   IonSkeletonText,
+  IonNote,
 } from "@ionic/vue";
 
 // Import Swiper styles
@@ -218,6 +219,7 @@ app.component("ion-toggle", IonToggle);
 app.component("ion-accordion", IonAccordion);
 app.component("ion-accordion-group", IonAccordionGroup);
 app.component("ion-skeleton-text", IonSkeletonText);
+app.component("ion-note", IonNote);
 
 app.use(VueFire, {
   firebaseApp,
