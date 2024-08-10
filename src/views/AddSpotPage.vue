@@ -45,11 +45,14 @@ const onSwiper = (event: any) => {
 
 const nextButtonLabel = ref<string>("Suivant");
 
+const isStepNotValid = ref<boolean>(true);
+
 function previousStep() {
   if (slider.value.activeIndex === 1) {
     nextButtonLabel.value = "Suivant";
   }
   slider.value.slidePrev();
+  isStepNotValid.value = false;
 }
 
 async function nextStep() {
@@ -117,6 +120,10 @@ function clearDatas() {
 
 function onSlideChange() {
   activeIndex.value = slider.value.activeIndex;
+
+  if (photosDraft.value.length === 0) {
+    isStepNotValid.value = true;
+  }
 }
 </script>
 
@@ -142,14 +149,19 @@ function onSlideChange() {
           @swiper="onSwiper"
           @slideChange="onSlideChange"
         >
-          <swiper-slide><StepLocation @close="closeAddForm" /></swiper-slide>
-          <swiper-slide><StepAddPhotos @close="closeAddForm" /></swiper-slide>
+          <swiper-slide
+            ><StepLocation @localize="isStepNotValid = false"
+          /></swiper-slide>
+          <swiper-slide
+            ><StepAddPhotos @add-photo="isStepNotValid = false"
+          /></swiper-slide>
           <swiper-slide><StepSuccess @close="closeAddForm" /></swiper-slide>
         </swiper>
 
         <div class="actions">
           <SwiperControls
             :next-button-label="nextButtonLabel"
+            :is-next-button-disabled="isStepNotValid"
             :slider="slider"
             @previousStep="previousStep"
             @nextStep="nextStep"

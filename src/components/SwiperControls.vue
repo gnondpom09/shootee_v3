@@ -4,9 +4,10 @@ import { toRefs, computed } from "vue";
 const props = defineProps<{
   slider: any;
   nextButtonLabel: string;
+  isNextButtonDisabled?: boolean;
 }>();
 
-const { nextButtonLabel, slider } = toRefs(props);
+const { nextButtonLabel, slider, isNextButtonDisabled } = toRefs(props);
 
 const emit = defineEmits<{
   (event: "previousStep"): void;
@@ -46,6 +47,7 @@ const disabledBackButton = computed<boolean>(() => {
             type="submit"
             shape="round"
             expand="full"
+            :disabled="isNextButtonDisabled"
             @click="emit('nextStep')"
           >
             {{ nextButtonLabel }}

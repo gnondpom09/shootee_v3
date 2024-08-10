@@ -7,6 +7,10 @@ import {
   isPlatform,
 } from "@ionic/vue";
 
+const emit = defineEmits<{
+  (event: "add-photo"): void;
+}>();
+
 const { takePhoto, photosDraft, getSelectedPhotosFromLibrary } =
   usePhotoGallery();
 
@@ -17,6 +21,7 @@ const actionSheet: ActionSheetOptions = {
       text: "Prendre une photo",
       handler: () => {
         takePhoto();
+        emit("add-photo");
       },
     },
     {
@@ -24,6 +29,7 @@ const actionSheet: ActionSheetOptions = {
       handler: async () => {
         if (isPlatform("hybrid")) {
           getSelectedPhotosFromLibrary();
+          emit("add-photo");
         } else {
           const alert = await alertController.create({
             header: "Fonctionnalité indisponible",

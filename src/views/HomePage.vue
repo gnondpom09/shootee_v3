@@ -1,26 +1,66 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import {
   getAllPublicSpots,
   getPublicAndSharedSpots,
+  getSharedSpots,
 } from "@/services/marker.service";
-import { useCurrentUser } from "vuefire";
+import GallerySpots from "@/components/GallerySpots.vue";
+import SkeletonGallery from "@/components/skeletons/SkeletonGallery.vue";
 
 const router = useRouter();
 
-const selectedSegment = ref<string>("default");
+const selectedSegment = ref<string>("all");
 
-const userAuth = useCurrentUser();
+const isContentLoading = ref<boolean>(true);
 
 const userId = sessionStorage.getItem("uid") as string;
 
-const spotsPublicAndShared = getPublicAndSharedSpots(userId);
+const spots = ref();
 
-const spots = getAllPublicSpots();
+onMounted(() => {
+  isContentLoading.value = true;
+
+  setTimeout(() => {
+    if (userId) {
+      spots.value = getPublicAndSharedSpots(userId);
+    } else {
+      spots.value = getAllPublicSpots();
+    }
+    isContentLoading.value = false;
+  }, 400);
+});
 
 function segmentChanged(e: CustomEvent) {
   selectedSegment.value = e.detail.value;
+
+  console.log(selectedSegment.value);
+
+  switch (selectedSegment.value) {
+    case "all":
+      if (userId) {
+        spots.value = getPublicAndSharedSpots(userId);
+      } else {
+        spots.value = getAllPublicSpots();
+      }
+      break;
+
+    case "publics":
+      spots.value = getAllPublicSpots();
+      break;
+
+    case "shared":
+      if (userId) {
+        spots.value = getSharedSpots(userId);
+      } else {
+        spots.value = [];
+      }
+      break;
+
+    default:
+      break;
+  }
 }
 
 function viewSpot(spotId: string) {
@@ -39,7 +79,7 @@ function viewSpot(spotId: string) {
       <div class="wall">
         <div class="home-title">
           <h1>Trouvez le spot idéal</h1>
-          <p class="legend">Version 0.8.0</p>
+          <p class="legend">Version 0.9.0</p>
         </div>
 
         <ion-segment
@@ -48,96 +88,41 @@ function viewSpot(spotId: string) {
           class="sub-menu"
           @ionChange="segmentChanged"
         >
-          <ion-segment-button value="default">
-            <ion-label>Recommandés</ion-label>
+          <ion-segment-button value="all">
+            <ion-label>Tous</ion-label>
           </ion-segment-button>
-          <ion-segment-button value="recents" disabled>
-            <ion-label>Récents</ion-label>
+          <ion-segment-button value="publics">
+            <ion-label>Publics</ion-label>
           </ion-segment-button>
-          <ion-segment-button value="nearby" disabled>
-            <ion-label>A Proximité</ion-label>
+          <ion-segment-button value="shared">
+            <ion-label>Partagés</ion-label>
           </ion-segment-button>
         </ion-segment>
 
-        <div v-if="!userAuth" class="">
-          <ion-row v-if="selectedSegment === 'default' && spots" class="pins">
-            <ion-col
-              :key="index"
-              v-for="(spot, index) in spots"
-              size="4"
-              class="pin"
-            >
-              <div
-                class="gallery"
-                :style="{ 'background-image': 'url(' + spot.thumbnail + ')' }"
-                style="
-                  height: 120px;
-                  background-size: cover;
-                  background-color: #fff;
-                  background-repeat: no-repeat;
-                  background-position: center;
-                  border-radius: 12px;
-                "
-              >
-                <ion-button
-                  class="link"
-                  @click="viewSpot(spot.id)"
-                ></ion-button>
-              </div>
-            </ion-col>
-          </ion-row>
-          <div v-if="selectedSegment === 'recents'">
-            <h2>segment 2</h2>
-          </div>
-          <div v-if="selectedSegment === 'nearby'">
-            <h2>segment 3</h2>
-          </div>
+        <div v-if="selectedSegment === 'all'" class="">
+          <SkeletonGallery v-if="isContentLoading && !spots" />
+          <GallerySpots
+            v-if="!isContentLoading && spots"
+            :spots="spots"
+            @view-spot="viewSpot"
+          />
         </div>
 
-        <div v-if="userAuth" class="">
-          <ion-row
-            v-if="selectedSegment === 'default' && spotsPublicAndShared"
-            class="pins"
-          >
-            <ion-col
-              :key="index"
-              v-for="(sharedSpot, index) in spotsPublicAndShared"
-              size="4"
-              class="pin"
-            >
-              <div
-                class="gallery"
-                :style="{
-                  'background-image': 'url(' + sharedSpot.thumbnail + ')',
-                }"
-                style="
-                  height: 120px;
-                  background-size: cover;
-                  background-color: #fff;
-                  background-repeat: no-repeat;
-                  background-position: center;
-                  border-radius: 12px;
-                "
-              >
-                <ion-button
-                  class="link"
-                  @click="viewSpot(sharedSpot.id)"
-                ></ion-button>
-                <ion-icon
-                  v-if="!sharedSpot.isPublic"
-                  slot="icon-only"
-                  class="private-spot"
-                  name="ellipse"
-                ></ion-icon>
-              </div>
-            </ion-col>
-          </ion-row>
-          <div v-if="selectedSegment === 'recents'">
-            <h2>segment 2</h2>
-          </div>
-          <div v-if="selectedSegment === 'nearby'">
-            <h2>segment 3</h2>
-          </div>
+        <div v-if="selectedSegment === 'publics'">
+          <SkeletonGallery v-if="isContentLoading && !spots" />
+          <GallerySpots
+            v-if="!isContentLoading && spots"
+            :spots="spots"
+            @view-spot="viewSpot"
+          />
+        </div>
+        <div v-if="selectedSegment === 'shared'">
+          <SkeletonGallery v-if="isContentLoading && !spots" />
+          <GallerySpots
+            v-if="!isContentLoading && spots"
+            :spots="spots"
+            @view-spot="viewSpot"
+          />
         </div>
       </div>
     </ion-content>

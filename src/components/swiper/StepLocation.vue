@@ -5,6 +5,10 @@ import { useGeolocation } from "@vueuse/core";
 import { useGeocode } from "@/composables/useGeocode";
 import AutocompleteSearch from "@/components/AutocompleteSearch.vue";
 
+const emit = defineEmits<{
+  (event: "localize"): void;
+}>();
+
 const { coords } = useGeolocation();
 
 const {
@@ -23,6 +27,8 @@ function localize() {
     setCoordonates(coords.value.latitude, coords.value.longitude);
     reverseGeocodeMarker(coords.value.latitude, coords.value.longitude);
     initializeMap.setMarker(coords.value.latitude, coords.value.longitude);
+
+    emit("localize");
   }
 }
 
@@ -42,12 +48,14 @@ function validLocality(
       locality.geometry.location.lat,
       locality.geometry.location.lng
     );
+
+    emit("localize");
   }
 }
 </script>
 
 <template>
-  <div class="add-form">
+  <div class="add-form ion-padding">
     <ion-item class="spot-name" lines="full">
       <ion-input
         type="text"

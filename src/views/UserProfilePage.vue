@@ -73,8 +73,6 @@ const actionSheet: ActionSheetOptions = {
   ],
 };
 
-const selectedSegment = ref<string>("spots");
-
 onMounted(() => {
   setTimeout(() => {
     if (currentUser.value) {
@@ -83,10 +81,6 @@ onMounted(() => {
     }
   }, 800);
 });
-
-function segmentChanged(e: CustomEvent) {
-  selectedSegment.value = e.detail.value;
-}
 
 function goToAccount() {
   router.push("/account");
@@ -183,35 +177,12 @@ function viewSpot(id: string) {
         </ion-button>
       </div>
 
-      <div class="sub-menu">
-        <ion-segment
-          mode="md"
-          :value="selectedSegment"
-          class="sub-menu"
-          @ionChange="segmentChanged"
-        >
-          <ion-segment-button value="spots">
-            <ion-label>spots</ion-label>
-          </ion-segment-button>
-          <ion-segment-button disabled value="followers">
-            <ion-label>suivis</ion-label>
-          </ion-segment-button>
-          <ion-segment-button disabled value="subscribers">
-            <ion-label>abonnés</ion-label>
-          </ion-segment-button>
-        </ion-segment>
-      </div>
-
       <div class="content" v-if="isContentLoading">
-        <div v-if="selectedSegment === 'spots'" class="spots-list">
-          <SkeletonItemsList />
-        </div>
+        <SkeletonItemsList />
       </div>
 
       <div class="content" v-if="spots && !isContentLoading">
-        <div v-if="selectedSegment === 'spots'" class="spots-list">
-          <SpotsCardList :spots="spots" @view-post="viewSpot" />
-        </div>
+        <SpotsCardList :spots="spots" title="Mes spots" @view-post="viewSpot" />
       </div>
 
       <div v-else class="action">

@@ -16,4 +16,5 @@ export interface Spot {
   tags?: string[];
   schedules?: string[];
   seasons?: string[];
+  addToFavoriteBy?: string[];
 }

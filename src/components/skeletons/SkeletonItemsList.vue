@@ -6,7 +6,7 @@
         style="width: 80px"
       ></ion-skeleton-text>
     </ion-list-header>
-    <ion-item v-for="(item, index) in 5" :key="index">
+    <ion-item v-for="(_item, index) in 5" :key="index">
       <ion-thumbnail slot="start">
         <ion-skeleton-text :animated="true"></ion-skeleton-text>
       </ion-thumbnail>
