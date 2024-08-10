@@ -41,6 +41,8 @@ const { takePhoto, savePhotosAndGetImagesPath, photosDraft, resetPhotos } =
 onMounted(() => {
   getPhotosByDayTime(spot.value.photos, "all");
   isPublicSpot.value = !!spot.value.isPublic;
+
+  console.log(spot.value);
 });
 
 function segmentChanged(e: CustomEvent) {
@@ -195,6 +197,7 @@ async function updateInformation() {
               >
             </ion-item>
             <!--             <ion-item
+              v-if="!spot.isPublic"
               button
               lines="none"
               class="ion-no-padding"

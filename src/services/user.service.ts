@@ -37,9 +37,19 @@ export function getUserById(id: string) {
 
 export function getUserByEmail(email: string) {
   const queryUserByEmail = useCollection(
-    query(collection(firestore, "spots"), where("email", "==", email))
+    query(collection(firestore, "users"), where("email", "==", email))
   );
   return queryUserByEmail;
+}
+
+export function getSpotSubscribers(ids: string[]) {
+  if (ids.length > 0) {
+    const querySubscribers = useCollection(
+      query(collection(firestore, "users"), where("id", "in", ids))
+    );
+    return querySubscribers;
+  }
+  return;
 }
 
 export async function updateUser(id: string, user: Profile) {

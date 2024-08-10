@@ -2,13 +2,21 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { onIonViewWillEnter } from "@ionic/vue";
-import { getAllPublicSpots } from "@/services/marker.service";
+import {
+  getAllPublicSpots,
+  getPublicAndSharedSpots,
+} from "@/services/marker.service";
+import { useCurrentUser } from "vuefire";
 
 const spots = getAllPublicSpots();
 
 const router = useRouter();
 
 const selectedSegment = ref<string>("default");
+
+const userAuth = useCurrentUser();
+
+const spotsPublicAndShared = getPublicAndSharedSpots(userAuth.value?.uid ?? "");
 
 // const header = ref<HTMLElement | null>(null);
 
@@ -18,6 +26,14 @@ onIonViewWillEnter(() => {
 
 onMounted(() => {
   /*   initHeader(); */
+
+  setTimeout(() => {
+    if (userAuth.value) {
+      const userId = userAuth.value.uid;
+      const data = getPublicAndSharedSpots(userId);
+      console.log(data);
+    }
+  }, 800);
 });
 
 /* function initHeader(): void {
@@ -69,7 +85,7 @@ function viewSpot(spotId: string) {
       <div class="wall">
         <div class="home-title">
           <h1>Trouvez le spot idéal</h1>
-          <p class="legend">Version 0.6.1</p>
+          <p class="legend">Version 0.7.0</p>
         </div>
 
         <ion-segment

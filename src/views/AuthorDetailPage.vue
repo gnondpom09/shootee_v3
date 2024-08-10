@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import SpotsCardList from "@/components/SpotsCardList.vue";
-import { getSpotsByAuthor } from "@/services/marker.service";
+import { getPublicSpotsByAuthor } from "@/services/marker.service";
 import { getUserById } from "@/services/user.service";
 import { useRouter, useRoute } from "vue-router";
 
@@ -10,7 +10,7 @@ const id = String(route.params.id);
 
 const author = getUserById(id);
 
-const spots = getSpotsByAuthor(id);
+const spots = getPublicSpotsByAuthor(id);
 
 function viewSpot(id: string) {
   router.push(`/spot-detail/${id}`);

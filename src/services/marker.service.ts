@@ -65,6 +65,17 @@ export function getSpotsByAuthor(userId: string) {
   return queryByAuthor;
 }
 
+export function getPublicSpotsByAuthor(userId: string) {
+  const queryByAuthor = useCollection(
+    query(
+      collection(firestore, "spots"),
+      where("isPublic", "==", true),
+      where("authorId", "==", userId)
+    )
+  );
+  return queryByAuthor;
+}
+
 export function getMarkerId(id: string) {
   return useDocument<Spot>(doc(firestore, `spots/${id}`));
 }

@@ -1,44 +1,57 @@
 <script setup lang="ts">
+import { Spot } from "@/models/spot.model";
 import { getMarkerId, updateSpot } from "@/services/marker.service";
-import { getUserByEmail } from "@/services/user.service";
+import { getSpotSubscribers, getUserByEmail } from "@/services/user.service";
 import { alertController } from "@ionic/vue";
-/* import { getSpotsSubscribers } from "@/services/user.service";
- */ import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useRoute } from "vue-router";
-import { useCurrentUser } from "vuefire";
 
 const route = useRoute();
 const spotId = String(route.params.id);
 
 const currentSpot = getMarkerId(spotId);
 
-const userAuth = useCurrentUser();
-
-/* const currentUser = getUserById(userAuth.value?.uid as string);
- */
 const newSpotSubscriber = ref<string>("");
 
-const spotsSubscribers = ref();
-
-onMounted(() => {
-  /*   spotsSubscribers.value = getSpotsSubscribers(spotId); */
-  console.log(userAuth.value);
-});
+const firends = currentSpot.value?.sharedWith
+  ? currentSpot.value.sharedWith
+  : [];
+const spotsSubscribers = getSpotSubscribers(firends);
 
 async function addNewSubscriber() {
-  console.log(newSpotSubscriber.value);
   try {
     const subscriber = getUserByEmail(newSpotSubscriber.value);
-    console.log(subscriber);
+    const sharedWith = currentSpot.value?.sharedWith ?? [];
 
-    if (currentSpot.value) {
-      currentSpot.value.sharedWith?.push(subscriber.value[0].id);
-      await updateSpot(spotId, currentSpot.value);
-    }
+    setTimeout(async () => {
+      if (currentSpot.value && subscriber.value) {
+        const userId = subscriber.value[0].id;
+        const isExists = sharedWith.includes(userId);
+
+        if (!isExists) {
+          sharedWith.push(userId);
+
+          const newSpot: Spot = { ...currentSpot.value, sharedWith };
+
+          await updateSpot(spotId, newSpot);
+
+          const alert = await alertController.create({
+            header: "Nouvel invité",
+            message: `Vous partagez maintenant ce spot avec ${subscriber.value[0].pseudo}.`,
+            buttons: ["Fermer"],
+          });
+
+          await alert.present();
+
+          newSpotSubscriber.value = "";
+          spotsSubscribers?.value.push(subscriber.value[0]);
+        }
+      }
+    }, 400);
   } catch {
     const alert = await alertController.create({
-      header: "Service indisponible",
-      message: "Un problème est survenu, veuillez réessayer plus tard.",
+      header: "Utilisateur inconnu",
+      message: "Aucun utilisateur trouvé, veuillez saisir un email valide.",
       buttons: ["Fermer"],
     });
 
@@ -46,11 +59,25 @@ async function addNewSubscriber() {
   }
 }
 
-function removeUser(index: number) {
-  //  const subscribers = spotsSubscribers.value.splice(index, 1);
-  //    currentSpot.value?.sharedWith = subscribers;
+async function removeUser(index: number) {
+  try {
+    if (spotsSubscribers?.value && currentSpot.value?.sharedWith) {
+      spotsSubscribers.value.splice(index, 1);
 
-  console.log("remove user");
+      currentSpot.value.sharedWith = spotsSubscribers.value.map(
+        (spot) => spot.id
+      );
+      await updateSpot(spotId, currentSpot.value);
+    }
+  } catch {
+    const alert = await alertController.create({
+      header: "Erreur inconnu",
+      message: "Un problème est survenu, veuillez réessayer plus tard.",
+      buttons: ["Fermer"],
+    });
+
+    await alert.present();
+  }
 }
 </script>
 
@@ -94,9 +121,10 @@ function removeUser(index: number) {
             :key="index"
           >
             <ion-item>
-              <ion-avatar slot="start">
+              <ion-avatar v-if="user.avatar" slot="start">
                 <img :src="user.avatar" />
               </ion-avatar>
+              <ion-avatar v-else class="no-avatar" slot="start"> </ion-avatar>
               <ion-label>{{ user.pseudo }}</ion-label>
             </ion-item>
 

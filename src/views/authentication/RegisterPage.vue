@@ -5,6 +5,8 @@ import { useRouter } from "vue-router";
 import { useFirebaseAuth } from "vuefire";
 import { createUser } from "@/services/user.service";
 
+import logo from "@/assets/logo.png";
+
 const auth = useFirebaseAuth();
 
 const email = ref("");
@@ -48,44 +50,54 @@ function signUp() {
         <ion-title>S'enregistrer</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content class="ion-padding">
+      <div class="login-form">
+        <div>
+          <ion-img :src="logo"></ion-img>
+        </div>
+        <div class="form">
+          <ion-item class="ion-no-padding">
+            <ion-input
+              type="text"
+              label="email"
+              labelPlacement="stacked"
+              v-model="email"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item class="ion-no-padding">
+            <ion-input
+              type="text"
+              label="pseudo"
+              labelPlacement="stacked"
+              v-model="pseudo"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item class="ion-no-padding">
+            <ion-input
+              type="password"
+              label="Password"
+              labelPlacement="stacked"
+              v-model="password"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item class="ion-no-padding">
+            <ion-input
+              type="password"
+              label="Repeat password"
+              labelPlacement="stacked"
+              v-model="repeatPassword"
+            ></ion-input>
+          </ion-item>
+
+          <p v-if="errMsg">{{ errMsg }}</p>
+        </div>
+        <ion-button @click="signUp">Créer mon compte</ion-button>
+      </div>
+
       <ion-card>
-        <ion-item>
-          <ion-input
-            type="text"
-            label="email"
-            labelPlacement="stacked"
-            v-model="email"
-          ></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-input
-            type="text"
-            label="pseudo"
-            labelPlacement="stacked"
-            v-model="pseudo"
-          ></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-input
-            type="password"
-            label="Password"
-            labelPlacement="stacked"
-            v-model="password"
-          ></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-input
-            type="password"
-            label="Repeat password"
-            labelPlacement="stacked"
-            v-model="repeatPassword"
-          ></ion-input>
-        </ion-item>
-
         <p v-if="errMsg">{{ errMsg }}</p>
 
         <ion-button @click="signUp" expand="block" fill="clear" shape="round">

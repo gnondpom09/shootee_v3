@@ -4,6 +4,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "vue-router";
 import { useFirebaseAuth } from "vuefire";
 
+import logo from "@/assets/logo.png";
+
 const auth = useFirebaseAuth();
 
 const email = ref("");
@@ -58,51 +60,65 @@ function resetPassword() {
         <ion-title>Login</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
-      <ion-card>
-        <ion-item>
-          <ion-input
-            type="text"
-            label="email"
-            labelPlacement="stacked"
-            v-model="email"
-          ></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-input
-            type="password"
-            label="Password"
-            labelPlacement="stacked"
-            v-model="password"
-          ></ion-input>
-        </ion-item>
-
-        <div lines="text-center">
-          <p>
-            Mot de passe perdu ?
-            <ion-button :click="resetPassword" fill="clear">
-              Réinitialiser
-            </ion-button>
-          </p>
-          <p>
-            Pas encore inscrit ?
-            <!-- <span routerLink="/register" tappable>Créer un compte</span> -->
-            <router-link
-              to="/register"
-              custom
-              v-slot="{ href, navigate, isActive }"
-            >
-              <NavLink :active="isActive" :href="href" @click="navigate"
-                >Créer un compte</NavLink
-              >
-            </router-link>
-          </p>
+    <ion-content class="ion-padding">
+      <div class="login-form">
+        <div>
+          <ion-img :src="logo"></ion-img>
         </div>
+        <div class="form">
+          <ion-item class="ion-no-padding">
+            <ion-input
+              type="text"
+              label="email"
+              labelPlacement="stacked"
+              v-model="email"
+            ></ion-input>
+          </ion-item>
 
-        <p v-if="errMsg">{{ errMsg }}</p>
-      </ion-card>
-      <ion-button @click="signIn" expand="full"> Se connecter </ion-button>
+          <ion-item class="ion-no-padding">
+            <ion-input
+              type="password"
+              label="Password"
+              labelPlacement="stacked"
+              v-model="password"
+            ></ion-input>
+          </ion-item>
+
+          <div lines="text-center">
+            <div class="actions">
+              Mot de passe perdu ?
+              <ion-button disabled :click="resetPassword" fill="clear"
+                >Réinitialiser</ion-button
+              >
+            </div>
+            <div class="actions">
+              <p>Pas encore inscrit ?</p>
+              <router-link
+                to="/register"
+                color="primary"
+                v-slot="{ href, navigate, isActive }"
+              >
+                <NavLink :active="isActive" :href="href" @click="navigate"
+                  >Créer un compte</NavLink
+                >
+              </router-link>
+            </div>
+          </div>
+
+          <p v-if="errMsg">{{ errMsg }}</p>
+        </div>
+        <ion-button @click="signIn"> Se connecter </ion-button>
+      </div>
     </ion-content>
   </ion-page>
 </template>
+
+<style lang="scss" scoped>
+.actions {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  column-gap: 8px;
+}
+</style>
