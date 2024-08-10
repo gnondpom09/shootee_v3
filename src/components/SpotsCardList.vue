@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { DocumentData } from "firebase/firestore";
-import { toRefs } from "vue";
+import { toRefs, Ref } from "vue";
 
 const props = defineProps<{
-  spots: DocumentData[];
+  spots: Ref<DocumentData[]>;
   title?: string;
 }>();
 

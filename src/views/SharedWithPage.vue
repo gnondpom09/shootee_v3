@@ -25,11 +25,11 @@ async function addNewSubscriber() {
 
     setTimeout(async () => {
       if (currentSpot.value && subscriber.value) {
-        const userId = subscriber.value[0].id;
-        const isExists = sharedWith.includes(userId);
+        const newUser = subscriber.value[0];
+        const isExists = sharedWith.includes(newUser.id);
 
         if (!isExists) {
-          sharedWith.push(userId);
+          sharedWith.push(newUser.id);
 
           const newSpot: Spot = { ...currentSpot.value, sharedWith };
 
@@ -37,14 +37,14 @@ async function addNewSubscriber() {
 
           const alert = await alertController.create({
             header: "Nouvel invité",
-            message: `Vous partagez maintenant ce spot avec ${subscriber.value[0].pseudo}.`,
+            message: `Vous partagez maintenant ce spot avec ${newUser.pseudo}.`,
             buttons: ["Fermer"],
           });
 
           await alert.present();
 
+          spotsSubscribers?.value.push(newUser);
           newSpotSubscriber.value = "";
-          spotsSubscribers?.value.push(subscriber.value[0]);
         }
       }
     }, 400);

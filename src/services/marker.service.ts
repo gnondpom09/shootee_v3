@@ -10,6 +10,7 @@ import {
   Timestamp,
   where,
   query,
+  or,
 } from "firebase/firestore";
 
 import { useCollection, useDocument, useFirestore } from "vuefire";
@@ -51,8 +52,10 @@ export function getPublicAndSharedSpots(userId: string) {
   const queryByAuthor = useCollection(
     query(
       collection(firestore, "spots"),
-      where("isPublic", "==", true),
-      where("sharedWith", "array-contains", userId)
+      or(
+        where("isPublic", "==", true),
+        where("sharedWith", "array-contains", userId)
+      )
     )
   );
   return queryByAuthor;

@@ -31,7 +31,7 @@ const selectedSegment = ref<string>("all");
 
 const isPublicSpot = ref<boolean>(true);
 
-const { checkUserAuth } = useAuth();
+const { checkUserAuth, checkIfShared } = useAuth();
 
 const { getPhotosByDayTime, filteredPhotos } = useCompareTime();
 
@@ -41,8 +41,6 @@ const { takePhoto, savePhotosAndGetImagesPath, photosDraft, resetPhotos } =
 onMounted(() => {
   getPhotosByDayTime(spot.value.photos, "all");
   isPublicSpot.value = !!spot.value.isPublic;
-
-  console.log(spot.value);
 });
 
 function segmentChanged(e: CustomEvent) {
@@ -196,7 +194,7 @@ async function updateInformation() {
                 ><p>Spot Public</p></ion-toggle
               >
             </ion-item>
-            <!--             <ion-item
+            <ion-item
               v-if="!spot.isPublic"
               button
               lines="none"
@@ -209,11 +207,21 @@ async function updateInformation() {
                 name="chevron-forward"
                 size="small"
               ></ion-icon>
-            </ion-item> -->
+            </ion-item>
           </ion-list>
         </div>
       </ion-accordion>
     </ion-accordion-group>
+
+    <div
+      v-if="
+        !checkUserAuth(spot.authorId) &&
+        !isPublicSpot &&
+        checkIfShared(spot.sharedWith ?? [])
+      "
+    >
+      <p class="legend">Ce spot est privé et partagé avec vous par l'auteur</p>
+    </div>
 
     <div class="header-gallery">
       <h5>Les points de vue</h5>

@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { onIonViewWillEnter } from "@ionic/vue";
 import {
   getAllPublicSpots,
   getPublicAndSharedSpots,
 } from "@/services/marker.service";
 import { useCurrentUser } from "vuefire";
-
-const spots = getAllPublicSpots();
 
 const router = useRouter();
 
@@ -16,32 +13,11 @@ const selectedSegment = ref<string>("default");
 
 const userAuth = useCurrentUser();
 
-const spotsPublicAndShared = getPublicAndSharedSpots(userAuth.value?.uid ?? "");
+const userId = sessionStorage.getItem("uid") as string;
 
-// const header = ref<HTMLElement | null>(null);
+const spotsPublicAndShared = getPublicAndSharedSpots(userId);
 
-onIonViewWillEnter(() => {
-  // console.log("Home page will enter");
-});
-
-onMounted(() => {
-  /*   initHeader(); */
-
-  setTimeout(() => {
-    if (userAuth.value) {
-      const userId = userAuth.value.uid;
-      const data = getPublicAndSharedSpots(userId);
-      console.log(data);
-    }
-  }, 800);
-});
-
-/* function initHeader(): void {
-  if (header.value) {
-    //  this.renderer.setStyle(this.header['el'], 'webkitTransition', 'top 700ms');
-    header.value.style("webkitTransition: top 700ms;");
-  }
-} */
+const spots = getAllPublicSpots();
 
 function segmentChanged(e: CustomEvent) {
   selectedSegment.value = e.detail.value;
@@ -50,16 +26,6 @@ function segmentChanged(e: CustomEvent) {
 function viewSpot(spotId: string) {
   router.push(`/spot-detail/${spotId}`);
 }
-
-/* function onContentScroll(event: any) {
-  if (header.value) {
-    if (event.detail.scrollTop >= 50) {
-      header.value.style("top: -76px; opacity: 0; transition: all ease 1s;");
-    } else {
-      header.value.style("top: 28px; opacity: 1; transition: all ease 1s;");
-    }
-  }
-} */
 </script>
 
 <template>
@@ -69,23 +35,11 @@ function viewSpot(spotId: string) {
         <ion-title class="oswald-title">SHOOTEE</ion-title>
       </ion-toolbar>
     </ion-header>
-    <!--     <ion-header ref="header" class="home-title ion-padding">
-      <ion-toolbar>
-        <ion-row>
-          <ion-col size="12">
-            <ion-title>
-              <h1>Shootee</h1>
-              <h4>Trouvez votre spot idéal</h4>
-            </ion-title>
-          </ion-col>
-        </ion-row>
-      </ion-toolbar>
-    </ion-header> -->
-    <ion-content fullscreen class="ion-padding">
+    <ion-content class="ion-padding">
       <div class="wall">
         <div class="home-title">
           <h1>Trouvez le spot idéal</h1>
-          <p class="legend">Version 0.7.0</p>
+          <p class="legend">Version 0.8.0</p>
         </div>
 
         <ion-segment
@@ -105,8 +59,8 @@ function viewSpot(spotId: string) {
           </ion-segment-button>
         </ion-segment>
 
-        <div v-if="spots" class="">
-          <ion-row v-if="selectedSegment === 'default'" class="pins">
+        <div v-if="!userAuth" class="">
+          <ion-row v-if="selectedSegment === 'default' && spots" class="pins">
             <ion-col
               :key="index"
               v-for="(spot, index) in spots"
@@ -129,6 +83,52 @@ function viewSpot(spotId: string) {
                   class="link"
                   @click="viewSpot(spot.id)"
                 ></ion-button>
+              </div>
+            </ion-col>
+          </ion-row>
+          <div v-if="selectedSegment === 'recents'">
+            <h2>segment 2</h2>
+          </div>
+          <div v-if="selectedSegment === 'nearby'">
+            <h2>segment 3</h2>
+          </div>
+        </div>
+
+        <div v-if="userAuth" class="">
+          <ion-row
+            v-if="selectedSegment === 'default' && spotsPublicAndShared"
+            class="pins"
+          >
+            <ion-col
+              :key="index"
+              v-for="(sharedSpot, index) in spotsPublicAndShared"
+              size="4"
+              class="pin"
+            >
+              <div
+                class="gallery"
+                :style="{
+                  'background-image': 'url(' + sharedSpot.thumbnail + ')',
+                }"
+                style="
+                  height: 120px;
+                  background-size: cover;
+                  background-color: #fff;
+                  background-repeat: no-repeat;
+                  background-position: center;
+                  border-radius: 12px;
+                "
+              >
+                <ion-button
+                  class="link"
+                  @click="viewSpot(sharedSpot.id)"
+                ></ion-button>
+                <ion-icon
+                  v-if="!sharedSpot.isPublic"
+                  slot="icon-only"
+                  class="private-spot"
+                  name="ellipse"
+                ></ion-icon>
               </div>
             </ion-col>
           </ion-row>
@@ -162,6 +162,13 @@ function viewSpot(spotId: string) {
       font-size: 1rem;
     }
   }
+}
+
+.private-spot {
+  padding: 4px;
+  color: var(--ion-color-danger);
+  position: absolute;
+  right: 4px;
 }
 
 .link {

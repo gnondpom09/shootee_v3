@@ -82,6 +82,7 @@ import {
   ellipsisVerticalOutline,
   chevronForward,
   chevronBack,
+  ellipse,
 } from "ionicons/icons";
 addIcons({
   add,
@@ -95,6 +96,7 @@ addIcons({
   bookmark,
   person,
   grid,
+  ellipse,
   "log-in": logIn,
   "log-out-outline": logOutOutline,
   "chevron-up": chevronUp,
@@ -166,6 +168,7 @@ import {
   IonAccordionGroup,
   IonSkeletonText,
   IonNote,
+  IonText,
 } from "@ionic/vue";
 
 // Import Swiper styles
@@ -220,6 +223,7 @@ app.component("ion-accordion", IonAccordion);
 app.component("ion-accordion-group", IonAccordionGroup);
 app.component("ion-skeleton-text", IonSkeletonText);
 app.component("ion-note", IonNote);
+app.component("ion-text", IonText);
 
 app.use(VueFire, {
   firebaseApp,

@@ -17,7 +17,8 @@ const router = useRouter();
 function signIn() {
   if (auth) {
     signInWithEmailAndPassword(auth, email.value, password.value)
-      .then(() => {
+      .then((data) => {
+        sessionStorage.setItem("uid", data.user.uid);
         router.push("/tabs");
       })
       .catch((error) => {
@@ -93,15 +94,13 @@ function resetPassword() {
             </div>
             <div class="actions">
               <p>Pas encore inscrit ?</p>
-              <router-link
-                to="/register"
-                color="primary"
-                v-slot="{ href, navigate, isActive }"
+
+              <ion-button
+                router-link="/register"
+                router-direction="forward"
+                fill="clear"
+                >Créer mon compte</ion-button
               >
-                <NavLink :active="isActive" :href="href" @click="navigate"
-                  >Créer un compte</NavLink
-                >
-              </router-link>
             </div>
           </div>
 

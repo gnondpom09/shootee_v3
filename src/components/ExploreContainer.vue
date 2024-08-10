@@ -3,16 +3,27 @@ import { onMounted } from "vue";
 import { useMap } from "@/composables/useMap";
 import { useGeocode } from "@/composables/useGeocode";
 import AutocompleteSearch from "@/components/AutocompleteSearch.vue";
-import { getAllPublicSpots } from "@/services/marker.service";
+import {
+  getAllPublicSpots,
+  getPublicAndSharedSpots,
+} from "@/services/marker.service";
 
 const { reverseGeocodeMarker, setCoordonates } = useGeocode();
 
-const spots = getAllPublicSpots();
+const userId = sessionStorage.getItem("uid") as string;
 
 const initializeMap = useMap("map");
 
 onMounted(() => {
-  if (spots.value) {
+  if (userId !== "") {
+    const spotsPublicAndShared = getPublicAndSharedSpots(userId);
+
+    setTimeout(() => {
+      initializeMap.setMarkersOnMap(spotsPublicAndShared.value);
+    }, 800);
+  } else {
+    const spots = getAllPublicSpots();
+
     setTimeout(() => {
       initializeMap.setMarkersOnMap(spots.value);
     }, 800);

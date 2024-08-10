@@ -21,6 +21,7 @@ const isPrivateAccount = ref<boolean>(false);
 
 function logout() {
   if (auth) {
+    sessionStorage.clear();
     signOut(auth);
     router.push("/login");
   }
@@ -31,25 +32,6 @@ onMounted(() => {
     isPrivateAccount.value = !!currentUser.value.isPrivateAccount;
   }
 });
-
-async function updateInformation() {
-  // TODO: check instagram url
-  if (currentUser.value) {
-    try {
-      currentUser.value.isPrivateAccount = !currentUser.value.isPrivateAccount;
-      await updateUser(currentUser.value.id, currentUser.value);
-      isPrivateAccount.value = currentUser.value.isPrivateAccount;
-    } catch {
-      const alert = await alertController.create({
-        header: "Service indisponible",
-        message: "Un problème est survenu, veuillez réessayer plus tard.",
-        buttons: ["Fermer"],
-      });
-
-      await alert.present();
-    }
-  }
-}
 </script>
 
 <template>

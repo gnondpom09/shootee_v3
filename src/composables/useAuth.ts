@@ -1,4 +1,3 @@
-import { ref } from "vue";
 import { useCurrentUser } from "vuefire";
 
 export function useAuth() {
@@ -8,7 +7,15 @@ export function useAuth() {
     return userId === currentUser.value?.uid;
   }
 
+  function checkIfShared(sharedWith: string[]) {
+    if (sharedWith.length > 0) {
+      return sharedWith.includes(String(currentUser.value?.uid));
+    }
+    return false;
+  }
+
   return {
     checkUserAuth,
+    checkIfShared,
   };
 }
