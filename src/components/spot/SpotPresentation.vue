@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { toRefs, ref, computed, onMounted } from "vue";
+import { toRefs, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { getUserById, updateUser } from "@/services/user.service";
+import { getUserById } from "@/services/user.service";
 import { PhotoSpot } from "@/models/photoSpot.model";
 import { Spot } from "@/models/spot.model";
 import { useAuth } from "@/composables/useAuth";
@@ -58,7 +58,7 @@ const setOpen = (open: boolean, photo: PhotoSpot | null) => {
 };
 
 const actionSheet: ActionSheetOptions = {
-  header: "Modifier mon avatar",
+  header: "Nouvelle photo",
   buttons: [
     {
       text: "Ouvrir l'appareil photo",
@@ -111,7 +111,8 @@ async function contribute() {
         spotAuthor.value.id
       );
       const photosUpdated = [...spot.value.photos, ...photos];
-      updateMarker(spot.value.id, photosUpdated);
+      filteredPhotos.value = [...photosUpdated];
+      await updateMarker(spot.value.id, photosUpdated);
       resetPhotos();
     }
   } catch {

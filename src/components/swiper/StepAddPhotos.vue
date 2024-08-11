@@ -15,7 +15,7 @@ const { takePhoto, photosDraft, getSelectedPhotosFromLibrary } =
   usePhotoGallery();
 
 const actionSheet: ActionSheetOptions = {
-  header: "Modifier mon avatar",
+  header: "Nouvelle photo",
   buttons: [
     {
       text: "Ouvrir l'apareil photo",
