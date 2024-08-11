@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import success from "@/assets/logo.png";
+import success from "@/assets/success.png";
 
 const emit = defineEmits<{
   (event: "close"): void;

@@ -86,10 +86,6 @@ function validLocality(
 
     <div v-if="latitude && longitude && address" id="geolocation-section">
       <h5>{{ address }}</h5>
-      <p class="location-info">
-        <span> Latitude : {{ coords.latitude }} </span>
-        <span> Longitude : {{ coords.longitude }} </span>
-      </p>
     </div>
 
     <div id="map-add-spot"></div>
@@ -118,7 +114,7 @@ function validLocality(
   height: 25%;
 }
 #geolocation-section {
-  margin-top: 44px;
+  margin-top: 20px;
   text-align: center;
 }
 #map-add-spot {
