@@ -1,18 +1,16 @@
 <script setup lang="ts">
+import success from "@/assets/logo.png";
+
 const emit = defineEmits<{
   (event: "close"): void;
 }>();
-
-function getImageUrl(url: string) {
-  return new URL(url, import.meta.url).href;
-}
 </script>
 
 <template>
   <ion-content>
     <div class="success-content">
       <h1>Merci de votre contribution</h1>
-      <img :src="getImageUrl('../../assets/success.png')" />
+      <img :src="success" />
 
       <p>
         Vous venez d'ajouter un nouveau sopt, retrouvez toutes ses informations

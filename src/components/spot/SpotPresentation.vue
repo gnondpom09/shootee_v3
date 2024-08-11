@@ -8,7 +8,11 @@ import { useAuth } from "@/composables/useAuth";
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { updateMarker, updateSpot } from "@/services/marker.service";
 import PhotoDetails from "@/components/spot/PhotoDetails.vue";
-import { ActionSheetOptions, alertController } from "@ionic/vue";
+import {
+  ActionSheetOptions,
+  alertController,
+  loadingController,
+} from "@ionic/vue";
 import { useCompareTime } from "@/composables/useCompareTime";
 
 const props = defineProps<{
@@ -57,7 +61,7 @@ const actionSheet: ActionSheetOptions = {
   header: "Modifier mon avatar",
   buttons: [
     {
-      text: "Prendre une photo",
+      text: "Ouvrir l'appareil photo",
       handler: () => {
         contribute();
       },
@@ -93,16 +97,32 @@ function sahredWith(spotId: string): void {
 }
 
 async function contribute() {
-  await takePhoto();
+  const loading = await loadingController.create({
+    message: "Chargement...",
+  });
+  loading.present();
 
-  if (spotAuthor.value && spot.value) {
-    const photos = await savePhotosAndGetImagesPath(
-      photosDraft.value,
-      spotAuthor.value.id
-    );
-    const photosUpdated = [...spot.value.photos, ...photos];
-    updateMarker(spot.value.id, photosUpdated);
-    resetPhotos();
+  try {
+    await takePhoto();
+
+    if (spotAuthor.value && spot.value) {
+      const photos = await savePhotosAndGetImagesPath(
+        photosDraft.value,
+        spotAuthor.value.id
+      );
+      const photosUpdated = [...spot.value.photos, ...photos];
+      updateMarker(spot.value.id, photosUpdated);
+      resetPhotos();
+    }
+  } catch {
+    const alert = await alertController.create({
+      header: "Service indisponible",
+      message: "Une erreur s'est produite, réessayez plus tard",
+      buttons: ["Fermer"],
+    });
+    await alert.present();
+  } finally {
+    loading.dismiss();
   }
 }
 
@@ -111,29 +131,29 @@ function toggleSelection() {
 }
 
 async function removePhoto(index: number) {
-  if (spotAuthor.value && spot.value) {
-    const alert = await alertController.create({
-      header: "Suppression photo",
-      message:
-        "Cette action est irréversible, souhaitez vous confirmer la suppression de cette photo.",
-      buttons: [
-        {
-          text: "Annuler",
-          role: "cancel",
-        },
-        {
-          text: "OK",
-          role: "confirm",
-          handler: () => {
+  const alert = await alertController.create({
+    header: "Suppression photo",
+    message:
+      "Cette action est irréversible, souhaitez vous confirmer la suppression de cette photo.",
+    buttons: [
+      {
+        text: "Annuler",
+        role: "cancel",
+      },
+      {
+        text: "OK",
+        role: "confirm",
+        handler: () => {
+          if (spotAuthor.value && spot.value) {
             spot.value.photos.splice(index, 1);
             updateMarker(spot.value.id, spot.value.photos);
             isSelectionEnabled.value = false;
-          },
+          }
         },
-      ],
-    });
-    await alert.present();
-  }
+      },
+    ],
+  });
+  await alert.present();
 }
 
 async function updateInformation() {

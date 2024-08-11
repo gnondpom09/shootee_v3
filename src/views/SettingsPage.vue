@@ -78,7 +78,7 @@ onMounted(() => {
           </ion-item-group>
         </ion-list>
 
-        <p class="legend">Version 0.10.0</p>
+        <p class="legend">Version 0.10.1</p>
       </div>
     </ion-content>
   </ion-page>

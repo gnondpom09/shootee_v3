@@ -59,17 +59,17 @@ async function nextStep() {
   const { coords } = useGeolocation();
 
   if (slider.value.activeIndex === 1 && coords.value && user.value) {
+    const loading = await loadingController.create({
+      message: "Chargement des photos...",
+    });
+    loading.present();
+
     const photos = await savePhotosAndGetImagesPath(
       photosDraft.value,
       user.value.id
     );
 
     if (latitude.value && longitude.value) {
-      const loading = await loadingController.create({
-        message: "Chargement des photos...",
-      });
-      loading.present();
-
       try {
         await createMarker(
           spotName.value,
