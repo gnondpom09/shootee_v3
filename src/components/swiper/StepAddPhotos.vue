@@ -18,7 +18,7 @@ const actionSheet: ActionSheetOptions = {
   header: "Modifier mon avatar",
   buttons: [
     {
-      text: "Prendre une photo",
+      text: "Ouvrir l'aapreil photo",
       handler: () => {
         takePhoto();
         emit("add-photo");
