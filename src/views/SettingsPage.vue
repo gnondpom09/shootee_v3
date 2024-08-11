@@ -51,28 +51,51 @@ onMounted(() => {
       </ion-toolbar>
     </ion-header>
     <ion-content v-if="currentUser">
-      <ion-list>
-        <ion-item button lines="none" @click="unavalaibleFunction">
-          <ion-label>Notifications</ion-label>
-        </ion-item>
-        <ion-item button lines="none" @click="unavalaibleFunction">
-          <ion-label>Conditions générales</ion-label>
-        </ion-item>
-        <ion-item button @click="logout" lines="none">
-          <ion-label color="primary">Se déconnecter</ion-label>
-        </ion-item>
-
-        <ion-item-group>
-          <ion-item-divider></ion-item-divider>
-
+      <div class="settings">
+        <ion-list>
           <ion-item button lines="none" @click="unavalaibleFunction">
-            <ion-label>désactiver mon compte</ion-label>
+            <ion-label>Notifications</ion-label>
           </ion-item>
           <ion-item button lines="none" @click="unavalaibleFunction">
-            <ion-label color="danger">Supprimer mon compte</ion-label>
+            <ion-label>Conditions générales</ion-label>
           </ion-item>
-        </ion-item-group>
-      </ion-list>
+          <ion-item button lines="none" router-link="/help">
+            <ion-label>Aide</ion-label>
+          </ion-item>
+          <ion-item button @click="logout" lines="none">
+            <ion-label color="primary">Se déconnecter</ion-label>
+          </ion-item>
+
+          <ion-item-group>
+            <ion-item-divider></ion-item-divider>
+
+            <ion-item button lines="none" @click="unavalaibleFunction">
+              <ion-label>désactiver mon compte</ion-label>
+            </ion-item>
+            <ion-item button lines="none" @click="unavalaibleFunction">
+              <ion-label color="danger">Supprimer mon compte</ion-label>
+            </ion-item>
+          </ion-item-group>
+        </ion-list>
+
+        <p class="legend">Version 0.10.0</p>
+      </div>
     </ion-content>
   </ion-page>
 </template>
+
+<style lang="scss" scoped>
+.settings {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding: 16px 0 24px 0;
+
+  ion-list {
+    width: 100%;
+  }
+}
+</style>

@@ -79,7 +79,6 @@ function viewSpot(spotId: string) {
       <div class="wall">
         <div class="home-title">
           <h1>Trouvez le spot idéal</h1>
-          <p class="legend">Version 0.9.3</p>
         </div>
 
         <ion-segment
