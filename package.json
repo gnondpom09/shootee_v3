@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vue-tsc && vite build && pwa-assets-generator --preset minimal-2023",
     "preview": "vite preview",
+    "generate-pwa-assets": "pwa-assets-generator --preset minimal-2023",
     "test:e2e": "cypress run",
     "test:unit": "vitest",
     "lint": "eslint ."
@@ -35,6 +36,7 @@
   "devDependencies": {
     "@capacitor/cli": "6.1.0",
     "@types/woosmap.map": "^1.4.11",
+    "@vite-pwa/assets-generator": "^0.2.4",
     "@vitejs/plugin-legacy": "^5.0.0",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-typescript": "^12.0.0",

@@ -175,6 +175,6 @@ function onSlideChange() {
 <style scoped lang="scss">
 .swiper {
   display: flex;
-  height: 90%;
+  height: 86%;
 }
 </style>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="192px" height="192px" viewBox="0 0 192 192" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>logo</title>
+    <g id="logo" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" fill="#14A098" x="-11" y="-11" width="218" height="203"></rect>
+        <rect id="Rectangle" fill="#FFFFFF" x="29" y="21" width="137" height="49" rx="8"></rect>
+        <rect id="Rectangle-Copy" fill="#FFFFFF" x="29" y="110" width="137" height="49" rx="8"></rect>
+        <rect id="Rectangle" fill="#FFFFFF" x="96" y="79" width="56" height="22" rx="8"></rect>
+    </g>
+</svg>

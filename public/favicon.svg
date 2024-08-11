@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>favicon</title>
+    <g id="favicon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" fill="#14A098" x="0" y="0" width="48" height="48"></rect>
+        <g id="logo" transform="translate(6.586957, 6.000000)" fill="#FFFFFF">
+            <rect id="Rectangle" x="0" y="0" width="35.7391304" height="12.7826087" rx="3"></rect>
+            <rect id="Rectangle-Copy" x="0" y="23.2173913" width="35.7391304" height="12.7826087" rx="3"></rect>
+            <rect id="Rectangle" x="17.4782609" y="15.1304348" width="14.6086957" height="5.73913043" rx="2"></rect>
+        </g>
+    </g>
+</svg>
