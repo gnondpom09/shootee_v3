@@ -21,7 +21,7 @@ const isPrivateAccount = ref<boolean>(false);
 
 function logout() {
   if (auth) {
-    sessionStorage.clear();
+    localStorage.clear();
     signOut(auth);
     router.push("/login");
   }
@@ -56,7 +56,7 @@ onMounted(() => {
           <ion-item button lines="none" @click="unavalaibleFunction">
             <ion-label>Notifications</ion-label>
           </ion-item>
-          <ion-item button lines="none" @click="unavalaibleFunction">
+          <ion-item button lines="none" router-link="/cgu">
             <ion-label>Conditions générales</ion-label>
           </ion-item>
           <ion-item button lines="none" router-link="/help">
@@ -78,7 +78,7 @@ onMounted(() => {
           </ion-item-group>
         </ion-list>
 
-        <p class="legend">Version 0.10.3</p>
+        <p class="legend">Version 0.11.0</p>
       </div>
     </ion-content>
   </ion-page>

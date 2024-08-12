@@ -198,8 +198,6 @@ export const usePhotoGallery = () => {
 
         await upload(blob);
         if (preview) {
-          console.log(preview);
-
           await uploadPreview(preview);
         }
         await refresh();

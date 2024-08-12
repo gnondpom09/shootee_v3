@@ -31,6 +31,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/HelpPage.vue"),
   },
   {
+    path: "/cgu",
+    meta: { requiresAuth: true },
+    component: () => import("@/views/GeneralConditionsPage.vue"),
+  },
+  {
     path: "/admin",
     meta: { requiresAuth: true },
     component: () => import("@/views/AdminPage.vue"),

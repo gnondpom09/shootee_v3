@@ -21,7 +21,7 @@ function signUp() {
   if (password.value === repeatPassword.value && auth) {
     createUserWithEmailAndPassword(auth, email.value, password.value)
       .then(async (data) => {
-        sessionStorage.setItem("uid", data.user.uid);
+        localStorage.setItem("uid", data.user.uid);
         await createUser(data.user.uid, pseudo.value, email.value);
 
         router.push("/tabs");

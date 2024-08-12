@@ -8,6 +8,9 @@ import {
 } from "@/services/marker.service";
 import GallerySpots from "@/components/GallerySpots.vue";
 import SkeletonGallery from "@/components/skeletons/SkeletonGallery.vue";
+import { alertController } from "@ionic/vue";
+import { getUserById, updateUser } from "@/services/user.service";
+import { Profile } from "@/models/profile.model";
 
 const router = useRouter();
 
@@ -15,7 +18,9 @@ const selectedSegment = ref<string>("all");
 
 const isContentLoading = ref<boolean>(true);
 
-const userId = sessionStorage.getItem("uid") as string;
+const userId = localStorage.getItem("uid") as string;
+
+const user = getUserById(userId);
 
 const spots = ref();
 
@@ -25,6 +30,12 @@ onMounted(() => {
   setTimeout(() => {
     if (userId) {
       spots.value = getPublicAndSharedSpots(userId);
+
+      if (user.value) {
+        if (!user.value.isInfoPWARead) {
+          displayInfoPWA();
+        }
+      }
     } else {
       spots.value = getAllPublicSpots();
     }
@@ -32,10 +43,33 @@ onMounted(() => {
   }, 400);
 });
 
+async function displayInfoPWA() {
+  const alert = await alertController.create({
+    header: "Information Progressive Web App",
+    message:
+      "Pour une meilleure expérience utilisateur, cette appplication est disponible en Progressive Web App. La procédure d'installation est expliquée dans la rubrique d'aide accessible depuis votre profil.",
+    buttons: [
+      {
+        text: "j'irais plus tard",
+        role: "cancel",
+      },
+      {
+        text: "Voir les explications",
+        role: "confirm",
+        handler: async () => {
+          await router.push("/help");
+        },
+      },
+    ],
+  });
+  await alert.present();
+
+  const userUpdated = { ...user.value, isInfoPWARead: true } as Profile;
+  await updateUser(userId, userUpdated);
+}
+
 function segmentChanged(e: CustomEvent) {
   selectedSegment.value = e.detail.value;
-
-  console.log(selectedSegment.value);
 
   switch (selectedSegment.value) {
     case "all":

@@ -10,7 +10,7 @@ import {
 
 const { reverseGeocodeMarker, setCoordonates } = useGeocode();
 
-const userId = sessionStorage.getItem("uid") as string;
+const userId = localStorage.getItem("uid") as string;
 
 const initializeMap = useMap("map");
 

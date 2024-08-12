@@ -18,7 +18,7 @@ function signIn() {
   if (auth) {
     signInWithEmailAndPassword(auth, email.value, password.value)
       .then((data) => {
-        sessionStorage.setItem("uid", data.user.uid);
+        localStorage.setItem("uid", data.user.uid);
         router.push("/tabs");
       })
       .catch((error) => {

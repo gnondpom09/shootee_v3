@@ -13,4 +13,5 @@ export interface Profile {
   isAdmin?: boolean;
   instagramAccount?: string;
   isPrivateAccount?: boolean;
+  isInfoPWARead?: boolean;
 }
