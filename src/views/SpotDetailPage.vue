@@ -1,21 +1,48 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { getMarkerId } from "@/services/marker.service";
+import { ref, computed } from "vue";
+import { getMarkerId, updateSpot } from "@/services/marker.service";
 
 import { useRoute } from "vue-router";
 import SpotPresentation from "@/components/spot/SpotPresentation.vue";
 import SpotNearbyRestaurants from "@/components/spot/SpotNearbyRestaurants.vue";
 import SpotNearbyBed from "@/components/spot/SpotNearbyBed.vue";
 import SpotDistance from "@/components/spot/spotDistance.vue";
+import { Spot } from "@/models/spot.model";
 
 const route = useRoute();
 const id = String(route.params.id);
 const spot = getMarkerId(id);
 
+const userId = localStorage.getItem("uid") as string;
+
 const selectedSegment = ref<string>("default");
+
+const isFavorite = computed<boolean>(
+  () => !!spot.value?.addToFavoriteBy?.includes(userId)
+);
 
 function segmentChanged(e: CustomEvent) {
   selectedSegment.value = e.detail.value;
+}
+
+async function toggleFavorite() {
+  const addToFavoriteBy = spot.value?.addToFavoriteBy ?? [];
+
+  try {
+    const isExists = addToFavoriteBy.includes(userId);
+
+    if (!isExists) {
+      addToFavoriteBy.push(userId);
+    } else {
+      const index = addToFavoriteBy.findIndex((item) => item === userId);
+      addToFavoriteBy.splice(index, 1);
+    }
+
+    if (spot.value) {
+      const newSpot: Spot = { ...spot.value, addToFavoriteBy };
+      await updateSpot(spot.value.id, newSpot);
+    }
+  } catch {}
 }
 </script>
 
@@ -33,6 +60,20 @@ function segmentChanged(e: CustomEvent) {
           </ion-buttons>
         </ion-buttons>
         <ion-title v-if="spot">{{ spot.name }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button v-on:click="toggleFavorite">
+            <ion-icon
+              v-if="isFavorite"
+              slot="icon-only"
+              name="bookmark"
+            ></ion-icon>
+            <ion-icon
+              v-else
+              slot="icon-only"
+              name="bookmark-outline"
+            ></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content v-if="spot" class="ion-padding">

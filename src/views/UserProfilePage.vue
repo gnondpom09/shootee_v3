@@ -172,6 +172,7 @@ function viewSpot(id: string) {
           ></a
           >Voir mon profil Instagram
         </ion-button>
+
         <ion-button v-else @click="goToAccount" shape="round">
           Ajouter un compte Instagram
         </ion-button>

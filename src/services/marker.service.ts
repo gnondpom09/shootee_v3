@@ -71,6 +71,16 @@ export function getSharedSpots(userId: string) {
   return queryByAuthor;
 }
 
+export function getFavoritesSpots(userId: string) {
+  const queryByAuthor = useCollection(
+    query(
+      collection(firestore, "spots"),
+      where("addToFavoriteBy", "array-contains", userId)
+    )
+  );
+  return queryByAuthor;
+}
+
 export function getSpotsByAuthor(userId: string) {
   const queryByAuthor = useCollection(
     query(collection(firestore, "spots"), where("authorId", "==", userId))

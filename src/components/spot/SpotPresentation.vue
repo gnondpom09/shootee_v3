@@ -316,7 +316,7 @@ async function updateInformation() {
       <PhotoDetails
         v-if="currentPhoto"
         :photo="currentPhoto"
-        :spot="spot"
+        :spot-title="spot?.name"
         @close="setOpen(false, null)"
       />
     </ion-modal>

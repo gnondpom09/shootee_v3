@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { PhotoSpot } from "@/models/photoSpot.model";
-import { Spot } from "@/models/spot.model";
 import { getUserById } from "@/services/user.service";
 import { toRefs } from "vue";
 
 const props = defineProps<{
   photo: PhotoSpot;
-  spot: Spot;
+  spotTitle?: string;
 }>();
-const { photo } = toRefs(props);
+const { photo, spotTitle } = toRefs(props);
 
 const emit = defineEmits<{
   (event: "close"): void;
@@ -33,7 +32,7 @@ const shootedAt = computed<string>(() => {
 <template>
   <ion-header>
     <ion-toolbar>
-      <ion-title>titre</ion-title>
+      <ion-title>{{ spotTitle }}</ion-title>
       <ion-buttons slot="end">
         <ion-button v-on:click="emit('close')">
           <ion-icon slot="icon-only" name="close"></ion-icon>
