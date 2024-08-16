@@ -10,6 +10,7 @@ export interface PhotoSpot {
 export interface PhotoDraft {
   path: string;
   webPath: string;
+  originalImage: Blob | null;
   preview: Blob | null;
   exif?: Exif;
 }

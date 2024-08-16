@@ -16,8 +16,8 @@ import { Filesystem } from "@capacitor/filesystem";
 import {
   b64toBlob,
   getBlob,
+  getCompressImage,
   getExifPhoto,
-  getPreview,
 } from "@/utils/photo.utils";
 
 const photoUrl = ref<string>("");
@@ -47,6 +47,7 @@ export const usePhotoGallery = () => {
             path: photo.path ?? "",
             webPath: photo.webPath ?? "",
             preview: null, // TODO: set preview
+            originalImage: null,
             exif: photo.exif,
           };
           photosDraft.value.push(draft);
@@ -71,12 +72,14 @@ export const usePhotoGallery = () => {
         const file = new File([blob], "photo");
         const exif = await getExifPhoto(file);
 
-        const preview = await getPreview(file);
+        const image = await getCompressImage(file);
+        const preview = await getCompressImage(file, 0.5);
 
         const draft: PhotoDraft = {
           path: photo.path ?? "",
           webPath: photo.webPath ?? "",
           preview: preview ?? null,
+          originalImage: image,
           exif,
         };
 
@@ -105,13 +108,13 @@ export const usePhotoGallery = () => {
 
     return new Promise((resolve) => {
       photosDraft.forEach(async (draft, index) => {
-        let blob: Blob;
+        /*         let blob: Blob; */
 
         const fileName = index + Date.now() + ".jpeg";
         const imageFileRef = storageRef(storage, `spots/${fileName}/image`);
         const previewFileRef = storageRef(storage, `spots/${fileName}/preview`);
 
-        if (isPlatform("hybrid")) {
+        /*         if (isPlatform("hybrid")) {
           // For App mobile
           const file = await Filesystem.readFile({
             path: String(draft.path),
@@ -120,7 +123,7 @@ export const usePhotoGallery = () => {
         } else {
           const response = await fetch(String(draft.webPath));
           blob = await response.blob();
-        }
+        } */
 
         const { url, upload, refresh } = await useStorageFile(imageFileRef);
         const {
@@ -129,10 +132,14 @@ export const usePhotoGallery = () => {
           refresh: refreshPreview,
         } = await useStorageFile(previewFileRef);
 
-        await upload(blob);
+        if (draft.originalImage) {
+          await upload(draft.originalImage);
+        }
+
         if (draft.preview) {
           await uploadPreview(draft.preview);
         }
+
         await refresh();
         await refreshPreview();
 
@@ -187,7 +194,7 @@ export const usePhotoGallery = () => {
       if (photo) {
         const file = new File([blob], "photo");
 
-        const preview = await getPreview(file);
+        const preview = await getCompressImage(file, 0.5);
 
         const { url, upload, refresh } = await useStorageFile(imageFileRef);
         const {

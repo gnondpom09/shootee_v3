@@ -87,7 +87,10 @@ export async function getBase64(photo: Photo): Promise<string> {
   return file.data as string;
 }
 
-export function getPreview(file: File): Promise<Blob | null> {
+export function getCompressImage(
+  file: File,
+  quality = QUALITY
+): Promise<Blob | null> {
   const blobUrl = URL.createObjectURL(file);
   const img = new Image();
   img.src = blobUrl;
@@ -111,7 +114,7 @@ export function getPreview(file: File): Promise<Blob | null> {
           resolve(blob);
         },
         MIME_TYPE,
-        QUALITY
+        quality
       );
     };
   });
