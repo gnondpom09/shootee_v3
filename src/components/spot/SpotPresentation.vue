@@ -35,7 +35,7 @@ const selectedSegment = ref<string>("all");
 
 const isPublicSpot = ref<boolean>(true);
 
-const { checkUserAuth, checkIfShared } = useAuth();
+const { checkUserAuth, checkIfShared, checkIfSharedWithAuthor } = useAuth();
 
 const { getPhotosByDayTime, filteredPhotos } = useCompareTime();
 
@@ -242,6 +242,16 @@ async function updateInformation() {
       "
     >
       <p class="legend">Ce spot est privé et partagé avec vous par l'auteur</p>
+    </div>
+
+    <div
+      v-if="
+        checkUserAuth(spot.authorId) &&
+        !isPublicSpot &&
+        checkIfSharedWithAuthor(spot.sharedWith ?? [])
+      "
+    >
+      <p class="legend">Vous avez partagé ce sopt avec des amis.</p>
     </div>
 
     <div class="header-gallery">

@@ -2,6 +2,7 @@
 import SpotsCardList from "@/components/SpotsCardList.vue";
 import { getPublicSpotsByAuthor } from "@/services/marker.service";
 import { getUserById } from "@/services/user.service";
+import { onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
@@ -10,7 +11,16 @@ const id = String(route.params.id);
 
 const author = getUserById(id);
 
-const spots = getPublicSpotsByAuthor(id);
+const isContentLoading = ref<boolean>(true);
+
+const spots = ref();
+
+onMounted(() => {
+  setTimeout(() => {
+    spots.value = getPublicSpotsByAuthor(id);
+    isContentLoading.value = false;
+  }, 400);
+});
 
 function viewSpot(id: string) {
   router.push(`/spot-detail/${id}`);
@@ -61,8 +71,8 @@ function viewSpot(id: string) {
         <ion-label>Spots</ion-label>
       </ion-item-divider>
 
-      <div class="spots-list">
-        <SpotsCardList :spots="spots" @view-post="viewSpot" />
+      <div v-if="spots && !isContentLoading" class="spots-list">
+        <SpotsCardList :spots="spots" disabled @view-post="viewSpot" />
       </div>
     </ion-content>
   </ion-page>

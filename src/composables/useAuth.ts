@@ -14,8 +14,13 @@ export function useAuth() {
     return false;
   }
 
+  function checkIfSharedWithAuthor(sharedWith: string[]) {
+    return sharedWith.length > 0;
+  }
+
   return {
     checkUserAuth,
     checkIfShared,
+    checkIfSharedWithAuthor,
   };
 }
