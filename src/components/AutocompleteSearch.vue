@@ -60,7 +60,7 @@ onMounted(() => {
 
   debouncedLocalitiesAutocomplete = debouncePromise(
     localitiesService.autocomplete,
-    0
+    800
   );
 
   initListeners();
@@ -232,17 +232,23 @@ function debouncePromise<T, Args extends any[]>(
       latestReject = reject;
 
       timeoutId = setTimeout(() => {
-        fn(...args)
-          .then((result) => {
-            if (latestResolve === resolve && latestReject === reject) {
-              resolve(result);
-            }
-          })
-          .catch((error) => {
-            if (latestResolve === resolve && latestReject === reject) {
-              reject(error);
-            }
-          });
+        if (args[0].input.length > 2) {
+          fn(...args)
+            .then((result) => {
+              if (latestResolve === resolve && latestReject === reject) {
+                console.log("resolve");
+
+                resolve(result);
+              }
+            })
+            .catch((error) => {
+              if (latestResolve === resolve && latestReject === reject) {
+                console.log("reject");
+
+                reject(error);
+              }
+            });
+        }
       }, delay);
     });
   };
