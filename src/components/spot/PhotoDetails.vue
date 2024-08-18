@@ -22,7 +22,7 @@ const shootedAt = computed<string>(() => {
       photo.value.exif.DateTimeOriginal.toDate().toLocaleDateString("fr-FR");
     const time =
       photo.value.exif.DateTimeOriginal.toDate().toLocaleTimeString("fr-FR");
-    return `Photo prise le ${date} à ${time}`;
+    return `Prise le ${date} à ${time}`;
   }
 
   return "";
@@ -40,8 +40,11 @@ const shootedAt = computed<string>(() => {
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-content class="ion-padding">
-    <ion-accordion-group>
+  <ion-content class="">
+
+    <img :src="photo?.image" />
+
+    <ion-accordion-group class="photo-details">
       <ion-accordion value="first">
         <ion-item slot="header" color="light">
           <ion-label>Informations</ion-label>
@@ -99,6 +102,12 @@ const shootedAt = computed<string>(() => {
         </div>
       </ion-accordion>
     </ion-accordion-group>
-    <img :src="photo?.image" />
   </ion-content>
 </template>
+
+<style lang="scss" scoped>
+.photo-details {
+  position: sticky;
+  bottom: 0
+}
+</style>

@@ -251,7 +251,12 @@ async function updateInformation() {
         checkIfSharedWithAuthor(spot.sharedWith ?? [])
       "
     >
-      <p class="legend">Vous avez partagé ce sopt avec des amis.</p>
+      <p class="legend">
+        Vous avez partagé ce sopt avec des amis.
+        <router-link fill="clear" :to="`/shared-with/${spot.id}`"
+          >Voir</router-link
+        >
+      </p>
     </div>
 
     <div class="header-gallery">
