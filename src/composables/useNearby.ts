@@ -139,6 +139,8 @@ export function useNearby(
 
     updatePagination(response.pagination);
 
+    //console.log(response.results);
+
     response.results.forEach(
       async (result: woosmap.map.localities.LocalitiesNearbyResult) => {
         const distance = measure(
@@ -151,8 +153,27 @@ export function useNearby(
 
         reverseGeocode(
           result.geometry.location.lat + "," + result.geometry.location.lng
-        ).then((address: any) => {
-          const firstElement = address.results[0];
+        ).then((result: any) => {
+          /*           console.log(result);
+          const firstElement = address.results[0]; */
+
+          const { address } = result;
+
+          const getName = (
+            amenity: string | undefined,
+            tourism: string | undefined
+          ) => {
+            if (amenity) {
+              return amenity;
+            }
+            if (tourism) {
+              return tourism;
+            }
+            return "-";
+          };
+
+          /*           <strong>${result.name}</strong>
+          ${firstElement.formatted_address} */
 
           resultListItem.innerHTML = `
             <ion-item
@@ -160,9 +181,11 @@ export function useNearby(
               class="item-card"
             >
               <ion-label>
-                <strong>${result.name}</strong>
+                <strong>${getName(address.amenity, address.tourism)}</strong>
                 <ion-note color="medium" class="ion-text-wrap">
-                  ${firstElement.formatted_address}
+                  ${address.house_number ?? ""} ${address.road}, ${
+            address.postcode
+          } ${address.village ?? address.city}
                 </ion-note>
               </ion-label>
               <div class="metadata-end-wrapper" slot="end">

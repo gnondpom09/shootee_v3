@@ -83,6 +83,7 @@ import {
   chevronForward,
   chevronBack,
   ellipse,
+  openOutline,
 } from "ionicons/icons";
 addIcons({
   add,
@@ -118,6 +119,7 @@ addIcons({
   "ellipsis-vertical-outline": ellipsisVerticalOutline,
   "chevron-forward": chevronForward,
   "chevron-back": chevronBack,
+  "open-outline": openOutline,
 });
 
 // Components

@@ -338,7 +338,7 @@ async function updateInformation() {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .author {
   margin-bottom: 12px;
 }

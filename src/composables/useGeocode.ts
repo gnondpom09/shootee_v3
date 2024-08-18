@@ -1,5 +1,5 @@
 import { ref, Ref } from "vue";
-import { API_KEY_WOOSMAP } from "../constants/map";
+import { API_KEY_WOOSMAP, GEOCODE_API } from "../constants/map";
 
 interface UseGeocode {
   spotName: Ref<string>;
@@ -19,17 +19,27 @@ const longitude = ref<number | null>(null);
 
 export function useGeocode(): UseGeocode {
   function reverseGeocode(lat_lng: string) {
-    const args = {
+    /*     const args = {
       key: API_KEY_WOOSMAP,
       latlng: lat_lng,
-    };
+    }; */
+
+    const parts = lat_lng.split(",");
+    const latitude = Number(parts[0]);
+    const longitude = Number(parts[1]);
 
     return fetch(
+      `https://geocode.maps.co/reverse?lat=${latitude}&lon=${longitude}&api_key=${GEOCODE_API}`
+    ).then((response) => {
+      return response.json();
+    });
+
+    /*     return fetch(
       `https://api.woosmap.com/localities/geocode/?${buildQueryString(args)}`
-    ).then((response) => response.json());
+    ).then((response) => response.json()); */
   }
 
-  function buildQueryString(params: any) {
+  /*   function buildQueryString(params: any) {
     const queryStringParts = [];
 
     for (let key in params) {
@@ -41,15 +51,21 @@ export function useGeocode(): UseGeocode {
       }
     }
     return queryStringParts.join("&");
-  }
+  } */
 
   function reverseGeocodeMarker(lat: number, lng: number): void {
     let reverseGeocodeLatLng = lat + "," + lng;
 
     reverseGeocode(reverseGeocodeLatLng).then((addressDetails) => {
-      let result = addressDetails.results[0];
+      // console.log(addressDetails);
+      // let result = addressDetails.results[0];
+      // address.value = result.formatted_address;
 
-      address.value = result.formatted_address;
+      address.value = `${addressDetails.address.road ?? ""} ${
+        addressDetails.address.postcode
+      } ${addressDetails.address.village ?? addressDetails.address.city} - ${
+        addressDetails.address.country
+      }`;
 
       if (
         addressDetails.results == null ||

@@ -2,6 +2,8 @@
 export const API_KEY_WOOSMAP = "woos-fc8fe374-edf7-3d11-86b2-7e787c73d350";
 //export const API_KEY_WOOSMAP = "woos-48c80350-88aa-333e-835a-07f4b658a9a4"; // Api key woosmap TEST
 
+export const GEOCODE_API = "66c1bb39242ff952559823mcp487dee";
+
 export const RADIUS_POINTS_OF_INTEREST = 5000;
 
 export const MAP_STYLES = [

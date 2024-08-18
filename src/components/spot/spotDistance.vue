@@ -22,15 +22,37 @@ onMounted(() => {
 
 <template>
   <div class="container">
+    <ion-fab class="open-waze" vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button size="small">
+        <a
+          class="link"
+          :href="`https://waze.com/ul?ll=${destination.lat},${destination.lng}&navigate=yes`"
+          target="_blank"
+          rel="noopener noreferrer"
+        ></a
+        ><ion-icon size="small" name="open-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
     <div id="map-distance"></div>
     <div class="tableContainer"></div>
   </div>
 </template>
 
 <style scoped lang="scss">
+.link {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 500;
+}
+
 .container {
   height: 100%;
   display: block;
+
+  .open-waze {
+    bottom: 74px;
+  }
 
   #map-distance {
     height: 33%;
