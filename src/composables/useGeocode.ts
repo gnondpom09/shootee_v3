@@ -57,7 +57,6 @@ export function useGeocode(): UseGeocode {
     let reverseGeocodeLatLng = lat + "," + lng;
 
     reverseGeocode(reverseGeocodeLatLng).then((addressDetails) => {
-      // console.log(addressDetails);
       // let result = addressDetails.results[0];
       // address.value = result.formatted_address;
 

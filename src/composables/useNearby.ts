@@ -159,6 +159,9 @@ export function useNearby(
             amenity: string | undefined,
             tourism: string | undefined
           ) => {
+            if (result.name) {
+              return result.name;
+            }
             if (amenity) {
               return amenity;
             }
@@ -190,7 +193,12 @@ export function useNearby(
                   <ion-note color="medium" class="ion-text-wrap">
                     ${address.house_number ?? ""} ${address.road}, ${
             address.postcode
-          } ${address.village ?? address.city}
+          } ${
+            address.village ??
+            address.city ??
+            address.town ??
+            address.municipality
+          }
                   </ion-note>
                 </ion-label>
               <div class="metadata-end-wrapper" slot="end">
