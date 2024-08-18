@@ -139,8 +139,6 @@ export function useNearby(
 
     updatePagination(response.pagination);
 
-    //console.log(response.results);
-
     response.results.forEach(
       async (result: woosmap.map.localities.LocalitiesNearbyResult) => {
         const distance = measure(
@@ -153,11 +151,9 @@ export function useNearby(
 
         reverseGeocode(
           result.geometry.location.lat + "," + result.geometry.location.lng
-        ).then((result: any) => {
-          /*           console.log(result);
-          const firstElement = address.results[0]; */
-
-          const { address } = result;
+        ).then((geocode: any) => {
+          //const firstElement = address.results[0];
+          const { address } = geocode;
 
           const getName = (
             amenity: string | undefined,
@@ -179,17 +175,27 @@ export function useNearby(
             <ion-item
               detail="false"
               class="item-card"
+              button
             >
+              <a
+                style="position: absolute; width: 100%; height: 100%;"
+                href="https://waze.com/ul?ll=${result.geometry.location.lat},${
+            result.geometry.location.lng
+          }&navigate=yes"
+                target="_blank"
+                rel="noopener noreferrer"
+              ></a>
               <ion-label>
-                <strong>${getName(address.amenity, address.tourism)}</strong>
-                <ion-note color="medium" class="ion-text-wrap">
-                  ${address.house_number ?? ""} ${address.road}, ${
+                  <strong>${getName(address.amenity, address.tourism)}</strong>
+                  <ion-note color="medium" class="ion-text-wrap">
+                    ${address.house_number ?? ""} ${address.road}, ${
             address.postcode
           } ${address.village ?? address.city}
-                </ion-note>
-              </ion-label>
+                  </ion-note>
+                </ion-label>
               <div class="metadata-end-wrapper" slot="end">
                 <ion-note color="medium">${distance.toFixed(0)} m</ion-note>
+                <ion-icon color="medium" icon="chevron-forward"></ion-icon>
               </div>
             </ion-item>
         `;
